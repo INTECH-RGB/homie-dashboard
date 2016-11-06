@@ -17,10 +17,15 @@
     "Valentin GAUTHEY",
     "Matthieu BOISSADY"
   ],
+  "dependencies": {
+    "bunyan": "^1.8.4"
+  },
   "devDependencies": {
     "ava": "^0.16.0",
     "babel-cli": "^6.18.0",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0"
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
+    "nodemon": "^1.11.0",
+    "shx": "^0.1.4"
   },
   "engines": {
     "node": "^7.0.0"
@@ -41,10 +46,9 @@
     "url": "https://github.com/INTECH-RGB/homie-dashboard.git"
   },
   "scripts": {
-    "start": "babel-node --harmony-async-await index.js | bunyan",
+    "build": "shx rm -r dist && babel src -d dist/src && shx cp package.json dist/",
+    "serve": "node dist/src/index.js",
+    "start": "nodemon src/index.js --exec babel-node --harmony-async-await | bunyan",
     "test": "ava"
-  },
-  "dependencies": {
-    "bunyan": "^1.8.4"
   }
 }
