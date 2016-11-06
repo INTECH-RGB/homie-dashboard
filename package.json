@@ -1,0 +1,50 @@
+{
+  "name": "homie-dashboard",
+  "description": "IoT dashboard for Homie devices",
+  "version": "1.0.0",
+  "author": "RGB Team",
+  "ava": {
+    "babel": "inherit"
+  },
+  "babel": {
+    "plugins": [
+      "transform-es2015-modules-commonjs"
+    ]
+  },
+  "bugs": "https://github.com/INTECH-RGB/homie-dashboard/issues",
+  "contributors": [
+    "Marvin ROGER",
+    "Valentin GAUTHEY",
+    "Matthieu BOISSADY"
+  ],
+  "devDependencies": {
+    "ava": "^0.16.0",
+    "babel-cli": "^6.18.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0"
+  },
+  "engines": {
+    "node": "^7.0.0"
+  },
+  "homepage": "https://github.com/INTECH-RGB/homie-dashboard",
+  "keywords": [
+    "automation",
+    "dashboard",
+    "home",
+    "homie",
+    "iot",
+    "mqtt"
+  ],
+  "license": "GPL-2.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/INTECH-RGB/homie-dashboard.git"
+  },
+  "scripts": {
+    "start": "babel-node --harmony-async-await index.js | bunyan",
+    "test": "ava"
+  },
+  "dependencies": {
+    "bunyan": "^1.8.4"
+  }
+}
