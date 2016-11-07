@@ -1,3 +1,3 @@
 import log from './lib/log'
 
-log.info('hi')
+log.info('starting')

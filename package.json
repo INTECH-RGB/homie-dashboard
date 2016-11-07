@@ -24,8 +24,12 @@
     "ava": "^0.16.0",
     "babel-cli": "^6.18.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
+    "eva.js": "^1.1.1",
     "nodemon": "^1.11.0",
-    "shx": "^0.1.4"
+    "shx": "^0.1.4",
+    "standard": "^8.5.0",
+    "vbuild": "^3.1.5",
+    "vue": "^2.0.5"
   },
   "engines": {
     "node": "^7.0.0"
@@ -40,15 +44,18 @@
     "mqtt"
   ],
   "license": "GPL-2.0",
-  "main": "index.js",
+  "main": "src/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/INTECH-RGB/homie-dashboard.git"
   },
   "scripts": {
-    "build": "shx rm -r dist && babel src -d dist/src && shx cp package.json dist/",
-    "serve": "node dist/src/index.js",
-    "start": "nodemon src/index.js --exec babel-node --harmony-async-await | bunyan",
-    "test": "ava"
+    "app-build": "vbuild",
+    "app-dev": "vbuild --dev",
+    "server-build": "babel server/ -d dist-server/src/ && shx cp package.json dist-server/",
+    "server-dev": "nodemon server/index.js --exec babel-node --harmony-async-await | bunyan",
+    "server-lint": "standard server/**/*.js",
+    "server-serve": "node src/index.js",
+    "server-test": "ava"
   }
 }

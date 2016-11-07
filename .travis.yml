@@ -11,7 +11,8 @@ before_install:
   - npm install -g yarn
 
 install:
-  - yarn
+  - yarn install
 
 script:
-  - npm test
+  - npm run server-lint
+  - npm run server-test

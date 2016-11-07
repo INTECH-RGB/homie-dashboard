@@ -1,8 +1,10 @@
 # Logs
 npm-debug.log*
+yarn-error.log*
 
 # Build
-dist
+dist-server
+dist-app
 
 # Dependency directories
 node_modules
