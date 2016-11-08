@@ -6272,7 +6272,7 @@ vue-template-es2015-compiler@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.1.1.tgz#ae1ddcf9f6c7eb95df304560ba9a803f3ec9ffb4"
 
-vue@^2.0.1, vue@^2.0.5:
+vue@^2.0.1:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.0.5.tgz#b99dc7180a802d1148a508db3d84b52c09b5ca8e"
 
