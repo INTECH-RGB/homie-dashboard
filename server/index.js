@@ -10,7 +10,7 @@ dotenv.config()
 async function wrapper () {
   log.info('starting')
 
-  let wss;
+  let wss
   try {
     wss = await createWebsocketServer(process.env.WS_API_IP, parseInt(process.env.WS_API_PORT, 10))
     log.info(`listening on ${process.env.WS_API_IP}:${process.env.WS_API_PORT}`)
@@ -19,12 +19,14 @@ async function wrapper () {
     process.exit(1)
   }
 
-  let db;
+  let db
   try {
     db = await sqlite.open('./homie-dashboard.db')
-    log.debug(`database opened`)
+    log.debug('database opened')
+    await db.migrate()
+    log.debug('database migrated')
   } catch (err) {
-    log.fatal('cannot open database', err)
+    log.fatal('cannot open or migrate database', err)
     process.exit(1)
   }
 
