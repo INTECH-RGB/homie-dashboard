@@ -18,7 +18,10 @@
     "Matthieu BOISSADY"
   ],
   "dependencies": {
-    "bunyan": "^1.8.4"
+    "bunyan": "^1.8.4",
+    "dotenv": "^2.0.0",
+    "sqlite": "^2.2.2",
+    "ws": "^1.1.1"
   },
   "devDependencies": {
     "ava": "^0.16.0",
@@ -54,7 +57,7 @@
     "server-build": "babel server/ -d dist-server/src/ && shx cp package.json dist-server/",
     "server-dev": "nodemon server/index.js --exec babel-node --harmony-async-await | bunyan",
     "server-lint": "standard server/**/*.js",
-    "server-serve": "node src/index.js",
+    "server-serve": "node --harmony-async-await src/index.js",
     "server-test": "ava"
   }
 }

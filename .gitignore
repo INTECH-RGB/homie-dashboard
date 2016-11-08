@@ -2,6 +2,9 @@
 npm-debug.log*
 yarn-error.log*
 
+# Databases
+*.db
+
 # Build
 dist-server
 dist-app
