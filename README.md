@@ -20,3 +20,7 @@ Homie Dashboard
   * `npm run server-lint`: lint the server
   * `npm run server-serve`: start the compiled version of the server (run from the `dist-server` directory)
   * `npm run server-test`: test the server
+
+## Team stuff
+
+We all code on Windows. Install [Mosquitto](https://mosquitto.org/download/) and run in the context of the repo: `dev.bat`. This will start the MQTT broker, the development server and the development Web Application.
