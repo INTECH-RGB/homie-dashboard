@@ -11,7 +11,7 @@
       "transform-es2015-modules-commonjs"
     ]
   },
-  "bugs": "https://github.com/INTECH-RGB/homie-dashboard/issues",
+  "bugs": "https://github.com/INTECH-RGBH/homie-dashboard/issues",
   "contributors": [
     "Marvin ROGER",
     "Valentin GAUTHEY",
@@ -28,17 +28,21 @@
     "ava": "^0.16.0",
     "babel-cli": "^6.18.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
+    "bulma": "^0.2.3",
     "eva.js": "^1.1.1",
+    "node-sass": "^3.11.3",
     "nodemon": "^1.11.0",
+    "sass-loader": "^4.0.2",
     "shx": "^0.2.0",
     "snazzy": "^5.0.0",
     "standard": "^8.5.0",
-    "vbuild": "^3.1.5"
+    "vbuild": "^3.1.5",
+    "vue-awesome": "^2.0.2"
   },
   "engines": {
     "node": "^7.0.0"
   },
-  "homepage": "https://github.com/INTECH-RGB/homie-dashboard",
+  "homepage": "https://github.com/INTECH-RGBH/homie-dashboard",
   "keywords": [
     "automation",
     "dashboard",
@@ -51,13 +55,13 @@
   "main": "src/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/INTECH-RGB/homie-dashboard.git"
+    "url": "https://github.com/INTECH-RGBH/homie-dashboard.git"
   },
   "scripts": {
     "app-build": "vbuild",
     "app-dev": "vbuild --dev",
     "server-build": "babel server/ -d dist-server/src/ && shx cp package.json dist-server/",
-    "server-dev": "nodemon server/index.js --exec babel-node --harmony-async-await | bunyan",
+    "server-dev": "nodemon --watch server server/index.js --exec babel-node --harmony-async-await | bunyan",
     "server-lint": "standard server/**/*.js | snazzy",
     "server-serve": "node --harmony-async-await src/index.js",
     "server-test": "ava"
