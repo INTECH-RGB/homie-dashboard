@@ -20,6 +20,7 @@
   "dependencies": {
     "bunyan": "^1.8.4",
     "dotenv": "^2.0.0",
+    "mqtt": "^2.0.1",
     "sqlite": "^2.2.2",
     "ws": "^1.1.1"
   },
