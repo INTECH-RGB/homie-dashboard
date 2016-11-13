@@ -26,7 +26,7 @@
     </div>
 
     <div class="hero-foot">
-      <nav class="tabs">
+      <nav class="tabs is-boxed">
         <div class="container">
           <ul>
             <li :class="{ 'is-active': route.path === '/' }"><router-link to="/" exact>Vue d'ensemble</router-link></li>
