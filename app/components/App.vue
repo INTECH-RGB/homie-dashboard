@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <div :class="{modal: true, 'is-active': !isConnected}">
@@ -36,8 +37,9 @@ export default {
 
 <style lang="sass">
   $homiered: #e74c3c;
-
   $primary: $homiered;
-
   @import "~bulma";
+
+  $fa-font-path: "~font-awesome/fonts";
+  @import "~font-awesome/scss/font-awesome.scss";
 </style>

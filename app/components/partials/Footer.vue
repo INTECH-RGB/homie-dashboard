@@ -7,7 +7,7 @@
         </p>
         <p>
           <a class="icon" href="https://github.com/INTECH-RGBH/homie-dashboard">
-            <icon name="github"></icon>
+            <i class="fa fa-github"></i>
           </a>
         </p>
       </div>
@@ -16,12 +16,7 @@
 </template>
 
 <script>
-import Icon from 'vue-awesome/components/Icon.vue'
-
-import 'vue-awesome/icons/github'
-
 export default {
-  components: { Icon }
 }
 </script>
 
