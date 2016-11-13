@@ -4,7 +4,7 @@
       <header class="nav">
         <div class="container">
           <div class="nav-left">
-            <a class="nav-item">
+            <a class="nav-item is-brand">
               <figure class="image is-24x24">
                 <img src="../../assets/images/logo_white.png" alt="Logo">
               </figure>
