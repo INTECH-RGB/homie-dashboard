@@ -7,11 +7,13 @@ CREATE TABLE devices (
   name TEXT NOT NULL,
   online INTEGER NOT NULL, -- SQLite BOOLEAN
   ip TEXT NOT NULL,
+  mac TEXT NOT NULL,
   stats_signal INTEGER,
   stats_uptime INTEGER NOT NULL,
   stats_interval_in_seconds INTEGER NOT NULL,
   fw_name TEXT NOT NULL,
   fw_version TEXT NOT NULL,
+  fw_checksum TEXT NOT NULL,
   implementation TEXT NOT NULL,
   added INTEGER NOT NULL, -- SQLite BOOLEAN
 
