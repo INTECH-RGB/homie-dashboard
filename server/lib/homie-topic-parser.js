@@ -7,6 +7,8 @@ export const TOPIC_TYPES = {
   INVALID: 'INVALID'
 }
 
+const validateIdFormat = (id) => /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(id)
+
 class HomieTopicParser {
   constructor (baseTopic = 'homie/') {
     this.setBaseTopic(baseTopic)
@@ -31,34 +33,46 @@ class HomieTopicParser {
       }
     } else if (length >= 2 && splittedTopic[1].startsWith('$')) {  // If [1] starts with $ then device property
       const deviceId = splittedTopic.shift()
+      if (!validateIdFormat(deviceId)) return { type: TOPIC_TYPES.INVALID }
+
       return {
         type: TOPIC_TYPES.DEVICE_PROPERTY,
         deviceId,
         property: splittedTopic.join('/').substr(1),  // Remove $
         value
       }
-    } else if (length === 3 && splittedTopic[2].startsWith('$')) {  // If [2] starts with $ then node special property
-      return {
-        type: TOPIC_TYPES.NODE_SPECIAL_PROPERTY,
-        deviceId: splittedTopic[0],
-        nodeId: splittedTopic[1],
-        property: splittedTopic[2].substr(1),
-        value
+    } else if (length === 3) {  // node property
+      const deviceId = splittedTopic[0]
+      const nodeId = splittedTopic[1]
+      if (!validateIdFormat(deviceId) || !validateIdFormat(nodeId)) return { type: TOPIC_TYPES.INVALID }
+
+      const type = splittedTopic[2].startsWith('$') ? TOPIC_TYPES.NODE_SPECIAL_PROPERTY : TOPIC_TYPES.NODE_PROPERTY
+      let property
+      if (type === TOPIC_TYPES.NODE_SPECIAL_PROPERTY) {
+        property = splittedTopic[2].substr(1)
+      } else {
+        property = splittedTopic[2]
+        if (!validateIdFormat(property)) return { type: TOPIC_TYPES.INVALID }
       }
-    } else if (length === 3) {  // Checking length to ensure there is no error in the topic
+
       return {
-        type: TOPIC_TYPES.NODE_PROPERTY,
-        deviceId: splittedTopic[0],
-        nodeId: splittedTopic[1],
-        property: splittedTopic[2],
+        type,
+        deviceId,
+        nodeId,
+        property,
         value
       }
     } else if (length === 4 && splittedTopic[3] === 'set') {  // If length is 4 and [5] is set then set
+      const deviceId = splittedTopic[0]
+      const nodeId = splittedTopic[1]
+      const property = splittedTopic[2]
+      if (!validateIdFormat(deviceId) || !validateIdFormat(nodeId) || !validateIdFormat(property)) return { type: TOPIC_TYPES.INVALID }
+
       return {
         type: TOPIC_TYPES.NODE_PROPERTY_SET,
-        deviceId: splittedTopic[0],
-        nodeId: splittedTopic[1],
-        property: splittedTopic[2],
+        deviceId,
+        nodeId,
+        property,
         value
       }
     } else {  // An error has occured, topic must be one of the above

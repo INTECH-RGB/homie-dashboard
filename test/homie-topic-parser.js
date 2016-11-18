@@ -38,6 +38,13 @@ test('parse a device property with subtopics', t => {
   })
 })
 
+test('report invalid device property if device is not a valid ID', t => {
+  const result = homieTopicParser.parse('homie/devicé/$property', 'value')
+  t.deepEqual(result, {
+    type: TOPIC_TYPES.INVALID
+  })
+})
+
 test('parse a node special property', t => {
   const result = homieTopicParser.parse('homie/device/node/$special', 'value')
   t.deepEqual(result, {
@@ -46,6 +53,20 @@ test('parse a node special property', t => {
     nodeId: 'node',
     property: 'special',
     value: 'value'
+  })
+})
+
+test('report invalid node special property if device is not a valid ID', t => {
+  const result = homieTopicParser.parse('homie/devicé/node/$special', 'value')
+  t.deepEqual(result, {
+    type: TOPIC_TYPES.INVALID
+  })
+})
+
+test('report invalid node special property if node is not a valid ID', t => {
+  const result = homieTopicParser.parse('homie/device/nodé/$special', 'value')
+  t.deepEqual(result, {
+    type: TOPIC_TYPES.INVALID
   })
 })
 
@@ -60,6 +81,27 @@ test('parse a node property', t => {
   })
 })
 
+test('report invalid node property if device is not a valid ID', t => {
+  const result = homieTopicParser.parse('homie/devicé/node/property', 'value')
+  t.deepEqual(result, {
+    type: TOPIC_TYPES.INVALID
+  })
+})
+
+test('report invalid node property if node is not a valid ID', t => {
+  const result = homieTopicParser.parse('homie/device/nodé/property', 'value')
+  t.deepEqual(result, {
+    type: TOPIC_TYPES.INVALID
+  })
+})
+
+test('report invalid node property if property is not a valid ID', t => {
+  const result = homieTopicParser.parse('homie/device/node/proper|y', 'value')
+  t.deepEqual(result, {
+    type: TOPIC_TYPES.INVALID
+  })
+})
+
 test('parse a node property set topic', t => {
   const result = homieTopicParser.parse('homie/device/node/property/set', 'value')
   t.deepEqual(result, {
@@ -68,5 +110,26 @@ test('parse a node property set topic', t => {
     nodeId: 'node',
     property: 'property',
     value: 'value'
+  })
+})
+
+test('report invalid node property set if device is not a valid ID', t => {
+  const result = homieTopicParser.parse('homie/devicé/node/property/set', 'value')
+  t.deepEqual(result, {
+    type: TOPIC_TYPES.INVALID
+  })
+})
+
+test('report invalid node property set if node is not a valid ID', t => {
+  const result = homieTopicParser.parse('homie/device/nodé/property/set', 'value')
+  t.deepEqual(result, {
+    type: TOPIC_TYPES.INVALID
+  })
+})
+
+test('report invalid node property set if property is not a valid ID', t => {
+  const result = homieTopicParser.parse('homie/device/node/proper|y/set', 'value')
+  t.deepEqual(result, {
+    type: TOPIC_TYPES.INVALID
   })
 })
