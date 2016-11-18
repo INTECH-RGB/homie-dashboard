@@ -18,7 +18,8 @@
   "contributors": [
     "Marvin ROGER",
     "Valentin GAUTHEY",
-    "Matthieu BOISSADY"
+    "Matthieu BOISSADY",
+    "Hugo ZAMMIT"
   ],
   "dependencies": {
     "bunyan": "^1.8.4",
