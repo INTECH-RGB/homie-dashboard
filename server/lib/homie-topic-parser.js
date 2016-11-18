@@ -30,10 +30,10 @@ class HomieTopicParser {
         value
       }
     } else if (length >= 2 && splittedTopic[1].startsWith('$')) {  // If [1] starts with $ then device property
-      const deviceID = splittedTopic.shift()
+      const deviceId = splittedTopic.shift()
       return {
         type: TOPIC_TYPES.DEVICE_PROPERTY,
-        deviceID,
+        deviceId,
         property: splittedTopic.join('/').substr(1),  // Remove $
         value
       }
@@ -42,7 +42,7 @@ class HomieTopicParser {
         type: TOPIC_TYPES.NODE_SPECIAL_PROPERTY,
         deviceId: splittedTopic[0],
         nodeId: splittedTopic[1],
-        property: splittedTopic[2],
+        property: splittedTopic[2].substr(1),
         value
       }
     } else if (length === 3) {  // Checking length to ensure there is no error in the topic
@@ -53,7 +53,7 @@ class HomieTopicParser {
         property: splittedTopic[2],
         value
       }
-    } else if (length === 4 && splittedTopic[2] === 'set') {  // If length is 4 and [5] is set then set
+    } else if (length === 4 && splittedTopic[3] === 'set') {  // If length is 4 and [5] is set then set
       return {
         type: TOPIC_TYPES.NODE_PROPERTY_SET,
         deviceId: splittedTopic[0],
