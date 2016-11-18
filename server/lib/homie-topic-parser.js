@@ -26,9 +26,12 @@ class HomieTopicParser {
     const length = splittedTopic.length
 
     if (length === 2 && splittedTopic[0] === '$broadcast') {  // Checking key word for global broadcast
+      const level = splittedTopic[1]
+      if (!validateIdFormat(level)) return { type: TOPIC_TYPES.INVALID }
+
       return {
         type: TOPIC_TYPES.BROADCAST,
-        level: splittedTopic[1],
+        level,
         value
       }
     } else if (length >= 2 && splittedTopic[1].startsWith('$')) {  // If [1] starts with $ then device property

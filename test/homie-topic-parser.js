@@ -11,6 +11,13 @@ test('parse a broadcast', t => {
   })
 })
 
+test('report invalid broadcast', t => {
+  const result = homieTopicParser.parse('homie/$broadcast/leve|', 'value')
+  t.deepEqual(result, {
+    type: TOPIC_TYPES.INVALID
+  })
+})
+
 test('report invalid first level topic', t => {
   const result = homieTopicParser.parse('homie/$lolipop', 'value')
   t.deepEqual(result, {
