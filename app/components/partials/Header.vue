@@ -4,11 +4,28 @@
       <header class="nav">
         <div class="container">
           <div class="nav-left">
-            <a class="nav-item is-brand">
+            <span class="nav-item is-brand">
               <figure class="image is-24x24">
                 <img src="../../assets/images/logo_white.png" alt="Logo">
               </figure>
-            </a>
+            </span>
+          </div>
+
+          <span @click="triggerMobileMenu" :class="{'nav-toggle': true, 'is-active': isMobileMenuActive}">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+
+          <div :class="{'nav-right': true, 'nav-menu': true, 'is-active': isMobileMenuActive}">
+            <span class="nav-item">
+              <a class="button is-light is-outlined">
+                <span class="icon">
+                  <i class="fa fa-plus-circle"></i>
+                </span>
+                <span>Ajouter un périphérique</span>
+              </a>
+            </span>
           </div>
         </div>
       </header>
@@ -42,8 +59,18 @@
 import {mapState} from 'eva.js'
 
 export default {
+  data () {
+    return {
+      isMobileMenuActive: false
+    }
+  },
   computed: {
     ...mapState(['route'])
+  },
+  methods: {
+    triggerMobileMenu () {
+      this.isMobileMenuActive = !this.isMobileMenuActive
+    }
   }
 }
 </script>
