@@ -3,10 +3,10 @@
     <div class="container">
       <div class="content has-text-centered">
         <p>
-          <strong>Homie Dashboard</strong> par <a href="https://github.com/INTECH-RGBH">RGBH Team</a>.
+          <strong>Homie Dashboard</strong> par <a target="_blank" href="https://github.com/INTECH-RGBH">RGBH Team</a>.
         </p>
         <p>
-          <a class="icon" href="https://github.com/INTECH-RGBH/homie-dashboard">
+          <a target="_blank" class="icon" href="https://github.com/INTECH-RGBH/homie-dashboard">
             <i class="fa fa-github"></i>
           </a>
         </p>
