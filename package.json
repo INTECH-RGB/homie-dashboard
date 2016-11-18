@@ -4,7 +4,10 @@
   "version": "1.0.0",
   "author": "RGB Team",
   "ava": {
-    "babel": "inherit"
+    "babel": "inherit",
+    "require": [
+      "babel-register"
+    ]
   },
   "babel": {
     "plugins": [
