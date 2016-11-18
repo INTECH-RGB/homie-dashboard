@@ -38,6 +38,7 @@ export default {
 <style lang="sass">
   $homiered: #e74c3c;
   $primary: $homiered;
+  $link-visited: $primary;
   @import "~bulma";
 
   $fa-font-path: "~font-awesome/fonts";
