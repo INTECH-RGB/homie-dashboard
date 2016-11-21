@@ -110,11 +110,11 @@ export default {
       axios.put(`${constants.HOMIE_ESP8266_AP_SERVER_URL}/config`, {
         name: 'Dashboard test device',
         wifi: {
-          ssid: 'Gilles-Marvin-Mathys_plus',
-          password: '0b3d210297'
+          ssid: 'SSID',
+          password: 'password'
         },
         mqtt: {
-          host: '192.168.1.20'
+          host: 'host'
         },
         ota: {
           enabled: true

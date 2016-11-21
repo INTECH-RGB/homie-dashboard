@@ -6,7 +6,7 @@ import initializeStore from './store/app'
 import Overview from './components/pages/Overview'
 import Devices from './components/pages/Devices'
 
-import AddDevice from './components/popups/AddDevice'
+import AddDevice from './components/standalones/AddDevice'
 
 const app = new EVA({ mode: 'history' })
 
