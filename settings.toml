@@ -1,0 +1,17 @@
+# Password securing your Homie Dashboard
+password = "abcd"
+
+# Credentials to your MQTT broker
+[mqtt]
+host = "127.0.0.1"
+port = 1883
+
+# Data needed for the configuration of homie-esp8266 devices
+[homie-esp8266]
+
+  [homie-esp8266.wifi]
+  ssid = "SSID"
+  password = "password"
+
+  [homie-esp8266.mqtt]
+  host = "192.168.1.10" #

@@ -1,7 +1,7 @@
 import createMqttClient from './lib/mqtt-client'
-export default function start (log, wss, db) {
-  const mqttClient = createMqttClient('mqtt://127.0.0.1:1883')
+export default function start ($deps) {
+  const mqttClient = createMqttClient(`mqtt://${$deps.settings.mqtt.host}:${$deps.settings.mqtt.port}`)
   mqttClient.on('connect', function onConnect () {
-    log.info('connected to broker')
+    $deps.log.info('connected to broker')
   })
 }
