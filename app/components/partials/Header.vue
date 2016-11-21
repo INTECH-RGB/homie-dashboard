@@ -19,7 +19,7 @@
 
           <div :class="{'nav-right': true, 'nav-menu': true, 'is-active': isMobileMenuActive}">
             <span class="nav-item">
-              <a class="button is-light is-outlined">
+              <a class="button is-light is-outlined" @click.prevent="openConfiguratorPopup">
                 <span class="icon">
                   <i class="fa fa-plus-circle"></i>
                 </span>
@@ -70,6 +70,9 @@ export default {
   methods: {
     triggerMobileMenu () {
       this.isMobileMenuActive = !this.isMobileMenuActive
+    },
+    openConfiguratorPopup () {
+      window.open('/ajout-peripherique', '', 'width=500, height=300')
     }
   }
 }

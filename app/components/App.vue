@@ -1,23 +1,29 @@
 
 <template>
   <div>
-    <div :class="{modal: true, 'is-active': !isConnected}">
-      <div class="modal-background"></div>
-      <div class="modal-content">
-        <div class="notification is-danger">
-          Tentative d'établissement de la connexion...
+    <template v-if="!$route.meta.standalone">
+      <div :class="{modal: true, 'is-active': !isConnected}">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <div class="notification is-danger">
+            Tentative d'établissement de la connexion...
+          </div>
         </div>
       </div>
-    </div>
-    <homie-header></homie-header>
 
-    <section class="section">
-      <div class="container">
-        <router-view></router-view>
-      </div>
-    </section>
+      <homie-header></homie-header>
 
-    <homie-footer></homie-footer>
+      <section class="section">
+        <div class="container">
+          <router-view></router-view>
+        </div>
+      </section>
+
+      <homie-footer></homie-footer>
+    </template>
+    <template v-else>
+      <router-view></router-view>
+    </template>
   </div>
 </template>
 

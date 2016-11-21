@@ -6,6 +6,8 @@ import initializeStore from './store/app'
 import Overview from './components/pages/Overview'
 import Devices from './components/pages/Devices'
 
+import AddDevice from './components/popups/AddDevice'
+
 const app = new EVA({ mode: 'history' })
 
 initializeStore(app)
@@ -13,6 +15,9 @@ initializeStore(app)
 app.router(route => [
   { meta: { title: "Vue d'ensemble" }, ...route('/', Overview) },
   { meta: { title: 'Périphériques' }, ...route('/peripheriques', Devices) },
+
+  { meta: { title: "Ajout d'un périphérique", standalone: true }, ...route('/ajout-peripherique', AddDevice) },
+
   { path: '*', redirect: '/' }
 ])
 
