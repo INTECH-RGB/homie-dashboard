@@ -33,7 +33,7 @@ async function wrapper () {
   try {
     db = await sqlite.open('./homie-dashboard.db')
     log.debug('database opened')
-    await db.migrate({ force: 'last' })
+    await db.migrate({ force: process.env.NODE_ENV === 'production' ? false : 'last' })
     log.debug('database migrated')
   } catch (err) {
     log.fatal('cannot open or migrate database', err)
