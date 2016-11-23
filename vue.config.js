@@ -1,14 +1,11 @@
-var CopyWebpackPlugin = require('copy-webpack-plugin')
-
-module.exports = {
+export default {
   title: 'Homie Dashboard',
   entry: './app/index.js',
+  static: {
+    from: './app/static'
+  },
   dist: './dist-app',
   template: './app/index.html',
   resolve: true,
-  mergeConfig: {
-    plugins: [
-      new CopyWebpackPlugin([{ from: 'app/assets/favicon.ico' }])
-    ]
-  }
+  vendor: ['vue', 'eva.js', 'eventemitter3', 'axios', 'uuid', 'cookie']
 }
