@@ -46,8 +46,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-  .image {
-    margin: auto;
-    margin-bottom: 10px;
-  }
+  .image
+    margin: auto
+    margin-bottom: 10px
 </style>

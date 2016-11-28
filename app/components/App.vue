@@ -42,11 +42,11 @@ export default {
 </script>
 
 <style lang="sass">
-  $homiered: #e74c3c;
-  $primary: $homiered;
-  $link-visited: $primary;
-  @import "~bulma";
+  $homiered: #e74c3c
+  $primary: $homiered
+  $link-visited: $primary
+  @import "~bulma"
 
-  $fa-font-path: "~font-awesome/fonts";
-  @import "~font-awesome/scss/font-awesome.scss";
+  $fa-font-path: "~font-awesome/fonts"
+  @import "~font-awesome/scss/font-awesome.scss"
 </style>
