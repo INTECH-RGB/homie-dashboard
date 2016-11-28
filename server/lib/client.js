@@ -1,6 +1,7 @@
 import {EventEmitter} from 'events'
 
 import {generateMessage, parseMessage, MESSAGE_TYPES} from '../../common/ws-messages'
+import {INFRASTRUCTURE_UPDATE} from '../../common/events'
 
 export default class Client extends EventEmitter {
   constructor (opts) {
@@ -9,6 +10,9 @@ export default class Client extends EventEmitter {
     this.$deps = opts.$deps
     this.ws = opts.ws
     this.mqttClient = opts.mqttClient
+    this.infrastructure = opts.infrastructure
+
+    this.ws.send(generateMessage({ type: MESSAGE_TYPES.EVENT, event: INFRASTRUCTURE_UPDATE, value: this.infrastructure.toJSON() }))
 
     this.ws.on('message', data => {
       const message = parseMessage(data)

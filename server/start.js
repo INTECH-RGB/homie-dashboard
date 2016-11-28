@@ -42,7 +42,7 @@ export default async function start ($deps) {
   const clients = new Set()
   $deps.wss.on('connection', function onConnection (ws) {
     $deps.log.debug('connection on websocket')
-    const client = new Client({ $deps, ws, mqttClient })
+    const client = new Client({ $deps, ws, mqttClient, infrastructure })
     client.on('close', function onClientClose () {
       clients.delete(client)
     })
