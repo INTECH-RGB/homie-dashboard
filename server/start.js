@@ -1,9 +1,10 @@
+import jsonpatch from 'fast-json-patch'
 import createMqttClient from './lib/mqtt-client'
 import Client from './lib/client'
 import MqttRelay from './lib/mqtt-relay'
 import infrastructure from './lib/infrastructure/infrastructure'
 import {generateMessage, MESSAGE_TYPES} from '../common/ws-messages'
-import {INFRASTRUCTURE_UPDATE} from '../common/events'
+import {INFRASTRUCTURE_PATCH} from '../common/events'
 import {syncInfrastructure, getAllDevices} from './services/database'
 
 const UPDATE_DELAY = 200
@@ -28,13 +29,17 @@ export default async function start ($deps) {
   /* Handle infrastructure updates */
 
   let updateDelay
+  let lastInfrastructure = infrastructure.toJSON()
   infrastructure.on('update', function onUpdate (update) {
     if (updateDelay) return
     updateDelay = setTimeout(async () => {
       updateDelay = null
       $deps.log.debug('synchronizing database')
       await syncInfrastructure($deps, infrastructure)
-      const message = generateMessage({ type: MESSAGE_TYPES.EVENT, event: INFRASTRUCTURE_UPDATE, value: infrastructure.toJSON() })
+      const currentInfrastructure = infrastructure.toJSON()
+      const patch = jsonpatch.compare(lastInfrastructure, currentInfrastructure)
+      lastInfrastructure = currentInfrastructure
+      const message = generateMessage({ type: MESSAGE_TYPES.EVENT, event: INFRASTRUCTURE_PATCH, value: patch })
       for (const client of $deps.wss.clients) {
         client.send(message)
       }

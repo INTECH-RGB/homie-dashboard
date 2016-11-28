@@ -33,6 +33,7 @@
     "cookie": "^0.3.1",
     "dotenv": "^2.0.0",
     "express": "^4.14.0",
+    "fast-json-patch": "^1.1.2",
     "mqtt": "^2.0.1",
     "sqlite": "^2.2.2",
     "toml": "^2.3.0",

@@ -18,6 +18,9 @@ export default class WebSocket extends EventEmitter {
 
       if (!this.stopped) setTimeout(this.start.bind(this), 2000)
     }
+    this.ws.onerror = (err) => {
+      this.emit('error', err)
+    }
     this.ws.onmessage = (event) => {
       this.emit('message', event.data)
     }
