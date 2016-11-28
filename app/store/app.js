@@ -1,7 +1,8 @@
 import WebSocket from '../lib/websocket'
 import {login, logout} from '../services/api'
-import {parseMessage, generateMessage, MESSAGE_TYPES} from '../../common/ws-messages'
+import {parseMessage, MESSAGE_TYPES} from '../../common/ws-messages'
 import {INFRASTRUCTURE_UPDATE} from '../../common/events'
+import wsRequest from '../helpers/ws-request'
 
 export const SET_IS_CONNECTED = 'SET_IS_CONNECTED'
 export const SET_IS_AUTHENTIFIED = 'SET_IS_AUTHENTIFIED'
@@ -53,9 +54,9 @@ export default function initializeStore (app) {
 
         return success
       },
-      setState ({commit}, opts) {
-        const message = generateMessage({
-          type: MESSAGE_TYPES.REQUEST,
+      async setState ({commit}, opts) {
+        const result = await wsRequest({
+          ws,
           method: 'setState',
           parameters: {
             deviceId: opts.deviceId,
@@ -63,7 +64,8 @@ export default function initializeStore (app) {
             property: opts.property,
             value: opts.value
           }})
-        ws.send(message)
+
+        return result
       }
     }
   })
