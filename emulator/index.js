@@ -17,6 +17,175 @@ const DEVICES = [
         ]
       }
     ]
+  },
+  {
+    id: 'lightdevice',
+    name: 'Lumière',
+    fw: { name: 'firmware', version: '1.0.0' },
+    nodes: [
+      {
+        id: 'lightnode',
+        type: 'light',
+        properties: [
+          { id: 'color', settable: true },
+          { id: 'intensity', settable: true }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'switchdevice',
+    name: 'Interrupteur',
+    fw: { name: 'firmware', version: '1.0.0' },
+    nodes: [
+      {
+        id: 'switchnode',
+        type: 'switch',
+        properties: [
+          { id: 'on', settable: true }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'humiditydevice',
+    name: 'Humidité',
+    fw: { name: 'firmware', version: '1.0.0' },
+    nodes: [
+      {
+        id: 'humiditynode',
+        type: 'humidity',
+        properties: [
+          { id: 'percentage', settable: false }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'shuttersdevice',
+    name: 'Volets',
+    fw: { name: 'firmware', version: '1.0.0' },
+    nodes: [
+      {
+        id: 'shuttersnode',
+        type: 'shutters',
+        properties: [
+          { id: 'percentage', settable: true }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'doordevice',
+    name: 'Porte',
+    fw: { name: 'firmware', version: '1.0.0' },
+    nodes: [
+      {
+        id: 'doornode',
+        type: 'door',
+        properties: [
+          { id: 'open', settable: false }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'windowdevice',
+    name: 'Fenêtre',
+    fw: { name: 'firmware', version: '1.0.0' },
+    nodes: [
+      {
+        id: 'windownode',
+        type: 'window',
+        properties: [
+          { id: 'window', settable: false }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'lockdevice',
+    name: 'Verrou',
+    fw: { name: 'firmware', version: '1.0.0' },
+    nodes: [
+      {
+        id: 'locknode',
+        type: 'lock',
+        properties: [
+          { id: 'open', settable: true }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'heaterdevice',
+    name: 'Chauffage',
+    fw: { name: 'firmware', version: '1.0.0' },
+    nodes: [
+      {
+        id: 'heaternode',
+        type: 'heater',
+        properties: [
+          { id: 'degrees', settable: true }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'sounddevice',
+    name: 'Son',
+    fw: { name: 'firmware', version: '1.0.0' },
+    nodes: [
+      {
+        id: 'soundnode',
+        type: 'sound',
+        properties: [
+          { id: 'intensity', settable: false }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'luminositydevice',
+    name: 'Luminosité',
+    fw: { name: 'firmware', version: '1.0.0' },
+    nodes: [
+      {
+        id: 'luminositynode',
+        type: 'luminosity',
+        properties: [
+          { id: 'lux', settable: false }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'motiondevice',
+    name: 'Chauffage',
+    fw: { name: 'firmware', version: '1.0.0' },
+    nodes: [
+      {
+        id: 'motionnode',
+        type: 'motion',
+        properties: [
+          { id: 'motion', settable: false }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'buzzerdevice',
+    name: 'Chauffage',
+    fw: { name: 'firmware', version: '1.0.0' },
+    nodes: [
+      {
+        id: 'buzzernode',
+        type: 'buzzer',
+        properties: [
+          { id: 'buzzing', settable: true }
+        ]
+      }
+    ]
   }
 ]
 
@@ -53,7 +222,13 @@ client.on('connect', function onConnect () {
     client.publish(`${BASE_TOPIC}/${device.id}/$online`, 'true', qos1Retained)
   }
 
+  client.subscribe('homie/+/+/+/set')
+
   interval = setInterval(sendAllStats, STATS_INTERVAL_IN_SECONDS * 1000)
+})
+
+client.on('message', function onMessage (topic, message) {
+  client.publish(topic.substr(0, topic.length - 4), message)
 })
 
 client.on('close', function onClose () {
@@ -75,6 +250,16 @@ const sendAllStats = function () {
     device.nodes.forEach(function (node) {
       if (node.type === 'temperature') {
         client.publish(`${BASE_TOPIC}/${device.id}/${node.id}/degrees`, (Math.floor(Math.random() * 30) + 0).toString(), qos1Retained)
+      } else if (node.type === 'humidity') {
+        client.publish(`${BASE_TOPIC}/${device.id}/${node.id}/percentage`, (Math.floor(Math.random() * 100) + 0).toString(), qos1Retained)
+      } else if (node.type === 'door' || node.type === 'window') {
+        client.publish(`${BASE_TOPIC}/${device.id}/${node.id}/open`, (Math.floor(Math.random() * 1) + 0) ? '1' : '0', qos1Retained)
+      } else if (node.type === 'sound') {
+        client.publish(`${BASE_TOPIC}/${device.id}/${node.id}/intensity`, (Math.floor(Math.random() * 30) + 0).toString(), qos1Retained)
+      } else if (node.type === 'luminosity') {
+        client.publish(`${BASE_TOPIC}/${device.id}/${node.id}/lux`, (Math.floor(Math.random() * 30) + 0).toString(), qos1Retained)
+      } else if (node.type === 'motion') {
+        client.publish(`${BASE_TOPIC}/${device.id}/${node.id}/motion`, (Math.floor(Math.random() * 1) + 0) ? '1' : '0', qos1Retained)
       }
     })
   }
