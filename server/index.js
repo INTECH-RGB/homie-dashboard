@@ -24,6 +24,9 @@ async function wrapper () {
   try {
     db = await sqlite.open('./homie-dashboard.db')
     log.debug('database opened')
+    await db.run('PRAGMA foreign_keys = ON')
+    const fk = await db.get('PRAGMA foreign_keys')
+    if (!fk || fk.foreign_keys !== 1) log.warn('no foreign key support')
     await db.migrate()
     log.debug('database migrated')
   } catch (err) {
