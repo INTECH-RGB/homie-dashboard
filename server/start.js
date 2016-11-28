@@ -1,4 +1,3 @@
-import throttle from 'lodash.throttle'
 import createMqttClient from './lib/mqtt-client'
 import Client from './lib/client'
 import MqttRelay from './lib/mqtt-relay'
@@ -7,7 +6,7 @@ import {generateMessage, MESSAGE_TYPES} from '../common/ws-messages'
 import {INFRASTRUCTURE_UPDATE} from '../common/events'
 import {syncInfrastructure, getAllDevices} from './services/database'
 
-const UPDATE_THROTTLE = 200
+const UPDATE_DELAY = 200
 
 export default async function start ($deps) {
   /* Populate the infrastructure from the DB */
@@ -28,14 +27,19 @@ export default async function start ($deps) {
 
   /* Handle infrastructure updates */
 
-  infrastructure.on('update', throttle(async (update) => {
-    $deps.log.debug('synchronizing database')
-    await syncInfrastructure($deps, infrastructure)
-    const message = generateMessage({ type: MESSAGE_TYPES.EVENT, event: INFRASTRUCTURE_UPDATE, value: infrastructure.toJSON() })
-    for (const client of $deps.wss.clients) {
-      client.send(message)
-    }
-  }, UPDATE_THROTTLE))
+  let updateDelay
+  infrastructure.on('update', function onUpdate (update) {
+    if (updateDelay) return
+    updateDelay = setTimeout(async () => {
+      updateDelay = null
+      $deps.log.debug('synchronizing database')
+      await syncInfrastructure($deps, infrastructure)
+      const message = generateMessage({ type: MESSAGE_TYPES.EVENT, event: INFRASTRUCTURE_UPDATE, value: infrastructure.toJSON() })
+      for (const client of $deps.wss.clients) {
+        client.send(message)
+      }
+    }, UPDATE_DELAY)
+  })
 
   /* Handle WS */
 
