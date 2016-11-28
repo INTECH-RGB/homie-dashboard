@@ -40,6 +40,8 @@ export async function deleteToken ({ db }, token) {
 
 export async function syncInfrastructure ({ db }, infrastructure) {
   for (let device of infrastructure.getDevices()) {
+    if (!device.isValid) return
+
     const deviceInDb = await db.get(
       `SELECT * FROM devices WHERE id = ?`,
       device.id
@@ -87,6 +89,8 @@ export async function syncInfrastructure ({ db }, infrastructure) {
     /* devices table now in sync */
 
     for (let node of device.getNodes()) {
+      if (!node.isValid) return
+
       const nodeInDb = await db.get(
         `SELECT * FROM nodes WHERE device_id = :device_id AND device_node_id = :device_node_id`, {
           ':device_id': device.id,
@@ -121,6 +125,8 @@ export async function syncInfrastructure ({ db }, infrastructure) {
       /* syncing properties */
 
       for (let property of node.getProperties()) {
+        if (!property.isValid) return
+
         const propertyInDb = await db.get(
           `SELECT * FROM properties WHERE node_id = :node_id AND node_property_id = :node_property_id`, {
             ':node_id': nodeId,
