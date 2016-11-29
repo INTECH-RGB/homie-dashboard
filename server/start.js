@@ -7,7 +7,7 @@ import {generateMessage, MESSAGE_TYPES} from '../common/ws-messages'
 import {INFRASTRUCTURE_PATCH} from '../common/events'
 import {syncInfrastructure, getAllDevices} from './services/database'
 
-const UPDATE_DELAY = 200
+const UPDATE_DELAY = 150
 
 export default async function start ($deps) {
   /* Populate the infrastructure from the DB */
