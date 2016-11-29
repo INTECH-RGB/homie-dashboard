@@ -7,7 +7,7 @@ import {generateMessage, MESSAGE_TYPES} from '../common/ws-messages'
 import {INFRASTRUCTURE_PATCH} from '../common/events'
 import {syncInfrastructure, getAllDevices} from './services/database'
 
-const UPDATE_DELAY = 150
+const DB_SYNC_DELAY = 500
 
 export default async function start ($deps) {
   /* Populate the infrastructure from the DB */
@@ -28,22 +28,23 @@ export default async function start ($deps) {
 
   /* Handle infrastructure updates */
 
-  let updateDelay
+  let dbSyncDelay
   let lastInfrastructure = infrastructure.toJSON()
   infrastructure.on('update', function onUpdate (update) {
-    if (updateDelay) return
-    updateDelay = setTimeout(async () => {
-      updateDelay = null
+    const currentInfrastructure = infrastructure.toJSON()
+    const patch = jsonpatch.compare(lastInfrastructure, currentInfrastructure)
+    lastInfrastructure = currentInfrastructure
+    const message = generateMessage({ type: MESSAGE_TYPES.EVENT, event: INFRASTRUCTURE_PATCH, value: patch })
+    for (const client of $deps.wss.clients) {
+      client.send(message)
+    }
+
+    if (dbSyncDelay) return
+    dbSyncDelay = setTimeout(async () => {
+      dbSyncDelay = null
       $deps.log.debug('synchronizing database')
       await syncInfrastructure($deps, infrastructure)
-      const currentInfrastructure = infrastructure.toJSON()
-      const patch = jsonpatch.compare(lastInfrastructure, currentInfrastructure)
-      lastInfrastructure = currentInfrastructure
-      const message = generateMessage({ type: MESSAGE_TYPES.EVENT, event: INFRASTRUCTURE_PATCH, value: patch })
-      for (const client of $deps.wss.clients) {
-        client.send(message)
-      }
-    }, UPDATE_DELAY)
+    }, DB_SYNC_DELAY)
   })
 
   /* Handle WS */
