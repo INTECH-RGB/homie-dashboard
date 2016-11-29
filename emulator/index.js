@@ -161,7 +161,7 @@ const DEVICES = [
   },
   {
     id: 'motiondevice',
-    name: 'Chauffage',
+    name: 'Mouvement',
     fw: { name: 'firmware', version: '1.0.0' },
     nodes: [
       {
@@ -175,7 +175,7 @@ const DEVICES = [
   },
   {
     id: 'buzzerdevice',
-    name: 'Chauffage',
+    name: 'Buzzer',
     fw: { name: 'firmware', version: '1.0.0' },
     nodes: [
       {
