@@ -31,22 +31,23 @@
 </template>
 
 <script>
-import CardDevice from "./Card"
-import {mapActions} from "eva.js"
+import CardDevice from './Card'
+import {mapActions} from 'eva.js'
 
 export default {
   props: ['state', 'deviceId', 'nodeId'],
 
-  components:{CardDevice},
+  components: {CardDevice},
   methods: {
-    setIntensity(percentage){
+    setIntensity (percentage) {
       this.setState({
         deviceId: this.deviceId,
         nodeId: this.nodeId,
-        property: "percentage",
+        property: 'percentage',
         value: percentage.toString()
       })
-    },...mapActions(["setState"])
+    },
+    ...mapActions(['setState'])
   }
 }
 </script>

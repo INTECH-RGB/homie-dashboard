@@ -5,19 +5,26 @@
     </div>
     <div slot="main">
       <div class="has-text-centered">
-          <p v-if="state.percentage" class="title">{{state.percentage.value}} %</p>
+        <p class="title">
+          <template v-if="state.percentage">
+            {{ state.percentage.value }} %
+          </template>
+          <template v-else>
+            ?
+          </template>
+        </p>
       </div>
     </div>
   </card-device>
 </template>
 
 <script>
-import CardDevice from "./Card"
+import CardDevice from './Card'
 
 export default {
   props: ['state', 'deviceId', 'nodeId'],
 
-  components:{CardDevice}
+  components: {CardDevice}
 }
 </script>
 

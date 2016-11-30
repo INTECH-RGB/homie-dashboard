@@ -18,38 +18,44 @@
       <a class="button " style="background-color:rgb(255,0,127)" @click="changeColor('255,0,127')"> > </a>
       <a class="button "style="background-color:rgb(255,255,0)" @click="changeColor('255,255,0')"> > </a>
       <a class="button "style="background-color:rgb(255,255,255)" @click="changeColor('255,255,255')"> > </a>
-      
+
     </div>
   </card-device>
 </template>
 
 <script>
-import CardDevice from "./Card"
-import {mapActions} from "eva.js"
+import CardDevice from './Card'
+import {mapActions} from 'eva.js'
 
 export default {
-  computed:{
-    rgbVar(){ return {backgroundColor: "rgb(" + parseInt(this.state.color.value.split(',')[0]) + ',' + parseInt(this.state.color.value.split(',')[1]) + ',' + parseInt(this.state.color.value.split(',')[2]) + ")" }}
+  computed: {
+    rgbVar () {
+      return {
+        backgroundColor: `rgb(${parseInt(this.state.color.value.split(',')[0])},${parseInt(this.state.color.value.split(',')[1])},${parseInt(this.state.color.value.split(',')[2])}`
+      }
+    }
   },
   props: ['state', 'deviceId', 'nodeId'],
-  components:{CardDevice},
+  components: {CardDevice},
   methods: {
-    setIntensity(percentage){
+    setIntensity (percentage) {
       this.setState({
         deviceId: this.deviceId,
         nodeId: this.nodeId,
-        property: "intensity",
+        property: 'intensity',
         value: percentage.toString()
       })
-    },...mapActions(["setState"]),
-    changeColor(rgb){
-        this.setState({
+    },
+    ...mapActions(['setState']),
+    changeColor (rgb) {
+      this.setState({
         deviceId: this.deviceId,
         nodeId: this.nodeId,
-        property: "color",
+        property: 'color',
         value: rgb
       })
-    },...mapActions(["setState"])
+    },
+    ...mapActions(['setState'])
   }
 }
 </script>

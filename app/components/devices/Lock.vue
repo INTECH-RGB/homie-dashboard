@@ -8,9 +8,14 @@
 
     <div slot="main">
       <div class="has-text-centered">
-        <template v-if = "state.open">
-          <p class="title">{{ state.open.value === '1' ? 'Déverrouillé' : 'Verrouillé' }}</p>
-        </template>
+        <p class="title">
+          <template v-if="state.open">
+            {{ state.open.value === '1' ? 'Déverrouillé' : 'Verrouillé' }}
+          </template>
+          <template v-else>
+            ?
+          </template>
+        </p>
       </div>
     </div>
 
@@ -22,23 +27,24 @@
 </template>
 
 <script>
-import CardDevice from "./Card"
-import {mapActions} from "eva.js"
+import CardDevice from './Card'
+import {mapActions} from 'eva.js'
 
 export default {
   props: ['state', 'deviceId', 'nodeId'],
 
-  components:{CardDevice},
+  components: {CardDevice},
 
-  methods : {
-    async turnLock(open) {
-       await this.setState({
-            deviceId: this.deviceId,
-            nodeId: this.nodeId,
-            property: "open",
-             value: open ? '1' : '0'})
+  methods: {
+    async turnLock (open) {
+      await this.setState({
+        deviceId: this.deviceId,
+        nodeId: this.nodeId,
+        property: 'open',
+        value: open ? '1' : '0'
+      })
     },
-    ...mapActions(["setState"])
+    ...mapActions(['setState'])
   }
 }
 </script>

@@ -10,9 +10,14 @@
 
     <div slot="main">
       <div class="has-text-centered">
-        <template v-if = "state.degrees">
-          <p class="title">{{ state.degrees.value }} °C</p>
-        </template>
+        <p class="title">
+          <template v-if="state.degrees">
+            {{ state.degrees.value }} °C
+          </template>
+          <template v-else>
+            ?
+          </template>
+        </p>
       </div>
     </div>
 
@@ -27,7 +32,7 @@
 
 <script>
 import {mapActions} from 'eva.js'
-import CardDevice from "./Card"
+import CardDevice from './Card'
 
 export default {
   props: ['state', 'deviceId', 'nodeId'],
@@ -42,7 +47,7 @@ export default {
     },
     ...mapActions(['setState'])
   },
-  components:{CardDevice}
+  components: {CardDevice}
 }
 </script>
 

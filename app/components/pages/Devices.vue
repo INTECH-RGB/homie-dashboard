@@ -14,21 +14,21 @@
 </template>
 
 <script>
-import {mapState} from "eva.js"
+import {mapState} from 'eva.js'
 
-import SwitchDevice from "../devices/Switch"
-import LightDevice from "../devices/Light"
-import TemperatureDevice from "../devices/Temperature"
-import HumidityDevice from "../devices/Humidity"
-import ShuttersDevice from "../devices/Shutters"
-import DoorDevice from "../devices/Door"
-import WindowDevice from "../devices/Window"
-import LockDevice from "../devices/Lock"
-import HeaterDevice from "../devices/Heater"
-import SoundDevice from "../devices/Sound"
-import LuminosityDevice from "../devices/Luminosity"
-import MotionDevice from "../devices/Motion"
-import BuzzerDevice from "../devices/Buzzer"
+import SwitchDevice from '../devices/Switch'
+import LightDevice from '../devices/Light'
+import TemperatureDevice from '../devices/Temperature'
+import HumidityDevice from '../devices/Humidity'
+import ShuttersDevice from '../devices/Shutters'
+import DoorDevice from '../devices/Door'
+import WindowDevice from '../devices/Window'
+import LockDevice from '../devices/Lock'
+import HeaterDevice from '../devices/Heater'
+import SoundDevice from '../devices/Sound'
+import LuminosityDevice from '../devices/Luminosity'
+import MotionDevice from '../devices/Motion'
+import BuzzerDevice from '../devices/Buzzer'
 
 export default {
   data () {
@@ -51,7 +51,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["infrastructure"])
+    ...mapState(['infrastructure'])
   }
 }
 

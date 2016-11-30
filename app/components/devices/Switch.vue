@@ -7,9 +7,14 @@
     </div>
     <div slot="main">
       <div class="has-text-centered">
-        <template v-if = "state.on">
-          <p class="title">{{ state.on.value === '1' ? 'ON' : 'OFF' }}</p>
-        </template>
+        <p class="title">
+          <template v-if="state.on">
+            {{ state.on.value === '1' ? 'ON' : 'OFF' }}
+          </template>
+          <template v-else>
+            ?
+          </template>
+        </p>
       </div>
     </div>
     <template slot="footer">
@@ -20,22 +25,22 @@
 </template>
 
 <script>
-import CardDevice from "./Card"
-import {mapActions} from "eva.js"
+import CardDevice from './Card'
+import {mapActions} from 'eva.js'
 
 export default {
   props: ['state', 'deviceId', 'nodeId'],
-  components:{CardDevice},
+  components: {CardDevice},
   methods: {
-    turnSwitch(on){
+    turnSwitch (on) {
       this.setState({
         deviceId: this.deviceId,
         nodeId: this.nodeId,
-        property: "on",
+        property: 'on',
         value: on ? '1' : '0'
       })
     },
-    ...mapActions(["setState"])
+    ...mapActions(['setState'])
   }
 }
 </script>

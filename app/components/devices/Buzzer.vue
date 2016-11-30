@@ -7,9 +7,14 @@
     </div>
     <div slot="main">
       <div class="has-text-centered">
-        <template v-if = "state.buzzing">
-          <p class="title">{{ state.buzzing.value === '1' ? 'Actif' : 'Inactif' }}</p>
-        </template>
+        <p class="title">
+          <template v-if="state.buzzing">
+            {{ state.buzzing.value === '1' ? 'Actif' : 'Inactif' }}
+          </template>
+          <template v-else>
+            ?
+          </template>
+        </p>
       </div>
     </div>
     <template slot="footer">
@@ -20,23 +25,23 @@
 </template>
 
 <script>
-import CardDevice from "./Card"
-import {mapActions} from "eva.js"
+import CardDevice from './Card'
+import {mapActions} from 'eva.js'
 
 export default {
   props: ['state', 'deviceId', 'nodeId'],
 
-  components:{CardDevice},
+  components: {CardDevice},
   methods: {
-    turnBuzzer(on){
+    turnBuzzer (on) {
       this.setState({
         deviceId: this.deviceId,
         nodeId: this.nodeId,
-        property: "buzzing",
+        property: 'buzzing',
         value: on ? '1' : '0'
       })
     },
-    ...mapActions(["setState"])
+    ...mapActions(['setState'])
   }
 }
 </script>

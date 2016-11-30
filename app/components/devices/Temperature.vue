@@ -5,20 +5,27 @@
       <!--<canvas ref="canvas"></canvas>-->
     </div>
     <div slot="main">
-     <div class="has-text-centered">
-          <p class="title">{{state.degrees ? state.degrees.value : ''}} °C</p>
-        </div>
+      <div class="has-text-centered">
+        <p class="title">
+          <template v-if="state.degrees">
+            {{ state.degrees.value }} °C
+          </template>
+          <template v-else>
+            ?
+          </template>
+        </p>
+      </div>
     </div>
   </card-device>
 </template>
 
 <script>
-import CardDevice from "./Card"
+import CardDevice from './Card'
 
 export default {
   props: ['state', 'deviceId', 'nodeId'],
 
-  components:{CardDevice}
+  components: {CardDevice}
 }
 </script>
 

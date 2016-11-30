@@ -27,7 +27,4 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-  .card
-    height: 100%
-  
 </style>
