@@ -4,13 +4,25 @@ import Device from './infrastructure/device'
 import Node from './infrastructure/node'
 import Property from './infrastructure/property'
 
+/**
+ * This class glues the MQTT with the infrastructure
+ @augments EventEmitter
+ */
 export default class MqttRelay extends EventEmitter {
+  /**
+   * Constructor
+   @param {$deps: Object, mqttClient: MqttClient, infrastructure: Infrastructure}
+   */
   constructor ({ $deps, mqttClient, infrastructure }) {
     super()
     this.$deps = $deps
     this.mqttClient = mqttClient
     this.infrastructure = infrastructure
 
+    this.mqttClient.on('connect', function onConnect () {
+      $deps.log.info('connected to broker')
+      mqttClient.subscribe('homie/#', { qos: 1 })
+    })
     this.mqttClient.on('message', (topic, value) => {
       const message = homieTopicParser.parse(topic, value.toString())
       if (message.type === TOPIC_TYPES.INVALID) return

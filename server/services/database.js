@@ -3,9 +3,15 @@ import {dateToSqlite} from '../helpers/sqlite'
 import Device from '../lib/infrastructure/device'
 import Node from '../lib/infrastructure/node'
 import Property from '../lib/infrastructure/property'
+import Tag from '../lib/infrastructure/tag'
 
 /* Auth */
 
+/**
+ * This function generates and inserts an auth token in the database
+ * @param {db: Database} $deps dependencies
+ * @returns {Promise} promise, to be resolved on success with the token or rejected on failure
+ */
 export async function createAuthToken ({ db }) {
   const token = uuid()
   const now = new Date()
@@ -18,6 +24,12 @@ export async function createAuthToken ({ db }) {
   return token
 }
 
+/**
+ * This function checks whether the given auth token exists in the database
+ * @param {db: Database} $deps dependencies
+ * @param {string} token the token to check
+ * @returns {Promise} promise, to be resolved on success with an existence bool or rejected on failure
+ */
 export async function checkToken ({ db }, token) {
   const record = await db.get(
     'SELECT * FROM auth_tokens WHERE token = ?',
@@ -27,6 +39,12 @@ export async function checkToken ({ db }, token) {
   return record !== undefined
 }
 
+/**
+ * This function deletes the given auth token in the database
+ * @param {db: Database} $deps dependencies
+ * @param {string} token the token to delete
+ * @returns {Promise} promise, to be resolved on success with a successful bool or rejected on failure
+ */
 export async function deleteToken ({ db }, token) {
   const result = await db.run(
     'DELETE FROM auth_tokens WHERE token = ?',
@@ -38,7 +56,41 @@ export async function deleteToken ({ db }, token) {
 
 /* Devices */
 
+/**
+ * This function synchronizes the infrastructure with the database.
+ * It iterates through all devices, nodes, properties and tags of the infrastructure,
+ * and updates the SQLite database accordingly
+ * @param {db: Database} $deps dependencies
+ * @param {Infrastructure} infrastructure the infrastructure to synchronize from
+ * @returns {Promise} promise, to be resolved on success or rejected on failure
+ */
 export async function syncInfrastructure ({ db }, infrastructure) {
+  /* Synchronize tags */
+
+  for (let tag of infrastructure.getTags()) {
+    await db.run(
+      `INSERT INTO tags (id)
+      SELECT :id
+      WHERE (SELECT id FROM tags WHERE id = :id) IS NULL
+      `, {
+        ':id': tag.id
+      })
+  }
+
+  const tagsInDb = await db.all(
+    `SELECT * FROM tags`
+  )
+
+  const tagsIdsToDelete = tagsInDb.filter(tag => !infrastructure.hasTag(tag.id)).map(tag => tag.id)
+  for (let tagIdToDelete of tagsIdsToDelete) {
+    await db.run(
+      'DELETE FROM tags WHERE id = ?',
+      tagIdToDelete
+    )
+  }
+
+  /* Synchronize devices */
+
   for (let device of infrastructure.getDevices()) {
     if (!device.isValid) return
 
@@ -122,6 +174,32 @@ export async function syncInfrastructure ({ db }, infrastructure) {
         nodeId = statement.lastID
       }
 
+      /* syncing tags */
+
+      for (const tag of node.getTags()) {
+        await db.run(
+          `INSERT INTO nodes_tags (node_id, tag_id)
+          SELECT :node_id, :tag_id
+          WHERE (SELECT id FROM nodes_tags WHERE node_id = :node_id AND tag_id = :tag_id) IS NULL
+          `, {
+            ':node_id': nodeId,
+            ':tag_id': tag.id
+          })
+      }
+
+      const nodeTagsInDb = await db.all(
+        `SELECT * FROM nodes_tags WHERE node_id = ?`,
+        nodeId
+      )
+
+      const nodeTagsIdsToDelete = nodeTagsInDb.filter(nodeTag => !node.hasTag(infrastructure.getTag(nodeTag.tag_id))).map(nodeTag => nodeTag.id)
+      for (let nodeTagIdToDelete of nodeTagsIdsToDelete) {
+        await db.run(
+          'DELETE FROM nodes_tags WHERE id = ?',
+          nodeTagIdToDelete
+        )
+      }
+
       /* syncing properties */
 
       for (let property of node.getProperties()) {
@@ -164,7 +242,37 @@ export async function syncInfrastructure ({ db }, infrastructure) {
   }
 }
 
-export async function getAllDevices ({ db }, infrastructure) {
+/**
+ * This function synchronizes the database with the infrastructure.
+ * It iterates through all devices, nodes, properties and tags of the SQLite database,
+ * and updates the infrastructure accordingly
+ * @param {db: Database} $deps dependencies
+ * @param {Infrastructure} infrastructure the infrastructure to synchronize against
+ * @returns {Promise} promise, to be resolved on success or rejected on failure
+ */
+export async function getInfrastructure ({ db }, infrastructure) {
+  /* Tags */
+
+  const tags = await db.all(
+    `SELECT id
+    FROM tags
+    `)
+
+  for (const tagInDb of tags) {
+    if (!infrastructure.hasTag(tagInDb['id'])) {
+      const tag = new Tag()
+      tag.id = tagInDb['id']
+      infrastructure.addTag(tag)
+    }
+  }
+
+  /* Devices */
+
+  const tagsPerNodes = await db.all(
+    `SELECT tag_id, node_id
+    FROM nodes_tags
+    `)
+
   const values = await db.all(
     `SELECT
       d.id AS 'd.id',
@@ -179,6 +287,7 @@ export async function getAllDevices ({ db }, infrastructure) {
       d.fw_version AS 'd.fw_version',
       d.fw_checksum AS 'd.fw_checksum',
       d.implementation AS 'd.implementation',
+      n.id AS 'n.id',
       n.device_node_id AS 'n.device_node_id',
       n.type AS 'n.type',
       n.properties AS 'n.properties',
@@ -197,7 +306,7 @@ export async function getAllDevices ({ db }, infrastructure) {
       device = new Device()
       device.id = value['d.id']
       device.name = value['d.name']
-      device.online = value['d.online']
+      device.online = value['d.online'] === 1
       device.localIp = value['d.local_ip']
       device.mac = value['d.mac']
       device.setStatProperty('signal', parseInt(value['d.stats_signal'], 10))
@@ -217,6 +326,7 @@ export async function getAllDevices ({ db }, infrastructure) {
       node.id = value['n.device_node_id']
       node.type = value['n.type']
       node.propertiesDefinition = value['n.properties']
+      for (const tagPerNode of tagsPerNodes) if (tagPerNode.node_id === value['n.id']) node.addTag(infrastructure.getTag(tagPerNode.tag_id))
       device.addNode(node)
     } else node = device.getNode(value['n.device_node_id'])
 

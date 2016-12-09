@@ -1,5 +1,8 @@
 import {EventEmitter} from 'events'
 
+/**
+ * This class represents a device
+ */
 export default class Device extends EventEmitter {
   constructor () {
     super()
@@ -123,6 +126,7 @@ export default class Device extends EventEmitter {
     const representation = {}
     representation.id = this.id
     representation.name = this.name
+    representation.online = this.online
     representation.localIp = this.localIp
     representation.mac = this.mac
     representation.stats = {

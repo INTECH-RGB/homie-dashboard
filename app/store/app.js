@@ -19,7 +19,10 @@ export default function initializeStore (app) {
       isAuthentified: false,
       websocketAuthFailed: false,
       intendedRoute: '/',
-      infrastructure: {}
+      infrastructure: {
+        devices: {},
+        tags: {}
+      }
     },
     mutations: {
       [SET_IS_CONNECTED] (state, connected) {
@@ -41,7 +44,7 @@ export default function initializeStore (app) {
         jsonpatch.apply(state.infrastructure, patch)
 
         for (const op of patch) {
-          if (op.op === 'add') {
+          if (op.op === 'add' || op.op === 'remove') {
             state.infrastructure = JSON.parse(JSON.stringify(state.infrastructure))
             break
           }
@@ -84,6 +87,42 @@ export default function initializeStore (app) {
           }})
 
         return result
+      },
+      async createTag ({commit}, opts) {
+        const result = await wsRequest({
+          ws,
+          method: 'createTag',
+          parameters: {
+            id: opts.id
+          }
+        })
+
+        return result
+      },
+      async toggleTag ({commit}, opts) {
+        const result = await wsRequest({
+          ws,
+          method: 'toggleTag',
+          parameters: {
+            deviceId: opts.deviceId,
+            nodeId: opts.nodeId,
+            tagId: opts.tagId,
+            operationAdd: opts.operationAdd
+          }
+        })
+
+        return result
+      },
+      async deleteTag ({commit}, opts) {
+        const result = await wsRequest({
+          ws,
+          method: 'deleteTag',
+          parameters: {
+            tagId: opts.tagId
+          }
+        })
+
+        return result
       }
     }
   })
@@ -99,8 +138,7 @@ export default function initializeStore (app) {
       ws.stop()
       app.$router.replace('/authentification')
     }
-  }).on('error', function onError (err) {
-    console.log(err)
+  }).on('error', function onError () {
   })
 
   ws.on('message', function onMessage (data) {

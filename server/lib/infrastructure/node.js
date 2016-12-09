@@ -1,5 +1,8 @@
 import {EventEmitter} from 'events'
 
+/**
+ * This class represents a node
+ */
 export default class Node extends EventEmitter {
   constructor () {
     super()
@@ -11,6 +14,8 @@ export default class Node extends EventEmitter {
     this._propertiesDefinition = null
 
     this._properties = new Map()
+
+    this._tags = new Set()
 
     this.isValid = false
 
@@ -35,6 +40,24 @@ export default class Node extends EventEmitter {
 
   getProperties () {
     return this._properties.values()
+  }
+
+  addTag (tag) {
+    this._tags.add(tag)
+    this._wasUpdated()
+  }
+
+  deleteTag (tag) {
+    this._tags.delete(tag)
+    this._wasUpdated()
+  }
+
+  hasTag (tag) {
+    return this._tags.has(tag)
+  }
+
+  getTags () {
+    return this._tags.values()
   }
 
   get device () { return this._device }
@@ -92,6 +115,8 @@ export default class Node extends EventEmitter {
     for (const property of this.getProperties()) {
       if (property.isValid) representation.properties[property.id] = property.toJSON()
     }
+    representation.tags = []
+    for (const tag of this.getTags()) representation.tags.push(tag.id)
 
     return representation
   }

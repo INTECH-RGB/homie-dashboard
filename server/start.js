@@ -5,22 +5,18 @@ import MqttRelay from './lib/mqtt-relay'
 import infrastructure from './lib/infrastructure/infrastructure'
 import {generateMessage, MESSAGE_TYPES} from '../common/ws-messages'
 import {INFRASTRUCTURE_PATCH} from '../common/events'
-import {syncInfrastructure, getAllDevices} from './services/database'
+import {syncInfrastructure, getInfrastructure} from './services/database'
 
-const DB_SYNC_DELAY = 30 * 1000
+const DB_SYNC_DELAY = 15 * 1000
 
 export default async function start ($deps) {
   /* Populate the infrastructure from the DB */
 
-  await getAllDevices($deps, infrastructure)
+  await getInfrastructure($deps, infrastructure)
 
   /* Initialize the MQTT client */
 
   const mqttClient = createMqttClient(`mqtt://${$deps.settings.mqtt.host}:${$deps.settings.mqtt.port}`)
-  mqttClient.on('connect', function onConnect () {
-    $deps.log.info('connected to broker')
-    mqttClient.subscribe('homie/#', { qos: 1 })
-  })
 
   /* Hook the infrastructure to the MQTT */
 
