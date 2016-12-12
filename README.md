@@ -1,5 +1,6 @@
-Homie Dashboard
-===============
+![Homie Dashboard banner](banner.png)
+
+<h1 align="center">Homie Dashboard</h1>
 
 [![Build Status](https://travis-ci.org/INTECH-RGBH/homie-dashboard.svg?branch=master)](https://travis-ci.org/INTECH-RGBH/homie-dashboard) [![Coverage Status](https://coveralls.io/repos/github/INTECH-RGBH/homie-dashboard/badge.svg?branch=master)](https://coveralls.io/github/INTECH-RGBH/homie-dashboard?branch=master) [![Known Vulnerabilities](https://snyk.io/test/github/intech-rgbh/homie-dashboard/badge.svg)](https://snyk.io/test/github/intech-rgbh/homie-dashboard) [![dependencies Status](https://david-dm.org/INTECH-RGBH/homie-dashboard/status.svg)](https://david-dm.org/INTECH-RGBH/homie-dashboard) [![devDependencies Status](https://david-dm.org/INTECH-RGBH/homie-dashboard/dev-status.svg)](https://david-dm.org/INTECH-RGBH/homie-dashboard?type=dev)
 
