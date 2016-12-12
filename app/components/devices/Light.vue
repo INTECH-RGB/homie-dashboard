@@ -1,32 +1,37 @@
 <template>
   <node :hasActions="true" :nodeData="nodeData">
-    <div slot="img">
-
-      <img v-if="nodeData.properties.intensity && parseInt(nodeData.properties.intensity.value) > 0" src="../../assets/images/icons/light/on.png" alt="" v-bind:style="{opacity:nodeData.properties.intensity.value / 100}">
-      <img v-else-if="nodeData.properties.intensity && parseInt(nodeData.properties.intensity.value) === 0 " src="../../assets/images/icons/light/off.png" alt="">
-
-      <img v-else src="../../assets/images/icons/common/unknown.png" alt="" >
-    </div>
-    <div slot="main">
+    
+    <template slot="img">
       <div class="has-text-centered">
-      <p>
-        <button v-if="nodeData.properties.color" class="button is-fullwidth" v-bind:style="rgbVar">Couleur Actuelle</button>
-        <button v-else class="button is-fullwidth">Couleur non définie</button>
-        <br>
-        <a class="button " style="background-color:rgb(255,0,127)" @click="changeColor('255,0,127')"> > </a>
-        <a class="button "style="background-color:rgb(255,255,0)" @click="changeColor('255,255,0')"> > </a>
-        <a class="button "style="background-color:rgb(255,255,255)" @click="changeColor('255,255,255')"> > </a>
-      </p>
-       <p>
-
-       </p>
-        <input type='range' v-model="rangeValue"  min='0' max='100' @change="setIntensity()"/>
+        <i v-if="nodeData.properties.intensity" class="fa fa-lightbulb-o " aria-hidden="true" :style="imgDataStyle"></i>
+        <img v-else src="../../assets/images/icons/common/unknown.png" alt="" >
       </div>
-    </div>
+    </template>
+    <template slot="main">
+      <div class="has-text-centered">
+      <div id="overlay" style="">
+        <chrome-picker :class="overlay" v-model="colors" @change-color="onChange" style="witdh:60px;height:60px"></chrome-picker>
+      </div>
+
+      <p class="title">
+          <template v-if="nodeData.properties.intensity">
+                {{ nodeData.properties.intensity.value }} %
+          </template>
+          <template v-else>
+                ?
+          </template>
+        </p>
+      </div>
+    </template>
+    <template slot="footer">
+      <a href="" class="card-footer-item" @click.prevent="showOverlay()"> Change Color </a> 
+    </template>
   </node>
+  
 </template>
 
 <script>
+import {Chrome} from 'vue-color'
 import {Component as Node, mixin as nodeMixin} from './Node.js'
 import {mapActions} from 'eva.js'
 
@@ -34,13 +39,49 @@ export default {
   mixins: [nodeMixin],
   data () {
     return {
-      rangeValue: this.nodeData.properties.intensity ? this.nodeData.properties.intensity.value : 0
-    }
+      colors: {
+        hex: '#194d33',
+        hsl: {
+          h: 150,
+          s: 0.5,
+          l: 0.2,
+          a: 1
+        },
+        hsv: {
+          h: 150,
+          s: 0.66,
+          v: 0.30,
+          a: 1
+        },
+        rgba: {
+          r: 25,
+          g: 77,
+          b: 51,
+          a: 1
+        },
+        a: 1
+      },
+      overlay: "is-hidden"
+    } 
   },
   computed: {
-    rgbVar () {
-      return {
-        backgroundColor: `rgb(${parseInt(this.nodeData.properties.color.value.split(',')[0])},${parseInt(this.nodeData.properties.color.value.split(',')[1])},${parseInt(this.nodeData.properties.color.value.split(',')[2])}`
+    
+    imgDataStyle(){
+      if(this.nodeData.properties.intensity && parseInt(this.nodeData.properties.intensity.value) <= 1)
+      {
+        return {
+                fontSize: '1725%',
+                opacity: 10 / 100,
+                color: 'rgb(0,0,0)'
+        }
+      }
+      else
+      {
+        return {
+                fontSize: '1725%',
+                opacity: this.nodeData.properties.intensity.value / 100,
+                color: this.nodeData.properties.color ? `rgb(${parseInt(this.nodeData.properties.color.value.split(',')[0])},${parseInt(this.nodeData.properties.color.value.split(',')[1])},${parseInt(this.nodeData.properties.color.value.split(',')[2])}` : 'rgb(0,0,0)'
+         }
       }
     },
     styleRedBackground () {
@@ -50,14 +91,14 @@ export default {
       }
     }
   },
-  components: {Node},
+  components: {Node, 'chrome-picker': Chrome},
   methods: {
-    setIntensity () {
+    setIntensity (rangeValue) {
       this.setState({
         deviceId: this.nodeData.device.id,
         nodeId: this.nodeData.id,
         property: 'intensity',
-        value: this.rangeValue.toString()
+        value: rangeValue.toString()
       })
     },
     ...mapActions(['setState']),
@@ -69,9 +110,21 @@ export default {
         value: rgb
       })
     },
-    ...mapActions(['setState'])
+    ...mapActions(['setState']),
+    onChange(rgb)
+    {
+      this.changeColor(rgb.rgba.r+','+rgb.rgba.g+','+rgb.rgba.b)
+      this.setIntensity(Math.round(rgb.rgba.a * 100))
+    },
+    showOverlay()
+    {
+      if(this.overlay === "is-hidden") this.overlay = "is-overlay"
+      else this.overlay = "is-hidden"
+    }
+
   }
 }
+
 </script>
 
 <style lang="sass">
