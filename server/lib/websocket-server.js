@@ -32,8 +32,6 @@ export default function createWebsocketServer (opts) {
         return res.cookie('ACCESSTOKEN', token, {
           expires: never,
           httpOnly: true
-        }).cookie('ACCESSTOKEN_SET', '1', {
-          expires: never
         }).sendStatus(200)
       } else {
         return res.sendStatus(401)
@@ -44,7 +42,7 @@ export default function createWebsocketServer (opts) {
       const cookies = req.headers.cookie ? cookie.parse(req.headers.cookie) : null
       if (!cookies || !cookies['ACCESSTOKEN']) return res.sendStatus(401)
       const doesExist = await deleteToken(opts, cookies['ACCESSTOKEN'])
-      if (doesExist) res.clearCookie('ACCESSTOKEN').clearCookie('ACCESSTOKEN_SET').sendStatus(204)
+      if (doesExist) res.clearCookie('ACCESSTOKEN').sendStatus(204)
       else return res.sendStatus(401)
     })
 

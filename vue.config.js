@@ -7,5 +7,5 @@ export default {
   dist: './dist-app',
   template: './app/index.html',
   resolve: true,
-  vendor: ['vue', 'eva.js', 'eventemitter3', 'axios', 'uuid', 'cookie', 'fast-json-patch']
+  vendor: ['vue', 'eva.js', 'eventemitter3', 'axios', 'uuid', 'fast-json-patch']
 }

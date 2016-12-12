@@ -1,5 +1,4 @@
 import EVA from 'eva.js'
-import cookie from 'cookie'
 import App from './components/App'
 
 import initializeStore, {SET_INTENDED_ROUTE, SET_IS_AUTHENTIFIED} from './store/app'
@@ -28,7 +27,7 @@ app.$router.beforeEach((to, from, next) => {
   if (app.$store.state.isAuthentified) {
     if (to.path === '/authentification') return next('/')
   } else {
-    if (cookie.parse(document.cookie).hasOwnProperty('ACCESSTOKEN_SET') && !app.$store.state.websocketAuthFailed) {
+    if (window.localStorage.getItem('accessTokenSet') && !app.$store.state.websocketAuthFailed) {
       app.$store.commit(SET_IS_AUTHENTIFIED, true)
       app.$store.dispatch('startWs')
       if (to.path === '/authentification') return next('/')

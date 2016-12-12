@@ -55,6 +55,7 @@ export default function initializeStore (app) {
       async login ({commit, dispatch}, password) {
         const success = await login(password)
         if (success) {
+          window.localStorage.setItem('accessTokenSet', true)
           commit(SET_IS_AUTHENTIFIED, true)
           commit(SET_WEBSOCKET_AUTH_FAILED, false)
           dispatch('startWs')
@@ -69,6 +70,7 @@ export default function initializeStore (app) {
         const success = await logout()
         if (success) {
           ws.stop()
+          window.localStorage.setItem('accessTokenSet', false)
           commit(SET_IS_AUTHENTIFIED, false)
           app.$router.replace('/authentification')
         }
