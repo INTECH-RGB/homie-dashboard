@@ -149,7 +149,6 @@ export default {
     ...mapActions({ createTagAction: 'createTag', deleteTagAction: 'deleteTag' })
   }
 }
-
 </script>
 
 <style lang="sass" scoped>

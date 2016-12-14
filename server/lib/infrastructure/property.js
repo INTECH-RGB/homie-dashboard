@@ -11,6 +11,7 @@ export default class Property extends EventEmitter {
 
     this._id = null
     this._value = null
+    this._settable = null
 
     this.isValid = false
 
@@ -34,13 +35,19 @@ export default class Property extends EventEmitter {
     if (!val || this._value === val) return
     this._value = val; this._wasUpdated()
   }
+  get settable () { return this._settable }
+  set settable (val) {
+    if (typeof val === undefined || this._value === val) return
+    this._settable = val; this._wasUpdated()
+  }
 
   _wasUpdated () {
     const wasValid = this.isValid
     this.isValid = (
       this._node !== null &&
       this._id !== null &&
-      this._value !== null
+      this._value !== null &&
+      this._settable !== null
     )
 
     if (!wasValid && this.isValid) {
@@ -59,6 +66,7 @@ export default class Property extends EventEmitter {
     const representation = {}
     representation.id = this.id
     representation.value = this.value
+    representation.settable = this.settable
 
     return representation
   }

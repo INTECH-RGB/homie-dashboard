@@ -5,6 +5,7 @@ import initializeStore, {SET_INTENDED_ROUTE, SET_IS_AUTHENTIFIED} from './store/
 
 import Overview from './components/pages/Overview'
 import Devices from './components/pages/Devices'
+import Automation from './components/pages/Automation'
 
 import Authentication from './components/standalones/Authentication'
 import AddDevice from './components/standalones/AddDevice'
@@ -16,6 +17,7 @@ initializeStore(app)
 app.router(route => [
   { meta: { title: "Vue d'ensemble" }, ...route('/', Overview) },
   { meta: { title: 'Périphériques' }, ...route('/peripheriques', Devices) },
+  { meta: { title: 'Automatisation' }, ...route('/automatisation', Automation) },
 
   { meta: { title: 'Authentifiez-vous', standalone: true }, ...route('/authentification', Authentication) },
   { meta: { title: "Ajout d'un périphérique", standalone: true }, ...route('/ajout-peripherique', AddDevice) },

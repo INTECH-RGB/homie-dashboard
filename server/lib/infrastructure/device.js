@@ -65,7 +65,7 @@ export default class Device extends EventEmitter {
   }
   get online () { return this._online }
   set online (val) {
-    if (!val || this._online === val) return
+    if (typeof val === undefined || this._online === val) return
     this._online = val
     this._wasUpdated()
   }

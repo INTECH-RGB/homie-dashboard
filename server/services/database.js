@@ -214,12 +214,13 @@ export async function syncInfrastructure ({ db }, infrastructure) {
         let propertyId
         if (!propertyInDb) {
           let statement = await db.run(
-            `INSERT INTO properties (node_id, node_property_id)
-            SELECT :node_id, :node_property_id
+            `INSERT INTO properties (node_id, node_property_id, settable)
+            SELECT :node_id, :node_property_id, :settable
             WHERE (SELECT id FROM properties WHERE node_id = :node_id AND node_property_id = :node_property_id) IS NULL
             `, {
               ':node_id': nodeId,
-              ':node_property_id': property.id
+              ':node_property_id': property.id,
+              ':settable': property.settable
             })
 
           propertyId = statement.lastID
@@ -292,6 +293,7 @@ export async function getInfrastructure ({ db }, infrastructure) {
       n.type AS 'n.type',
       n.properties AS 'n.properties',
       p.node_property_id AS 'p.node_property_id',
+      p.settable AS 'p.settable',
       h.value AS 'h.value'
     FROM property_history h
     INNER JOIN properties p ON h.property_id = p.id
@@ -336,6 +338,7 @@ export async function getInfrastructure ({ db }, infrastructure) {
       property.node = node
       property.id = value['p.node_property_id']
       property.value = value['h.value']
+      property.settable = value['p.settable']
       node.addProperty(property)
     } else property = node.getProperty(value['p.node_property_id'])
   }

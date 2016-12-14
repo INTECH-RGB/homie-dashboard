@@ -98,7 +98,7 @@ const DEVICES = [
         id: 'windownode',
         type: 'window',
         properties: [
-          { id: 'window', settable: false }
+          { id: 'open', settable: false }
         ]
       }
     ]
@@ -216,7 +216,8 @@ client.on('connect', async function onConnect () {
     for (let node of device.nodes) {
       client.publish(`${BASE_TOPIC}/${device.id}/${node.id}/$type`, node.type, qos1Retained)
       let properties = ''
-      for (let property of node.properties) properties += `${property.id}${property.settable ? ':settable' : ''}`
+      for (let property of node.properties) properties += `${property.id}${property.settable ? ':settable' : ''},`
+      properties = properties.slice(0, -1)
       client.publish(`${BASE_TOPIC}/${device.id}/${node.id}/$properties`, properties, qos1Retained)
     }
 

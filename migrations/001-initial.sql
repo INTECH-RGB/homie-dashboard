@@ -48,10 +48,12 @@ CREATE TABLE properties (
   id INTEGER PRIMARY KEY NOT NULL,
   node_id INTEGER NOT NULL,
   node_property_id TEXT NOT NULL,
+  settable INTEGER NOT NULL,
 
   CONSTRAINT properties_node_id_fk FOREIGN KEY(node_id) REFERENCES nodes(id),
   CONSTRAINT properties_property_per_node_uq UNIQUE(node_id, node_property_id) ON CONFLICT REPLACE,
-  CONSTRAINT properties_node_property_id_ck CHECK(node_property_id <> '')
+  CONSTRAINT properties_node_property_id_ck CHECK(node_property_id <> ''),
+  CONSTRAINT properties_settable_ck CHECK (settable IN (0, 1))
 );
 
 CREATE TABLE property_history (
