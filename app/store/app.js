@@ -125,6 +125,20 @@ export default function initializeStore (app) {
         })
 
         return result
+      },
+      async addIfttt ({commit}, opts) {
+        const result = await wsRequest({
+          ws,
+          method: 'addIfttt',
+          parameters: {
+            iProperty: opts.iProperty,
+            condition: opts.condition,
+            oProperty: opts.oProperty,
+            mutation: opts.mutation
+          }
+        })
+
+        return result
       }
     }
   })

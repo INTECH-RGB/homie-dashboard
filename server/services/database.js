@@ -66,7 +66,8 @@ export async function deleteToken ({ db }, token) {
  */
 export async function syncInfrastructure ({ db }, infrastructure) {
   /* Synchronize tags */
-
+  const start = new Date()
+  await db.run('BEGIN TRANSACTION')
   for (let tag of infrastructure.getTags()) {
     await db.run(
       `INSERT INTO tags (id)
@@ -94,12 +95,7 @@ export async function syncInfrastructure ({ db }, infrastructure) {
   for (let device of infrastructure.getDevices()) {
     if (!device.isValid) return
 
-    const deviceInDb = await db.get(
-      `SELECT * FROM devices WHERE id = ?`,
-      device.id
-    )
-
-    if (deviceInDb) {
+    if (device.db.get('exist')) {
       await db.run(
         `UPDATE devices
         SET name = :name, online = :online, local_ip = :local_ip, mac = :mac, stats_signal = :stats_signal, stats_uptime = :stats_uptime, stats_interval_in_seconds = :stats_interval_in_seconds, fw_name = :fw_name, fw_version = :fw_version, fw_checksum = :fw_checksum, implementation = :implementation
@@ -136,6 +132,7 @@ export async function syncInfrastructure ({ db }, infrastructure) {
           ':fw_checksum': device.getFirmwareProperty('checksum'),
           ':implementation': device.implementation
         })
+      device.db.set('exist', true)
     }
 
     /* devices table now in sync */
@@ -143,22 +140,14 @@ export async function syncInfrastructure ({ db }, infrastructure) {
     for (let node of device.getNodes()) {
       if (!node.isValid) return
 
-      const nodeInDb = await db.get(
-        `SELECT * FROM nodes WHERE device_id = :device_id AND device_node_id = :device_node_id`, {
-          ':device_id': device.id,
-          ':device_node_id': node.id
-        })
-
-      let nodeId
-      if (nodeInDb) {
-        nodeId = nodeInDb.id
+      if (node.db.get('exist')) {
         await db.run(
           `UPDATE nodes
           SET type = :type, properties = :properties
           WHERE id = :id`, {
             ':type': node.type,
             ':properties': node.propertiesDefinition,
-            ':id': nodeId
+            ':id': node.db.get('id')
           })
       } else {
         const statement = await db.run(
@@ -171,7 +160,8 @@ export async function syncInfrastructure ({ db }, infrastructure) {
             ':type': node.type,
             ':properties': node.propertiesDefinition
           })
-        nodeId = statement.lastID
+        node.db.set('id', statement.lastID)
+        node.db.set('exist', true)
       }
 
       /* syncing tags */
@@ -182,14 +172,14 @@ export async function syncInfrastructure ({ db }, infrastructure) {
           SELECT :node_id, :tag_id
           WHERE (SELECT id FROM nodes_tags WHERE node_id = :node_id AND tag_id = :tag_id) IS NULL
           `, {
-            ':node_id': nodeId,
+            ':node_id': node.db.get('id'),
             ':tag_id': tag.id
           })
       }
 
       const nodeTagsInDb = await db.all(
         `SELECT * FROM nodes_tags WHERE node_id = ?`,
-        nodeId
+        node.db.get('id')
       )
 
       const nodeTagsIdsToDelete = nodeTagsInDb.filter(nodeTag => !node.hasTag(infrastructure.getTag(nodeTag.tag_id))).map(nodeTag => nodeTag.id)
@@ -205,27 +195,19 @@ export async function syncInfrastructure ({ db }, infrastructure) {
       for (let property of node.getProperties()) {
         if (!property.isValid) return
 
-        const propertyInDb = await db.get(
-          `SELECT * FROM properties WHERE node_id = :node_id AND node_property_id = :node_property_id`, {
-            ':node_id': nodeId,
-            ':node_property_id': property.id
-          })
-
-        let propertyId
-        if (!propertyInDb) {
+        if (!property.db.get('exist')) {
           let statement = await db.run(
             `INSERT INTO properties (node_id, node_property_id, settable)
             SELECT :node_id, :node_property_id, :settable
             WHERE (SELECT id FROM properties WHERE node_id = :node_id AND node_property_id = :node_property_id) IS NULL
             `, {
-              ':node_id': nodeId,
+              ':node_id': node.db.get('id'),
               ':node_property_id': property.id,
               ':settable': property.settable
             })
 
-          propertyId = statement.lastID
-        } else {
-          propertyId = propertyInDb.id
+          property.db.set('id', statement.lastID)
+          property.db.set('exist', true)
         }
 
         /* syncing properties values */
@@ -234,13 +216,17 @@ export async function syncInfrastructure ({ db }, infrastructure) {
           SELECT :property_id, :value, :date
           WHERE (SELECT value FROM property_history WHERE property_id = :property_id ORDER BY id DESC LIMIT 1) IS NULL OR (SELECT value FROM property_history WHERE property_id = :property_id ORDER BY id DESC LIMIT 1) <> :value
           `, {
-            ':property_id': propertyId,
+            ':property_id': property.db.get('id'),
             ':value': property.value,
             ':date': dateToSqlite(new Date())
           })
       }
     }
   }
+  await db.run('END TRANSACTION')
+
+  const end = new Date()
+  console.log(`${end - start}ms`)
 }
 
 /**
@@ -292,6 +278,7 @@ export async function getInfrastructure ({ db }, infrastructure) {
       n.device_node_id AS 'n.device_node_id',
       n.type AS 'n.type',
       n.properties AS 'n.properties',
+      p.id AS 'p.id',
       p.node_property_id AS 'p.node_property_id',
       p.settable AS 'p.settable',
       h.value AS 'h.value'
@@ -306,6 +293,7 @@ export async function getInfrastructure ({ db }, infrastructure) {
     let device
     if (!infrastructure.hasDevice(value['d.id'])) {
       device = new Device()
+      device.db.set('exist', true)
       device.id = value['d.id']
       device.name = value['d.name']
       device.online = value['d.online'] === 1
@@ -324,6 +312,8 @@ export async function getInfrastructure ({ db }, infrastructure) {
     let node
     if (!device.hasNode(value['n.device_node_id'])) {
       node = new Node()
+      node.db.set('id', value['n.id'])
+      node.db.set('exist', true)
       node.device = device
       node.id = value['n.device_node_id']
       node.type = value['n.type']
@@ -335,6 +325,8 @@ export async function getInfrastructure ({ db }, infrastructure) {
     let property
     if (!node.hasProperty(value['p.node_property_id'])) {
       property = new Property()
+      property.db.set('id', value['p.id'])
+      property.db.set('exist', true)
       property.node = node
       property.id = value['p.node_property_id']
       property.value = value['h.value']

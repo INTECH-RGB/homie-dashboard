@@ -91,6 +91,13 @@ export default class Client extends EventEmitter {
       this.infrastructure.deleteTag(tagId)
 
       this._sendResponse(message, true)
+    } else if (message.method === 'addIfttt') {
+      const iProperty = message.parameters.iProperty
+      const condition = message.parameters.condition
+      const oProperty = message.parameters.oProperty
+      const mutation = message.parameters.mutation
+
+      this._sendResponse(message, true)
     }
   }
 }

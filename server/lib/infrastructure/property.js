@@ -13,6 +13,11 @@ export default class Property extends EventEmitter {
     this._value = null
     this._settable = null
 
+    this.db = new Map([
+      ['exist', false],
+      ['id', null]
+    ])
+
     this.isValid = false
 
     Object.seal(this)

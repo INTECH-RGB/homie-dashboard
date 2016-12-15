@@ -17,6 +17,11 @@ export default class Node extends EventEmitter {
 
     this._tags = new Set()
 
+    this.db = new Map([
+      ['exist', false],
+      ['id', null]
+    ])
+
     this.isValid = false
 
     Object.seal(this)

@@ -26,6 +26,10 @@ export default class Device extends EventEmitter {
 
     this._nodes = new Map()
 
+    this.db = new Map([
+      ['exist', false]
+    ])
+
     this.isValid = false
 
     Object.seal(this)
