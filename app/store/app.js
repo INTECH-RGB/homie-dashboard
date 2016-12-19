@@ -21,7 +21,8 @@ export default function initializeStore (app) {
       intendedRoute: '/',
       infrastructure: {
         devices: {},
-        tags: {}
+        tags: {},
+        house: { floors: {} }
       }
     },
     mutations: {
@@ -121,6 +122,17 @@ export default function initializeStore (app) {
           method: 'deleteTag',
           parameters: {
             tagId: opts.tagId
+          }
+        })
+
+        return result
+      },
+      async addFloor ({commit}, opts) {
+        const result = await wsRequest({
+          ws,
+          method: 'addFloor',
+          parameters: {
+            name: opts.name
           }
         })
 

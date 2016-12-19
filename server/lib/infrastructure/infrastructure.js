@@ -14,6 +14,8 @@ class Infrastructure extends EventEmitter {
 
     this._tags = new Map()
 
+    this._houseFloors = new Map()
+
     Object.seal(this)
   }
 
@@ -96,12 +98,50 @@ class Infrastructure extends EventEmitter {
     return this._tags.values()
   }
 
+  hasFloor (floorId) {
+    return this._houseFloors.has(floorId)
+  }
+
+  /**
+   * Adds a floor
+   * @param {Floor}  the floor
+   */
+  addFloor (floor) {
+    this._houseFloors.set(floor.id, floor)
+    floor.on('update', (update) => {
+      this.emit('update', update)
+    })
+    this._wasUpdated()
+  }
+
+  /**
+   * Gets a floor
+   * @param {string} floorId the floor ID
+   * @returns {Floor} the floor
+   */
+  getFloor (floorId) {
+    return this._houseFloors.get(floorId)
+  }
+
+  deleteFloor (floorId) {
+    this._houseFloors.delete(floorId)
+    this._wasUpdated()
+  }
+
+  /**
+   * Gets all floors from the infrastructure
+   * @returns {Iterable.<Floor>} the floors
+   */
+  getFloors () {
+    return this._houseFloors.values()
+  }
+
   _wasUpdated () {
     this.emit('update', { type: 'infrastructure' })
   }
 
   toJSON () {
-    const representation = { devices: {}, tags: {} }
+    const representation = { devices: {}, tags: {}, house: { floors: {} } }
 
     for (const device of this.getDevices()) {
       if (device.isValid) representation.devices[device.id] = device.toJSON()
@@ -109,6 +149,10 @@ class Infrastructure extends EventEmitter {
 
     for (const tag of this.getTags()) {
       if (tag.isValid) representation.tags[tag.id] = tag.toJSON()
+    }
+
+    for (const floor of this.getFloors()) {
+      if (floor.isValid) representation.house.floors[floor.id] = floor.toJSON()
     }
 
     return representation

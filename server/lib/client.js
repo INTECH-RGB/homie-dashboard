@@ -3,6 +3,7 @@ import {EventEmitter} from 'events'
 import {generateMessage, parseMessage, MESSAGE_TYPES} from '../../common/ws-messages'
 import {INFRASTRUCTURE} from '../../common/events'
 import Tag from './infrastructure/tag'
+import Floor from './infrastructure/floor'
 
 /**
  * This class handles WebSocket clients
@@ -89,6 +90,15 @@ export default class Client extends EventEmitter {
       const tagId = message.parameters.tagId
 
       this.infrastructure.deleteTag(tagId)
+
+      this._sendResponse(message, true)
+    } else if (message.method === 'addFloor') {
+      const name = message.parameters.name
+
+      const floor = new Floor()
+      floor.id = 0
+      floor.name = name
+      this.infrastructure.addFloor(floor)
 
       this._sendResponse(message, true)
     }

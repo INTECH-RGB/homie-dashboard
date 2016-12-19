@@ -4,6 +4,8 @@ import Device from '../lib/infrastructure/device'
 import Node from '../lib/infrastructure/node'
 import Property from '../lib/infrastructure/property'
 import Tag from '../lib/infrastructure/tag'
+import Floor from '../lib/infrastructure/floor'
+import Room from '../lib/infrastructure/room'
 
 /* Auth */
 
@@ -264,6 +266,39 @@ export async function getInfrastructure ({ db }, infrastructure) {
       tag.id = tagInDb['id']
       infrastructure.addTag(tag)
     }
+  }
+
+  /* House */
+
+  const rooms = await db.all(
+    `SELECT
+      f.id AS 'f.id',
+      f.name AS 'f.name',
+      r.id AS 'r.id',
+      r.name AS 'r.name',
+      r.tag_id AS 'r.tag_id'
+    FROM rooms r
+    INNER JOIN floors f ON r.floor_id = f.id
+    `)
+
+  for (let iRoom of rooms) {
+    let floor
+    if (!infrastructure.hasFloor(iRoom['f.id'])) {
+      floor = new Floor()
+      floor.id = iRoom['f.id']
+      floor.name = iRoom['f.name']
+      infrastructure.addFloor(floor)
+    } else floor = infrastructure.getFloor(iRoom['f.id'])
+
+    let room
+    if (!floor.hasRoom(iRoom['r.id'])) {
+      room = new Room()
+      room.floor = floor
+      room.id = iRoom['r.id']
+      room.name = iRoom['r.name']
+      room.tagId = iRoom['r.tag_id']
+      floor.addRoom(room)
+    } else room = floor.getRoom(iRoom['r.id'])
   }
 
   /* Devices */
