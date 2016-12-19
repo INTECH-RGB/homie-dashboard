@@ -127,6 +127,22 @@ export default function initializeStore (app) {
 
         return result
       },
+      async addRoom ({commit}, opts) {
+        const result = await wsRequest({
+          ws,
+          method: 'addRoom',
+          parameters: {
+            name: opts.name,
+            floor_id: opts.floor_id,
+            tag_id: opts.tag_id
+           
+          }
+          
+        })
+        console.log("lol")
+        return result
+      },
+
       async addFloor ({commit}, opts) {
         const result = await wsRequest({
           ws,
@@ -138,6 +154,9 @@ export default function initializeStore (app) {
 
         return result
       }
+
+      
+      
     }
   })
 
