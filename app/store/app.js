@@ -165,7 +165,15 @@ export default function initializeStore (app) {
     }
   })
 
-  const ws = new WebSocket(`ws://127.0.0.1:5000`)
+  let wsUrl
+  if (process.env.NODE_ENV === 'production') {
+    const l = window.location
+    wsUrl = ((l.protocol === 'https:') ? 'wss://' : 'ws://') + l.host
+  } else {
+    wsUrl = 'ws://127.0.0.1:5000'
+  }
+
+  const ws = new WebSocket(wsUrl)
   ws.on('open', function onOpen () {
     app.$store.commit(SET_IS_CONNECTED, true)
   }).on('close', function onClose (event) {

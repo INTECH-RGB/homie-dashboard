@@ -18,6 +18,11 @@
     "env": {
       "development": {
         "sourceMaps": "inline"
+      },
+      "production": {
+        "plugins": [
+          "transform-inline-environment-variables"
+        ]
       }
     }
   },
@@ -54,6 +59,7 @@
     "babel-core": "^6.18.2",
     "babel-plugin-transform-async-to-generator": "^6.16.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
+    "babel-plugin-transform-inline-environment-variables": "^6.8.0",
     "babel-watch": "^2.0.3",
     "balloon-css": "^0.4.0",
     "bulma": "^0.2.3",
@@ -94,11 +100,11 @@
   },
   "preferGlobal": true,
   "scripts": {
-    "app-build": "cross-env BABEL_ENV=production vbuild",
+    "app-build": "cross-env BABEL_ENV=production NODE_ENV=production vbuild",
     "app-dev": "vbuild --dev",
     "common-depcheck": "depcheck",
     "emulator-start": "babel-watch emulator/index.js | bunyan",
-    "server-build": "cross-env BABEL_ENV=production babel server/ -d dist-server/src/ && cross-env BABEL_ENV=production babel common/ -d dist-server/common/ && shx cp package.json dist-server/",
+    "server-build": "cross-env BABEL_ENV=production NODE_ENV=production babel server/ -d dist-server/src/ && cross-env BABEL_ENV=production babel common/ -d dist-server/common/ && npm run app-build && shx cp -r dist-app/ dist-server/ && shx cp package.json dist-server/",
     "server-dev": "babel-watch server/bin/cli.js -- --port 5000 --ip 0.0.0.0 --logLevel debug | bunyan",
     "server-lint": "standard server/**/*.js | snazzy",
     "server-test": "nyc ava"

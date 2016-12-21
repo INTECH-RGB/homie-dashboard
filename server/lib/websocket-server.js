@@ -1,3 +1,4 @@
+import path from 'path'
 import {createServer} from 'http'
 import cookie from 'cookie'
 import express from 'express'
@@ -46,6 +47,13 @@ export default function createWebsocketServer (opts) {
       await AuthTokenModel.forge({ token: cookies['ACCESSTOKEN'] }).destroy()
       res.clearCookie('ACCESSTOKEN').sendStatus(204)
     })
+
+    if (process.env.NODE_ENV === 'production') {
+      app.use(express.static(path.join(__dirname, '../../dist-app')))
+      app.use(function (req, res, next) {
+        res.sendFile(path.join(__dirname, '../../index.html'))
+      })
+    }
 
     httpServer.on('request', app)
 
