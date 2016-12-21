@@ -28,6 +28,8 @@ export default class Device extends EventEmitter {
 
     this.isValid = false
 
+    this.model = null
+
     Object.seal(this)
   }
 
@@ -37,6 +39,12 @@ export default class Device extends EventEmitter {
 
   addNode (node) {
     this._nodes.set(node.id, node)
+    node.on('valid', () => {
+      this.emit('newNode', node)
+    })
+    node.on('newProperty', (property) => {
+      this.emit('newProperty', property)
+    })
     node.on('update', (update) => {
       this.emit('update', update)
     })
@@ -117,9 +125,10 @@ export default class Device extends EventEmitter {
       this._implementation !== null
     )
 
-    if (!wasValid && this.isValid) this.emit('valid')
-
-    if (this.isValid) this.emit('update', { type: 'device' })
+    if (this.isValid) {
+      if (wasValid) this.emit('update', { entity: this })
+      else this.emit('valid')
+    }
   }
 
   toJSON () {
