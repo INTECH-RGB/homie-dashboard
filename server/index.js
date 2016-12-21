@@ -13,7 +13,7 @@ export async function bootstrap (opts) {
 
   let settings
   try {
-    settings = await loadSettings()
+    settings = await loadSettings(opts.dataDir)
     log.info('settings loaded')
   } catch (err) {
     log.fatal('cannot load settings', err)
