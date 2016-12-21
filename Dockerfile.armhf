@@ -24,4 +24,4 @@ VOLUME ["/data"]
 
 EXPOSE 80
 
-CMD ["node", "./src/bin/cli.js", "--data", "/data"]
+CMD ["node", "./src/bin/cli.js", "--dataDir", "/data"]
