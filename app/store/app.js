@@ -139,7 +139,6 @@ export default function initializeStore (app) {
           }
           
         })
-        console.log("lol")
         return result
       },
 
@@ -153,6 +152,16 @@ export default function initializeStore (app) {
         })
 
         return result
+      },
+
+      async deleteFloor({commit}, opts) {
+        const result = await wsRequest({
+          ws,
+          method: 'deleteFloor',
+          parameters: {
+            floorId: opts.floorId
+          }
+        })
       }
 
       

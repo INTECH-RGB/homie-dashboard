@@ -103,6 +103,11 @@ export default class Client extends EventEmitter {
 
       this._sendResponse(message, true)
     }
+    else if (message.method === 'deleteFloor') {
+      const floorId = message.parameters.floorId
+
+      this.infrastructure.deleteFloor(floorId)
+    }
     else if (message.method === 'addRoom') {
       const name = message.parameters.name
       const floorId = message.parameters.floor_id

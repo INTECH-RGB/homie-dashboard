@@ -51,23 +51,7 @@
       Ici, vous pouvez modéliser votre maison sous forme d'étages et de pièces.
     </h2>
 
-    <div class="tile is-ancestor">
-      <div class="tile is-parent is-12 is-vertical">
-        <div v-for="floor in infrastructure.house.floors" class="tile is-child notification is-primary clickable">
-          <div class="content">
-            <p class="title">{{ floor.name }}</p>
-             <div @click="openaddRoomModal(floor.id)" class="tile is-child notification is-primary clickable">
-          <div class="content">
-            <p class="title">
-              <span class="icon"><i class="fa fa-plus"></i></span>
-              Ajouter une salle
-            </p>
-          </div>
-        </div>
-          </div>
-        </div>
-
-        <div @click="addFloorOpened = true" class="tile is-child notification is-primary clickable">
+        <div @click="addFloorOpened = true" class="column is-12 notification is-primary clickable">
           <div class="content">
             <p class="title">
               <span class="icon"><i class="fa fa-plus"></i></span>
@@ -75,14 +59,31 @@
             </p>
           </div>
         </div>
-      </div>
+
+  <div v-for="floor in infrastructure.house.floors">
+    <div @click="modelizeFloor(floor.rooms)" class="column is-12 notification is-primary clickable">
+      <button @click="deleteFloor(floor.id)" class="delete"></button>
+      <p class="title">
+     <span class="icon"><i class="fa fa-eye"></i></span>
+    {{ floor.name }}
+    </p>
     </div>
+          <div @click="openaddRoomModal(floor.id); canvas.reset()" class="column is-12 notification is-info clickable">
+            <p class="title">
+              <span class="icon"><i class="fa fa-plus"></i></span>
+              Ajouter une salle
+              </p>
+          </div>
+          <canvas id="canvas" :width="windowWidth" height="800"></canvas>
+        </div>  
+        
   </div>
 </template>
 
 <script>
 import {mapState, mapActions} from 'eva.js'
 import uuid from 'uuid'
+import ocanvas from 'ocanvas'
 
 export default {
   data () {
@@ -91,7 +92,8 @@ export default {
       addFloorOpened: false,
       roomNameInput: '',
       addRoomOpened: false,
-      floorId: null
+      floorId: null,
+      windowWidth: window.innerWidth
     }
   },
   computed: {
@@ -115,10 +117,60 @@ export default {
       this.floorId = id
 
     },
+    async deleteFloor(floorId) {
+      await this.deleteFloorAction({ floorId })
+    },
+    modelizeFloor(rooms) {
+      let marge = 33
+      let marged = 40
+      let i = 1
+      let y = 0
+      let a = 1
+      var canvas = ocanvas.create({
+	canvas: "#canvas",
+	background: "#ccc",
+	fps: 60
+});
+console.log(rooms)
+for(var room in rooms) {
+  y++
+  if(y > 3) {
+    y = 1
+   a++
+   i = 1
+  }
+  console.log(rooms[room])
+var rectangle = canvas.display.rectangle({
+	x: 177 * i + marge * i,
+	y: 170 * a + marged * a,
+	origin: { x: "center", y: "center" },
+	width: 200,
+	height: 200,
+  stroke: "outside 5px rgba(255, 0, 0, 0.5)"
+});
+canvas.addChild(rectangle);
+
+rectangle.dragAndDrop();
+
+
+var text = canvas.display.text({
+	x: 0,
+	y: -20,
+	origin: { x: "center", y: "top" },
+	font: "bold 30px sans-serif",
+	text: rooms[room].name,
+	fill: "#f44"
+});
+
+rectangle.addChild(text);
+i++
+}
+this.canvas = canvas
+    },
     async createTag (tagId) {
       await this.createTagAction({ id: tagId })
     },
-    ...mapActions({ createTagAction: 'createTag', addFloorAction: 'addFloor', addRoomAction: 'addRoom' })
+    ...mapActions({ createTagAction: 'createTag', addFloorAction: 'addFloor', addRoomAction: 'addRoom', deleteFloorAction:'deleteFloor' })
   }
 }
 </script>
@@ -127,3 +179,4 @@ export default {
   .clickable
     cursor: pointer
 </style>
+

@@ -36,11 +36,12 @@
     "express": "^4.14.0",
     "fast-json-patch": "^1.1.2",
     "mqtt": "^2.0.1",
+    "ocanvas": "^2.8.6",
     "sqlite": "^2.2.2",
     "toml": "^2.3.0",
     "uuid": "^3.0.0",
-    "ws": "^1.1.1",
-    "vue-color": "^2.0.2"
+    "vue-color": "^2.0.2",
+    "ws": "^1.1.1"
   },
   "devDependencies": {
     "ava": "^0.17.0",
