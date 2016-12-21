@@ -33,7 +33,7 @@ export async function bootstrap (opts) {
     await knex.raw('PRAGMA foreign_keys=ON')
     await knex.raw('PRAGMA locking_mode=EXCLUSIVE')
     await knex.raw('PRAGMA synchronous=NORMAL')
-    await knex.migrate.latest()
+    await knex.migrate.latest({ directory: path.join(__dirname, '/migrations') })
     log.debug('database migrated')
   } catch (err) {
     log.fatal('cannot open or migrate database', err)
