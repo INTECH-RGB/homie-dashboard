@@ -42,40 +42,37 @@
       </div>
     </div>
 
-
-
-
-
     <h1 class="title">Vue d'ensemble</h1>
     <h2 class="subtitle">
       Ici, vous pouvez modéliser votre maison sous forme d'étages et de pièces.
     </h2>
 
-        <div @click="addFloorOpened = true" class="column is-12 notification is-primary clickable">
-          <div class="content">
-            <p class="title">
-              <span class="icon"><i class="fa fa-plus"></i></span>
-              Ajouter un étage
-            </p>
-          </div>
-        </div>
-
-  <div v-for="floor in infrastructure.house.floors">
-    <div @click="modelizeFloor(floor.rooms)" class="column is-12 notification is-primary clickable">
-      <button @click="deleteFloor(floor.id)" class="delete"></button>
-      <p class="title">
-     <span class="icon"><i class="fa fa-eye"></i></span>
-    {{ floor.name }}
-    </p>
+    <div @click="addFloorOpened = true" class="notification is-primary clickable">
+      <div class="content">
+        <p class="title">
+          <span class="icon"><i class="fa fa-plus"></i></span>
+          Ajouter un étage
+        </p>
+      </div>
     </div>
-          <div @click="openaddRoomModal(floor.id); canvas.reset()" class="column is-12 notification is-info clickable">
-            <p class="title">
-              <span class="icon"><i class="fa fa-plus"></i></span>
-              Ajouter une salle
-              </p>
-          </div>
-          <canvas id="canvas" :width="windowWidth" height="800"></canvas>
-        </div>
+
+    <template v-for="floor in infrastructure.house.floors">
+      <div @click="modelizeFloor(floor.rooms)" class="notification is-primary clickable">
+        <button @click="deleteFloor(floor.id); canvas.reset()" class="delete"></button>
+        <p class="title">
+          <span class="icon"><i class="fa fa-eye"></i></span>
+          {{ floor.name }}
+        </p>
+      </div>
+
+      <div @click="openaddRoomModal(floor.id); canvas.reset()" class="notification is-info clickable">
+        <p class="title">
+          <span class="icon"><i class="fa fa-plus"></i></span>
+          Ajouter une salle
+        </p>
+      </div>
+    </template>
+    <canvas id="canvas" :width="windowWidth" height="800"></canvas>
 
   </div>
 </template>
@@ -87,6 +84,7 @@ import ocanvas from 'ocanvas'
 export default {
   data () {
     return {
+      canvas: null,
       floorNameInput: '',
       addFloorOpened: false,
       roomNameInput: '',
@@ -120,13 +118,13 @@ export default {
       let i = 1
       let y = 0
       let a = 1
-      var canvas = ocanvas.create({
+      const canvas = ocanvas.create({
         canvas: '#canvas',
         background: '#ccc',
         fps: 60
       })
 
-      for (var room in rooms) {
+      for (const room in rooms) {
         y++
         if (y > 3) {
           y = 1
@@ -134,7 +132,7 @@ export default {
           i = 1
         }
 
-        var rectangle = canvas.display.rectangle({
+        const rectangle = canvas.display.rectangle({
           x: 177 * i + marge * i,
           y: 170 * a + marged * a,
           origin: { x: 'center', y: 'center' },
@@ -146,7 +144,7 @@ export default {
 
         rectangle.dragAndDrop()
 
-        var text = canvas.display.text({
+        const text = canvas.display.text({
           x: 0,
           y: -20,
           origin: { x: 'center', y: 'top' },
