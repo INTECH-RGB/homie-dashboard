@@ -7,6 +7,8 @@ import start from './start'
 import loadSettings from './lib/settings'
 
 export async function bootstrap (opts) {
+  log.level(opts.logLevel)
+
   log.info('starting')
 
   let settings

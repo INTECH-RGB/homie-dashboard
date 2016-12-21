@@ -135,9 +135,7 @@ export default function initializeStore (app) {
             name: opts.name,
             floor_id: opts.floor_id,
             tag_id: opts.tag_id
-           
           }
-          
         })
         return result
       },
@@ -154,7 +152,7 @@ export default function initializeStore (app) {
         return result
       },
 
-      async deleteFloor({commit}, opts) {
+      async deleteFloor ({commit}, opts) {
         const result = await wsRequest({
           ws,
           method: 'deleteFloor',
@@ -162,10 +160,9 @@ export default function initializeStore (app) {
             floorId: opts.floorId
           }
         })
-      }
 
-      
-      
+        return result
+      }
     }
   })
 
