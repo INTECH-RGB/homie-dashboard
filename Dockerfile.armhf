@@ -24,4 +24,4 @@ VOLUME ["/data"]
 
 EXPOSE 35589
 
-CMD ["node", "./src/bin/cli.js", "--port", "35589", "--dataDir", "/data"]
+CMD ["node", "./src/bin/cli.js", "--ip", "0.0.0.0", "--port", "35589", "--dataDir", "/data"]
