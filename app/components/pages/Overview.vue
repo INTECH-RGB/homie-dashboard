@@ -42,9 +42,9 @@
       </div>
     </div>
 
-   
 
-    
+
+
 
     <h1 class="title">Vue d'ensemble</h1>
     <h2 class="subtitle">
@@ -75,14 +75,13 @@
               </p>
           </div>
           <canvas id="canvas" :width="windowWidth" height="800"></canvas>
-        </div>  
-        
+        </div>
+
   </div>
 </template>
 
 <script>
 import {mapState, mapActions} from 'eva.js'
-import uuid from 'uuid'
 import ocanvas from 'ocanvas'
 
 export default {
@@ -105,72 +104,63 @@ export default {
       this.addFloorOpened = false
     },
     addRoom () {
-      let tag = "room:" + uuid()
-      this.createTag(tag)
       this.addRoomOpened = false
-      this.addRoomAction({ name: this.roomNameInput, floor_id: this.floorId, tag_id: tag })
-      
-      
+      this.addRoomAction({ name: this.roomNameInput, floor_id: this.floorId })
     },
-    openaddRoomModal(id) {
+    openaddRoomModal (id) {
       this.addRoomOpened = true
       this.floorId = id
-
     },
-    async deleteFloor(floorId) {
+    async deleteFloor (floorId) {
       await this.deleteFloorAction({ floorId })
     },
-    modelizeFloor(rooms) {
+    modelizeFloor (rooms) {
       let marge = 33
       let marged = 40
       let i = 1
       let y = 0
       let a = 1
       var canvas = ocanvas.create({
-	canvas: "#canvas",
-	background: "#ccc",
-	fps: 60
-});
-console.log(rooms)
-for(var room in rooms) {
-  y++
-  if(y > 3) {
-    y = 1
-   a++
-   i = 1
-  }
-  console.log(rooms[room])
-var rectangle = canvas.display.rectangle({
-	x: 177 * i + marge * i,
-	y: 170 * a + marged * a,
-	origin: { x: "center", y: "center" },
-	width: 200,
-	height: 200,
-  stroke: "outside 5px rgba(255, 0, 0, 0.5)"
-});
-canvas.addChild(rectangle);
+        canvas: '#canvas',
+        background: '#ccc',
+        fps: 60
+      })
 
-rectangle.dragAndDrop();
+      for (var room in rooms) {
+        y++
+        if (y > 3) {
+          y = 1
+          a++
+          i = 1
+        }
 
+        var rectangle = canvas.display.rectangle({
+          x: 177 * i + marge * i,
+          y: 170 * a + marged * a,
+          origin: { x: 'center', y: 'center' },
+          width: 200,
+          height: 200,
+          stroke: 'outside 5px rgba(255, 0, 0, 0.5)'
+        })
+        canvas.addChild(rectangle)
 
-var text = canvas.display.text({
-	x: 0,
-	y: -20,
-	origin: { x: "center", y: "top" },
-	font: "bold 30px sans-serif",
-	text: rooms[room].name,
-	fill: "#f44"
-});
+        rectangle.dragAndDrop()
 
-rectangle.addChild(text);
-i++
-}
-this.canvas = canvas
+        var text = canvas.display.text({
+          x: 0,
+          y: -20,
+          origin: { x: 'center', y: 'top' },
+          font: 'bold 30px sans-serif',
+          text: rooms[room].name,
+          fill: '#f44'
+        })
+
+        rectangle.addChild(text)
+        i++
+      }
+      this.canvas = canvas
     },
-    async createTag (tagId) {
-      await this.createTagAction({ id: tagId })
-    },
-    ...mapActions({ createTagAction: 'createTag', addFloorAction: 'addFloor', addRoomAction: 'addRoom', deleteFloorAction:'deleteFloor' })
+    ...mapActions({ addFloorAction: 'addFloor', addRoomAction: 'addRoom', deleteFloorAction: 'deleteFloor' })
   }
 }
 </script>
@@ -179,4 +169,3 @@ this.canvas = canvas
   .clickable
     cursor: pointer
 </style>
-

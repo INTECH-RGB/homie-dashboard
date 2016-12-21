@@ -3,7 +3,7 @@ import {bookshelf} from '../lib/database'
 class Floor extends bookshelf.Model {
   get tableName () { return 'floors' }
 
-  nodes () {
+  rooms () {
     return this.hasMany('Room')
   }
 }

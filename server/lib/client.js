@@ -1,4 +1,5 @@
 import {EventEmitter} from 'events'
+import uuid from 'uuid'
 
 import {generateMessage, parseMessage, MESSAGE_TYPES} from '../../common/ws-messages'
 import {INFRASTRUCTURE} from '../../common/events'
@@ -8,6 +9,7 @@ import Room from './infrastructure/room'
 
 import TagModel from '../models/tag'
 import FloorModel from '../models/floor'
+import RoomModel from '../models/room'
 
 /**
  * This class handles WebSocket clients
@@ -108,7 +110,7 @@ export default class Client extends EventEmitter {
       const name = message.parameters.name
 
       const floor = new Floor()
-      floor.model = await FloorModel.forge({ name: floor.name }).save()
+      floor.model = await FloorModel.forge({ name }).save()
       floor.id = floor.model.id
       floor.name = name
       this.infrastructure.addFloor(floor)
@@ -116,20 +118,25 @@ export default class Client extends EventEmitter {
       this._sendResponse(message, true)
     } else if (message.method === 'deleteFloor') {
       const floorId = message.parameters.floorId
+      const floor = this.infrastructure.getFloor(floorId)
 
+      await floor.model.destroy()
       this.infrastructure.deleteFloor(floorId)
     } else if (message.method === 'addRoom') {
       const name = message.parameters.name
       const floorId = message.parameters.floor_id
-      const tagId = message.parameters.tag_id
+      const tagId = `room:${uuid()}`
+      const tag = new Tag()
+      tag.id = tagId
+      this.infrastructure.addTag(tag)
+      tag.model = await TagModel.forge({ id: tagId }).save(null, { method: 'insert' })
       const floor = this.infrastructure.getFloor(floorId)
       const room = new Room()
-      room.id = tagId
+      room.model = await RoomModel.forge({ name: floor.name, floor_id: floorId, tag_id: tagId }).save()
+      room.id = room.model.id
       room.name = name
       room.floor = floor
       room.tagId = tagId
-      console.log(floorId)
-      console.log(room)
       floor.addRoom(room)
 
       this._sendResponse(message, true)

@@ -35,16 +35,16 @@ export async function getInfrastructure (infrastructure) {
 
   for (const floorInDb of floors.models) {
     const floor = new Floor()
-    floor.id = floorInDb['id']
-    floor.name = floorInDb['name']
+    floor.id = floorInDb.attributes['id']
+    floor.name = floorInDb.attributes['name']
     infrastructure.addFloor(floor)
 
     for (const roomInDb of floorInDb.related('rooms').models) {
       const room = new Room()
       room.floor = floor
-      room.id = roomInDb['id']
-      room.name = roomInDb['name']
-      room.tagId = roomInDb['tag_id']
+      room.id = roomInDb.attributes['id']
+      room.name = roomInDb.attributes['name']
+      room.tagId = roomInDb.attributes['tag_id']
       floor.addRoom(room)
     }
   }

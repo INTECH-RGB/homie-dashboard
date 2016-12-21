@@ -14,6 +14,8 @@ export default class Floor extends EventEmitter {
 
     this.isValid = false
 
+    this.model = null
+
     Object.seal(this)
   }
 

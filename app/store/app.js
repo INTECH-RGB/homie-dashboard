@@ -133,8 +133,7 @@ export default function initializeStore (app) {
           method: 'addRoom',
           parameters: {
             name: opts.name,
-            floor_id: opts.floor_id,
-            tag_id: opts.tag_id
+            floor_id: opts.floor_id
           }
         })
         return result
