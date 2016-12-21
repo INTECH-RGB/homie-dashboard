@@ -15,7 +15,7 @@ const argv = yargs
     describe: 'IP you want to listen to. Defaults to 127.0.0.1'
   })
   .option('port', {
-    describe: 'Port you want to listen to. Defaults to 80'
+    describe: 'Port you want to listen to. Defaults to 35589'
   })
   .option('dataDir', {
     describe: "Top directory you want Homie's data to be stored in. Defaults to CWD"
@@ -45,7 +45,7 @@ console.log(clor.magenta("Make sure this IP won't change over time").line())
 
 bootstrap({
   ip: argv.ip || '127.0.0.1',
-  port: argv.port || 80,
+  port: parseInt(argv.port, 10) || 35589,
   dataDir: argv.dataDir || './',
   logLevel: argv.logLevel || 'info'
 })

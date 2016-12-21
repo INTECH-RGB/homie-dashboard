@@ -22,6 +22,6 @@ USER homie-dashboard
 
 VOLUME ["/data"]
 
-EXPOSE 80
+EXPOSE 35589
 
-CMD ["node", "./src/bin/cli.js", "--dataDir", "/data"]
+CMD ["node", "./src/bin/cli.js", "--port", "35589", "--dataDir", "/data"]
