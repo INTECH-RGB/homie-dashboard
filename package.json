@@ -98,7 +98,7 @@
     "app-dev": "vbuild --dev",
     "common-depcheck": "depcheck",
     "emulator-start": "babel-watch emulator/index.js | bunyan",
-    "server-build": "cross-env BABEL_ENV=production babel server/ -d dist-server/src/ && shx cp package.json dist-server/",
+    "server-build": "cross-env BABEL_ENV=production babel server/ -d dist-server/src/ && cross-env BABEL_ENV=production babel common/ -d dist-server/common/ && shx cp package.json dist-server/",
     "server-dev": "babel-watch server/bin/cli.js -- --port 5000 --ip 0.0.0.0 --logLevel debug | bunyan",
     "server-lint": "standard server/**/*.js | snazzy",
     "server-test": "nyc ava"
