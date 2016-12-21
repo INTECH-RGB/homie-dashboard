@@ -13,13 +13,15 @@ RUN adduser -h /usr/src/homie-dashboard -D -H homie-dashboard \
     && chown -R homie-dashboard:homie-dashboard /data \
     && chown -R homie-dashboard:homie-dashboard /usr/src/homie-dashboard
 
-USER homie-dashboard
-
 ADD dist-server /usr/src/homie-dashboard
-RUN npm install
+RUN apk add --no-cache --virtual build-dependencies make g++ python \
+  && npm install --production \
+  && apk del build-dependencies
+
+USER homie-dashboard
 
 VOLUME ["/data"]
 
 EXPOSE 80
 
-CMD ["npm", "start"]
+CMD ["node", "./src/bin/cli.js", "--data", "/data"]
