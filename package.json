@@ -1,7 +1,7 @@
 {
   "name": "homie-dashboard",
   "description": "IoT dashboard for Homie devices",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "author": "RGB Team",
   "ava": {
     "babel": "inherit",
@@ -44,7 +44,6 @@
     "internal-ip": "^1.2.0",
     "knex": "^0.12.6",
     "mqtt": "^2.0.1",
-    "ocanvas": "^2.8.6",
     "sqlite3": "^3.1.8",
     "toml": "^2.3.0",
     "uuid": "^3.0.0",
@@ -71,6 +70,7 @@
     "font-awesome": "^4.7.0",
     "node-sass": "^4.0.0",
     "nyc": "^10.0.0",
+    "ocanvas": "^2.8.6",
     "sass-loader": "^4.0.2",
     "shx": "^0.2.0",
     "snazzy": "^5.0.0",
@@ -96,7 +96,7 @@
     "url": "https://github.com/INTECH-RGBH/homie-dashboard.git"
   },
   "bin": {
-    "homie-dashboard": "./bin/cli.js"
+    "homie-dashboard": "./src/bin/cli.js"
   },
   "preferGlobal": true,
   "scripts": {
