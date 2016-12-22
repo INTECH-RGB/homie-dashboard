@@ -30,6 +30,7 @@ need-to-npm-publish:
         name: check if need to npm publish
         code: |
           WERCKER_GIT_COMMIT_MESSAGE=`git log -1 --pretty='%s'`
+          echo Git commit message: $WERCKER_GIT_COMMIT_MESSAGE
           if [[ $WERCKER_GIT_COMMIT_MESSAGE == \[deploy\]* ]]; then exit 0; else exit 1; fi
 
 npm-publish:
@@ -57,6 +58,9 @@ trigger-docker-hub:
         name: login to Scaleway
         code: |
           ./scw login -t $SCALEWAY_TOKEN -o $SCALEWAY_ACCESS_KEY -s
+
+    - add-ssh-key:
+        keyname: SSH
 
     - script:
         name: trigger work on Scaleway
