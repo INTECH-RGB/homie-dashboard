@@ -1,4 +1,6 @@
 box: node:7
+no-response-timeout: 60
+command-timeout: 60
 
 test-and-build:
   steps:
@@ -65,4 +67,4 @@ trigger-docker-hub:
     - script:
         name: trigger work on Scaleway
         code: |
-          ./scw run --rm --commercial-type=C1 Alpine_Linux echo lol
+          ./scw run --rm --commercial-type=C1 Alpine_Linux "curl -s https://raw.githubusercontent.com/INTECH-RGBH/docker-stuff/master/worker.sh | bash -s $DOCKER_USERNAME $DOCKER_PASSWORD"
