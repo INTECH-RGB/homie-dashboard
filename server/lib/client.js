@@ -5,6 +5,7 @@ import {INFRASTRUCTURE} from '../../common/events'
 import Tag from './infrastructure/tag'
 import Floor from './infrastructure/floor'
 import Room from './infrastructure/room'
+import Statistical from './statistical'
 
 /**
  * This class handles WebSocket clients
@@ -26,6 +27,8 @@ export default class Client extends EventEmitter {
     this.ws = opts.ws
     this.mqttClient = opts.mqttClient
     this.infrastructure = opts.infrastructure
+
+    this.statistical = new Statistical(opts.$deps)
 
     this.ws.send(generateMessage({ type: MESSAGE_TYPES.EVENT, event: INFRASTRUCTURE, value: this.infrastructure.toJSON() }))
 
@@ -118,6 +121,10 @@ export default class Client extends EventEmitter {
       floor.addRoom(room)
 
       this._sendResponse(message, true)
+    }
+    else if(message.method === 'getStat'){
+      const result = await this.statistical.getStatDevice(message.parameters.id)
+      this._sendResponse(message, result)
     }
   }
 }

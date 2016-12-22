@@ -17,7 +17,8 @@
             </ul>
 
             <h2>Nom du nœud</h2>
-
+            {{getStats}}
+            
             <h2>Tags</h2>
 
             <ul class="tag-list">
@@ -81,6 +82,12 @@ export default {
   computed: {
     ...mapState(['infrastructure'])
   },
+  asyncComputed: {
+    async getStats(){
+      const result = await this.giveStat()
+      return result
+    }
+  },
   methods: {
     getWifiIconClasses (signal) {
       return {
@@ -105,7 +112,12 @@ export default {
         operationAdd
       })
     },
-    ...mapActions({ toggleTagAction: 'toggleTag' })
+    async giveStat()
+    {
+        const result = await this.giveStatAction({id: this.nodeData.id})
+        return result
+    },
+    ...mapActions({ toggleTagAction: 'toggleTag', giveStatAction: 'giveStat'})
   }
 }
 </script>

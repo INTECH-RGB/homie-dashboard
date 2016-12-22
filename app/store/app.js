@@ -11,6 +11,7 @@ export const SET_WEBSOCKET_AUTH_FAILED = 'SET_WEBSOCKET_AUTH_FAILED'
 export const SET_INTENDED_ROUTE = 'SET_INTENDED_ROUTE'
 export const SET_INFRASTRUCTURE = 'SET_INFRASTRUCTURE'
 export const PATCH_INFRASTRUCTURE = 'PATCH_INFRASTRUCTURE'
+export const SET_STAT = 'SET_STAT'
 
 export default function initializeStore (app) {
   app.model({
@@ -139,7 +140,6 @@ export default function initializeStore (app) {
           }
           
         })
-        console.log("lol")
         return result
       },
 
@@ -152,6 +152,16 @@ export default function initializeStore (app) {
           }
         })
 
+        return result
+      },
+      async giveStat({commit}, opts) {
+        const result = await wsRequest({
+          ws, 
+          method: 'getStat', 
+          parameters: {
+            id: opts.id
+          }
+        })
         return result
       }
 

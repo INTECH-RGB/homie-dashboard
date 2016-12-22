@@ -56,6 +56,24 @@ export async function deleteToken ({ db }, token) {
   return result.changes === 1
 }
 
+export async function getStat({db}, device_id) {
+  const resultDb = await db.all(`
+  SELECT ph.id, ph.date,ph.value, p.node_property_id, n.device_node_id
+  FROM property_history ph 
+  JOIN properties p ON ph.property_id = p.id 
+  JOIN nodes n ON p.node_id = n.id 
+  WHERE n.device_node_id = ? 
+  ORDER BY ph.id`, device_id)
+
+  const resultFinal = {}
+
+  for(let db of resultDb){
+    resultFinal[db.id] = db
+  }
+
+  return resultFinal
+}
+
 /* Devices */
 
 /**
