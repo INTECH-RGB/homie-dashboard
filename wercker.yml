@@ -1,0 +1,53 @@
+box: node:7
+
+test-and-build:
+  steps:
+    - npm-install
+
+    - script:
+        name: lint server
+        code: |
+          npm run server-lint
+
+    - script:
+        name: test server
+        code: |
+          npm run server-test
+
+    - script:
+        name: build app
+        code: |
+          npm run app-build
+
+    - script:
+        name: build server
+        code: |
+          npm run server-build
+
+need-to-npm-publish:
+  steps:
+    - script:
+        name: check if need to npm publish
+        code: |
+          WERCKER_GIT_COMMIT_MESSAGE=`git log -1 --pretty='%s'`
+          if [[ $WERCKER_GIT_COMMIT_MESSAGE == \[deploy\]* ]]; then echo 0; else echo 1; fi
+
+npm-publish:
+  steps:
+    - script:
+        name: add .npmrc
+        code: |
+          echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > ~/.npmrc
+
+    - script:
+        name: publish to npm
+        code: |
+          cd dist-server
+          npm publish
+
+trigger-docker-hub:
+  steps:
+    - script:
+        name: TODO
+        code: |
+          echo TODO
