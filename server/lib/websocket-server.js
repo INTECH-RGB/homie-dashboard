@@ -51,7 +51,7 @@ export default function createWebsocketServer (opts) {
     if (process.env.NODE_ENV === 'production') {
       app.use(express.static(path.join(__dirname, '../../dist-app')))
       app.use(function (req, res, next) {
-        res.sendFile(path.join(__dirname, '../../index.html'))
+        res.sendFile(path.join(__dirname, '../../dist-app/index.html'))
       })
     }
 
