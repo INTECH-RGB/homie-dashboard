@@ -30,7 +30,7 @@ need-to-npm-publish:
         name: check if need to npm publish
         code: |
           WERCKER_GIT_COMMIT_MESSAGE=`git log -1 --pretty='%s'`
-          if [[ $WERCKER_GIT_COMMIT_MESSAGE == \[deploy\]* ]]; then echo 0; else echo 1; fi
+          if [[ $WERCKER_GIT_COMMIT_MESSAGE == \[deploy\]* ]]; then exit 0; else exit 1; fi
 
 npm-publish:
   steps:
