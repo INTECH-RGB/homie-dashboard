@@ -49,7 +49,6 @@
     "sqlite3": "^3.1.8",
     "toml": "^2.3.0",
     "uuid": "^3.0.0",
-    "vue-color": "^2.0.2",
     "ws": "^1.1.1",
     "yargs": "^6.5.0"
   },
@@ -72,13 +71,13 @@
     "font-awesome": "^4.7.0",
     "node-sass": "^4.0.0",
     "nyc": "^10.0.0",
-    "ocanvas": "^2.8.6",
     "sass-loader": "^4.0.2",
     "shx": "^0.2.0",
     "snazzy": "^5.0.0",
     "standard": "^8.5.0",
     "vbuild": "^4.0.0",
     "vue": "2.1.6",
+    "vue-color": "^2.0.2",
     "vue-grid-layout": "^2.0.0",
     "vue-loader": "^10.0.2",
     "vue-template-compiler": "2.1.6"
