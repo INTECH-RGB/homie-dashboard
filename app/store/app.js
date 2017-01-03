@@ -157,7 +157,8 @@ export default function initializeStore (app) {
           ws, 
           method: 'getStat', 
           parameters: {
-            id: opts.id
+            id: opts.id,
+            interval: opts.interval
           }
         })
         return result

@@ -118,7 +118,7 @@ export default {
     },
     async giveStat()
     {
-        const result = await this.giveStatAction({id: this.nodeData.id})
+        const result = await this.giveStatAction({id: this.nodeData.id, interval: "day"})
         return result
         
     },
