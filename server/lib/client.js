@@ -143,6 +143,8 @@ export default class Client extends EventEmitter {
       floor.addRoom(room)
 
       this._sendResponse(message, true)
+    } else if (message.method === 'getHomieEsp8266Settings') {
+      this._sendResponse(message, this.$deps.settings['homie-esp8266'])
     }
     else if(message.method === 'getStat'){
       const result = await this.statistical.getStatDevice(message.parameters.id, message.parameters.interval)
