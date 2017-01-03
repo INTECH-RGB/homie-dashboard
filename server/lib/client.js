@@ -1,4 +1,5 @@
 import {EventEmitter} from 'events'
+import uuid from 'uuid'
 
 import {generateMessage, parseMessage, MESSAGE_TYPES} from '../../common/ws-messages'
 import {INFRASTRUCTURE} from '../../common/events'
@@ -6,6 +7,10 @@ import Tag from './infrastructure/tag'
 import Floor from './infrastructure/floor'
 import Room from './infrastructure/room'
 import Statistical from './statistical'
+
+import TagModel from '../models/tag'
+import FloorModel from '../models/floor'
+import RoomModel from '../models/room'
 
 /**
  * This class handles WebSocket clients
@@ -75,6 +80,7 @@ export default class Client extends EventEmitter {
       const tag = new Tag()
       tag.id = tagId
       this.infrastructure.addTag(tag)
+      tag.model = await TagModel.forge({ id: tagId }).save(null, { method: 'insert' })
 
       this._sendResponse(message, true)
     } else if (message.method === 'toggleTag') {
@@ -86,13 +92,20 @@ export default class Client extends EventEmitter {
       const node = this.infrastructure.getDevice(deviceId).getNode(nodeId)
       const tag = this.infrastructure.getTag(tagId)
 
-      if (operationAdd) node.addTag(tag)
-      else node.deleteTag(tag)
+      if (operationAdd) {
+        node.addTag(tag)
+        await node.model.tags().attach(tag.model)
+      } else {
+        node.deleteTag(tag)
+        await node.model.tags().detach(tag.model)
+      }
 
       this._sendResponse(message, true)
     } else if (message.method === 'deleteTag') {
       const tagId = message.parameters.tagId
+      const tag = this.infrastructure.getTag(tagId)
 
+      await tag.model.destroy()
       this.infrastructure.deleteTag(tagId)
 
       this._sendResponse(message, true)
@@ -100,24 +113,33 @@ export default class Client extends EventEmitter {
       const name = message.parameters.name
 
       const floor = new Floor()
-      floor.id = 0
+      floor.model = await FloorModel.forge({ name }).save()
+      floor.id = floor.model.id
       floor.name = name
       this.infrastructure.addFloor(floor)
 
       this._sendResponse(message, true)
-    }
-    else if (message.method === 'addRoom') {
+    } else if (message.method === 'deleteFloor') {
+      const floorId = message.parameters.floorId
+      const floor = this.infrastructure.getFloor(floorId)
+
+      await floor.model.destroy()
+      this.infrastructure.deleteFloor(floorId)
+    } else if (message.method === 'addRoom') {
       const name = message.parameters.name
       const floorId = message.parameters.floor_id
-      const tagId = message.parameters.tag_id
+      const tagId = `room:${uuid()}`
+      const tag = new Tag()
+      tag.id = tagId
+      this.infrastructure.addTag(tag)
+      tag.model = await TagModel.forge({ id: tagId }).save(null, { method: 'insert' })
       const floor = this.infrastructure.getFloor(floorId)
       const room = new Room()
-      room.id = tagId
+      room.model = await RoomModel.forge({ name: floor.name, floor_id: floorId, tag_id: tagId }).save()
+      room.id = room.model.id
       room.name = name
       room.floor = floor
       room.tagId = tagId
-      console.log(floorId)
-      console.log(room)
       floor.addRoom(room)
 
       this._sendResponse(message, true)

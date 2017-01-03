@@ -17,7 +17,8 @@
             </ul>
 
             <h2>Nom du nœud</h2>
-            {{getStats}}
+            <statistical :stat="getStats"></statistical>
+           
             
             <h2>Tags</h2>
 
@@ -71,6 +72,7 @@
 
 <script>
 import {mapState, mapActions} from 'eva.js'
+import Statistical from './Statistical'
 
 export default {
   props: ['nodeData', 'hasActions'],
@@ -79,12 +81,14 @@ export default {
       settingsOpened: false
     }
   },
+  components: {Statistical},
   computed: {
     ...mapState(['infrastructure'])
   },
   asyncComputed: {
     async getStats(){
       const result = await this.giveStat()
+      
       return result
     }
   },
@@ -116,6 +120,7 @@ export default {
     {
         const result = await this.giveStatAction({id: this.nodeData.id})
         return result
+        
     },
     ...mapActions({ toggleTagAction: 'toggleTag', giveStatAction: 'giveStat'})
   }

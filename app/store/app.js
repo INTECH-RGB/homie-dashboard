@@ -134,11 +134,8 @@ export default function initializeStore (app) {
           method: 'addRoom',
           parameters: {
             name: opts.name,
-            floor_id: opts.floor_id,
-            tag_id: opts.tag_id
-           
+            floor_id: opts.floor_id
           }
-          
         })
         return result
       },
@@ -154,6 +151,7 @@ export default function initializeStore (app) {
 
         return result
       },
+
       async giveStat({commit}, opts) {
         const result = await wsRequest({
           ws, 
@@ -163,14 +161,31 @@ export default function initializeStore (app) {
           }
         })
         return result
-      }
+      },
 
-      
-      
+      async deleteFloor ({commit}, opts) {
+        const result = await wsRequest({
+          ws,
+          method: 'deleteFloor',
+          parameters: {
+            floorId: opts.floorId
+          }
+        })
+
+        return result
+      }
     }
   })
 
-  const ws = new WebSocket(`ws://127.0.0.1:5000`)
+  let wsUrl
+  if (process.env.NODE_ENV === 'production') {
+    const l = window.location
+    wsUrl = ((l.protocol === 'https:') ? 'wss://' : 'ws://') + l.host
+  } else {
+    wsUrl = 'ws://127.0.0.1:5000'
+  }
+
+  const ws = new WebSocket(wsUrl)
   ws.on('open', function onOpen () {
     app.$store.commit(SET_IS_CONNECTED, true)
   }).on('close', function onClose (event) {

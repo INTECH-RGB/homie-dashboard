@@ -15,6 +15,8 @@ export default class Floor extends EventEmitter {
 
     this.isValid = false
 
+    this.model = null
+
     Object.seal(this)
   }
 
@@ -54,7 +56,7 @@ export default class Floor extends EventEmitter {
 
     if (!wasValid && this.isValid) this.emit('valid')
 
-    if (this.isValid) this.emit('update', { type: 'room' })
+    if (this.isValid) this.emit('update', { entity: this })
   }
 
   toJSON () {

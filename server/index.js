@@ -1,33 +1,39 @@
-import dotenv from 'dotenv'
-import sqlite from 'sqlite'
-
+import path from 'path'
+import Knex from 'knex'
+import {bookshelf} from './lib/database'
 import log from './lib/log'
 import createWebsocketServer from './lib/websocket-server'
 import start from './start'
 import loadSettings from './lib/settings'
 
-dotenv.config()
+export async function bootstrap (opts) {
+  log.level(opts.logLevel)
 
-async function wrapper () {
   log.info('starting')
 
   let settings
   try {
-    settings = await loadSettings()
+    settings = await loadSettings(opts.dataDir)
     log.info('settings loaded')
   } catch (err) {
     log.fatal('cannot load settings', err)
     process.exit(1)
   }
 
-  let db
+  const knex = new Knex({
+    client: 'sqlite3',
+    connection: {
+      filename: path.join(opts.dataDir, './homie-dashboard.db')
+    },
+    useNullAsDefault: true
+  })
+  bookshelf.knex = knex
+
   try {
-    db = await sqlite.open('./homie-dashboard.db')
-    log.debug('database opened')
-    await db.run('PRAGMA foreign_keys = ON')
-    const fk = await db.get('PRAGMA foreign_keys')
-    if (!fk || fk.foreign_keys !== 1) log.warn('no foreign key support')
-    await db.migrate()
+    await knex.raw('PRAGMA foreign_keys=ON')
+    await knex.raw('PRAGMA locking_mode=EXCLUSIVE')
+    await knex.raw('PRAGMA synchronous=NORMAL')
+    await knex.migrate.latest({ directory: path.join(__dirname, '/migrations') })
     log.debug('database migrated')
   } catch (err) {
     log.fatal('cannot open or migrate database', err)
@@ -36,17 +42,12 @@ async function wrapper () {
 
   let wss
   try {
-    wss = await createWebsocketServer({ ip: process.env.WS_API_IP, port: parseInt(process.env.WS_API_PORT, 10), db, settings })
-    log.info(`listening on ${process.env.WS_API_IP}:${process.env.WS_API_PORT}`)
+    wss = await createWebsocketServer({ ip: opts.ip, port: opts.port, settings })
+    log.info(`listening on ${opts.ip}:${opts.port}`)
   } catch (err) {
     log.fatal('cannot start server', err)
     process.exit(1)
   }
 
-  start({ log, wss, db, settings })
+  start({ log, wss, settings })
 }
-
-wrapper().catch(function onError (err) {
-  log.fatal('unhandled error', err)
-  process.exit(2)
-})
