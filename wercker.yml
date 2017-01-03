@@ -1,0 +1,83 @@
+box: node:7
+
+test-and-build:
+  steps:
+    - script:
+        name: install Yarn
+        code: |
+          npm install -g yarn
+
+    - script:
+        name: set Yarn cache
+        code: |
+          yarn config set cache-folder $WERCKER_CACHE_DIR/yarn
+
+    - script:
+        name: install dependencies
+        code: |
+          yarn
+
+    - script:
+        name: lint server
+        code: |
+          npm run server-lint
+
+    - script:
+        name: test server
+        code: |
+          npm run server-test
+
+    - script:
+        name: build app
+        code: |
+          npm run app-build
+
+    - script:
+        name: build server
+        code: |
+          npm run server-build
+
+need-to-npm-publish:
+  steps:
+    - script:
+        name: check if need to npm publish
+        code: |
+          WERCKER_GIT_COMMIT_MESSAGE=`git log -1 --pretty='%s'`
+          echo Git commit message: $WERCKER_GIT_COMMIT_MESSAGE
+          if [[ $WERCKER_GIT_COMMIT_MESSAGE == \[deploy\]* ]]; then echo "Needed"; else echo "Not needed" && exit 1; fi
+
+npm-publish:
+  steps:
+    - script:
+        name: add .npmrc
+        code: |
+          echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > ~/.npmrc
+
+    - script:
+        name: publish to npm
+        code: |
+          cd dist-server
+          npm publish
+
+trigger-docker-hub:
+  steps:
+    - script:
+        name: download Scaleway CLI
+        code: |
+          wget https://github.com/scaleway/scaleway-cli/releases/download/v1.11.1/scw_1.11.1_linux_amd64.tar.gz
+          tar zxvf scw_1.11.1_linux_amd64.tar.gz --strip-components 1 --wildcards --no-anchored scw
+
+    - script:
+        name: login to Scaleway
+        code: |
+          ./scw login -t $SCALEWAY_TOKEN -o $SCALEWAY_ACCESS_KEY -s
+
+    - add-ssh-key:
+        keyname: SSH
+
+    - script:
+        name: trigger work on Scaleway
+        code: |
+          #SERVER=$(./scw run --detach --commercial-type=C1 Alpine_Linux)
+          #./scw exec --wait $SERVER "echo http://dl-cdn.alpinelinux.org/alpine/v3.4/main > /etc/apk/repositories && echo http://dl-cdn.alpinelinux.org/alpine/v3.4/community >> /etc/apk/repositories && apk update && apk upgrade --available && apk add tmux"
+          #./scw exec $SERVER tmux new "wget -O /root/worker.sh https://raw.githubusercontent.com/INTECH-RGBH/docker-stuff/master/worker.sh && chmod +x /root/worker.sh && /root/worker.sh $DOCKER_USERNAME $DOCKER_PASSWORD"

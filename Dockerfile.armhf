@@ -4,24 +4,23 @@ FROM resin/armhf-alpine-node:6-slim
 RUN mkdir -p /usr/src/homie-dashboard
 
 # User data directory
-RUN mkdir -p /data
+RUN mkdir -p /homie-dashboard
 
 WORKDIR /usr/src/homie-dashboard
 
 # Add node-red user so we aren't running as root
 RUN adduser -h /usr/src/homie-dashboard -D -H homie-dashboard \
-    && chown -R homie-dashboard:homie-dashboard /data \
+    && chown -R homie-dashboard:homie-dashboard /homie-dashboard \
     && chown -R homie-dashboard:homie-dashboard /usr/src/homie-dashboard
 
-ADD dist-server /usr/src/homie-dashboard
 RUN apk add --no-cache --virtual build-dependencies make g++ python \
-  && npm install --production \
+  && npm install homie-dashboard \
   && apk del build-dependencies
 
 USER homie-dashboard
 
-VOLUME ["/data"]
+VOLUME ["/homie-dashboard"]
 
 EXPOSE 35589
 
-CMD ["node", "./src/bin/cli.js", "--ip", "0.0.0.0", "--port", "35589", "--dataDir", "/data"]
+CMD ["node", "./node_modules/homie-dashboard/src/bin/cli.js", "--ip", "0.0.0.0", "--port", "35589", "--dataDir", "/homie-dashboard"]
