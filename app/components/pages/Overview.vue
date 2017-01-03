@@ -75,7 +75,7 @@
     </div>
 
     <template v-for="floor in infrastructure.house.floors">
-      <div @click="modelizeFloor(floor.rooms)" class="notification is-primary clickable">
+      <div class="notification is-primary clickable">
         <button @click="deleteFloor(floor.id); canvas.reset()" class="delete"></button>
         <p class="title">
           <span class="icon"><i class="fa fa-eye"></i></span>
@@ -97,7 +97,6 @@
 
 <script>
 import {mapState, mapActions} from 'eva.js'
-import ocanvas from 'ocanvas'
 import {GridLayout, GridItem} from 'vue-grid-layout/dist/vue-grid-layout.js'
 
 export default {
@@ -135,52 +134,6 @@ export default {
     },
     async deleteFloor (floorId) {
       await this.deleteFloorAction({ floorId })
-    },
-    modelizeFloor (rooms) {
-      let marge = 33
-      let marged = 40
-      let i = 1
-      let y = 0
-      let a = 1
-      const canvas = ocanvas.create({
-        canvas: '#canvas',
-        background: '#ccc',
-        fps: 60
-      })
-
-      for (const room in rooms) {
-        y++
-        if (y > 3) {
-          y = 1
-          a++
-          i = 1
-        }
-
-        const rectangle = canvas.display.rectangle({
-          x: 177 * i + marge * i,
-          y: 170 * a + marged * a,
-          origin: { x: 'center', y: 'center' },
-          width: 200,
-          height: 200,
-          stroke: 'outside 5px rgba(255, 0, 0, 0.5)'
-        })
-        canvas.addChild(rectangle)
-
-        rectangle.dragAndDrop()
-
-        const text = canvas.display.text({
-          x: 0,
-          y: -20,
-          origin: { x: 'center', y: 'top' },
-          font: 'bold 30px sans-serif',
-          text: rooms[room].name,
-          fill: '#f44'
-        })
-
-        rectangle.addChild(text)
-        i++
-      }
-      this.canvas = canvas
     },
     ...mapActions({ addFloorAction: 'addFloor', addRoomAction: 'addRoom', deleteFloorAction: 'deleteFloor' })
   }
