@@ -26,12 +26,14 @@
       }
     }
   },
+  "bin": {
+    "homie-dashboard": "./src/bin/cli.js"
+  },
   "bugs": "https://github.com/INTECH-RGBH/homie-dashboard/issues",
   "contributors": [
     "Marvin ROGER",
     "Valentin GAUTHEY",
-    "Matthieu BOISSADY",
-    "Hugo ZAMMIT"
+    "Matthieu BOISSADY"
   ],
   "dependencies": {
     "body-parser": "^1.15.2",
@@ -95,14 +97,11 @@
   ],
   "license": "GPL-2.0",
   "main": "src/index.js",
+  "preferGlobal": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/INTECH-RGBH/homie-dashboard.git"
   },
-  "bin": {
-    "homie-dashboard": "./src/bin/cli.js"
-  },
-  "preferGlobal": true,
   "scripts": {
     "app-build": "cross-env BABEL_ENV=production NODE_ENV=production vbuild",
     "app-dev": "vbuild --dev",

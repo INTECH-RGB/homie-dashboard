@@ -8,10 +8,10 @@ RUN mkdir -p /homie-dashboard
 
 WORKDIR /usr/src/homie-dashboard
 
-# Add node-red user so we aren't running as root
+# Add homie-dashboard user so we aren't running as root
 RUN adduser -h /usr/src/homie-dashboard -D -H homie-dashboard \
-    && chown -R homie-dashboard:homie-dashboard /homie-dashboard \
-    && chown -R homie-dashboard:homie-dashboard /usr/src/homie-dashboard
+  && chown -R homie-dashboard:homie-dashboard /homie-dashboard \
+  && chown -R homie-dashboard:homie-dashboard /usr/src/homie-dashboard
 
 RUN apk add --no-cache --virtual build-dependencies make g++ python \
   && npm install homie-dashboard \
