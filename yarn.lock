@@ -1085,6 +1085,10 @@ base64-js@^1.0.2:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.2.0.tgz#a39992d723584811982be5e290bb6a53d86700f1"
 
+batch-processor@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/batch-processor/-/batch-processor-1.0.0.tgz#75c95c32b748e0850d10c2b168f6bdbe9891ace8"
+
 bcrypt-pbkdf@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.0.tgz#3ca76b85241c7170bf7d9703e7b9aa74630040d4"
@@ -2246,6 +2250,12 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
+element-resize-detector@^1.1.10:
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/element-resize-detector/-/element-resize-detector-1.1.10.tgz#512ca38e1a27b3f6582a83ea0dfed1ba1abab56d"
+  dependencies:
+    batch-processor "^1.0.0"
+
 elliptic@^6.0.0:
   version "6.3.2"
   resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.3.2.tgz#e4c81e0829cf0a65ab70e998b8232723b5c1bc48"
@@ -3379,6 +3389,10 @@ installed-by-yarn-globally@^0.1.0:
   resolved "https://registry.yarnpkg.com/installed-by-yarn-globally/-/installed-by-yarn-globally-0.1.1.tgz#c6de9721c536b896930da19efb90e8499e40e7e2"
   dependencies:
     user-home "^2.0.0"
+
+interact.js@^1.2.6:
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/interact.js/-/interact.js-1.2.8.tgz#b62bc004563b5c6f294b6b115b396205d843f60b"
 
 internal-ip@^1.2.0:
   version "1.2.0"
@@ -6715,6 +6729,13 @@ vue-color@^2.0.2:
     lodash.throttle "^4.0.0"
     material-colors "^1.0.0"
     tinycolor2 "^1.1.2"
+
+vue-grid-layout@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/vue-grid-layout/-/vue-grid-layout-2.0.0.tgz#b635bd91400def60a34d3234155cedcf29620aee"
+  dependencies:
+    element-resize-detector "^1.1.10"
+    interact.js "^1.2.6"
 
 vue-hot-reload-api@^2.0.1:
   version "2.0.7"

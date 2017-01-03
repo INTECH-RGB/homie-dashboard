@@ -1,5 +1,23 @@
 <template>
   <div>
+    <grid-layout :layout="layout"
+               :col-num="12"
+               :row-height="30"
+               :is-draggable="true"
+               :is-resizable="true"
+               :vertical-compact="true"
+               :use-css-transforms="true"
+    >
+      <grid-item v-for="item in layout"
+                 :x="item.x"
+                 :y="item.y"
+                 :w="item.w"
+                 :h="item.h"
+                 :i="item.i"
+              >
+          <span class="text">{{item.i}}</span>
+      </grid-item>
+    </grid-layout>
     <div class="modal" :class="{ 'is-active': addFloorOpened }">
       <div class="modal-background"></div>
       <div class="modal-card">
@@ -80,6 +98,7 @@
 <script>
 import {mapState, mapActions} from 'eva.js'
 import ocanvas from 'ocanvas'
+import {GridLayout, GridItem} from 'vue-grid-layout/dist/vue-grid-layout.js'
 
 export default {
   data () {
@@ -90,8 +109,13 @@ export default {
       roomNameInput: '',
       addRoomOpened: false,
       floorId: null,
-      windowWidth: window.innerWidth
+      windowWidth: window.innerWidth,
+      layout: [{ x: 0, y: 0, w: 2, h: 2, i: '0' }]
     }
+  },
+  components: {
+    GridLayout,
+    GridItem
   },
   computed: {
     ...mapState(['infrastructure'])
