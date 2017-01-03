@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import {mapActions, mapState} from 'eva.js'
+import {mapActions} from 'eva.js'
 
 export default {
   data () {
@@ -31,9 +31,6 @@ export default {
       password: '',
       isWrongPassword: false
     }
-  },
-  computed: {
-    ...mapState('intendedRoute')
   },
   methods: {
     async send () {
