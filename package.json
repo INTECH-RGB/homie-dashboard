@@ -38,7 +38,6 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "bookshelf": "^0.10.2",
-    "bunyan": "^1.8.4",
     "clor": "^2.0.2",
     "cookie": "^0.3.1",
     "express": "^4.14.0",
@@ -105,9 +104,9 @@
     "app-build": "cross-env BABEL_ENV=production NODE_ENV=production vbuild",
     "app-dev": "vbuild --dev",
     "common-depcheck": "depcheck",
-    "emulator-start": "babel-watch emulator/index.js | bunyan",
+    "emulator-start": "babel-watch emulator/index.js",
     "server-build": "cross-env BABEL_ENV=production NODE_ENV=production babel server/ -d dist-server/src/ && cross-env BABEL_ENV=production babel common/ -d dist-server/common/ && npm run app-build && shx cp -r dist-app/ dist-server/ && shx cp package.json dist-server/",
-    "server-dev": "babel-watch server/bin/cli.js -- --port 5000 --ip 0.0.0.0 --logLevel debug | bunyan",
+    "server-dev": "babel-watch server/bin/cli.js -- --port 5000 --ip 0.0.0.0 --logLevel debug",
     "server-lint": "standard server/**/*.js | snazzy",
     "server-test": "nyc ava"
   }
