@@ -1,5 +1,6 @@
 language: node_js
 node_js:
+  - 6
   - 7
 
 cache:
@@ -55,7 +56,7 @@ after_deploy:
         "branch": "master",
         "config": {
           "env": {
-            "global": ["VERSION=\"'"$TRAVIS_TAG"'\""]
+            "global": ["HOMIE_DASHBOARD_VERSION=\"'"$TRAVIS_TAG"'\""]
           }
         }
       }
