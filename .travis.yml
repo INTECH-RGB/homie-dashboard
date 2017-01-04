@@ -45,6 +45,7 @@ deploy:
     node: 7
     condition: "$SIDE == server"
   provider: npm
+  email: "$NPM_EMAIL"
   api_key: "$NPM_TOKEN"
 
 after_deploy:
