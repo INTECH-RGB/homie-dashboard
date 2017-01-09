@@ -7,6 +7,8 @@
         <a v-else class="button" @click="changeInterval('week')">Par Semaine</a>
         <a v-if="interval === 'day'" class="button is-primary">Par Jour</a>
         <a v-else class="button" @click="changeInterval('day')">Par Jour</a>
+        <a v-if="interval === 'hour'" class="button is-primary">Par Heure</a>
+        <a v-else class="button" @click="changeInterval('hour')">Par Heure</a>
     </div>
 </div>
 
@@ -132,6 +134,7 @@ export default {
                     data[key].label = element.node_property_id
                 }
                 if(this.interval === "day") data[key].labels.push(new Date(element.date).getHours() + "H")
+                else if(this.interval === "hour") data[key].labels.push(new Date(element.date).getMinutes() + "M")
                 else if (this.interval === "week") {
                     var date = new Date(element.date)
                     var day_of_week = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"]
