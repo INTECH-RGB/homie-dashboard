@@ -58,8 +58,8 @@ export default class Floor extends EventEmitter {
     this._wasUpdated()
   }
 
-  updateMap(map) {
-    this.roomsMap = map 
+  updateMap (map) {
+    this.roomsMap = map
     this._wasUpdated()
   }
 

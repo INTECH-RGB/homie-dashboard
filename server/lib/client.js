@@ -125,6 +125,8 @@ export default class Client extends EventEmitter {
 
       await floor.model.destroy()
       this.infrastructure.deleteFloor(floorId)
+
+      this._sendResponse(message, true)
     } else if(message.method === 'deleteRoom') {
       const floorId = message.parameters.floorId
       const roomId = message.parameters.roomId
@@ -164,7 +166,6 @@ export default class Client extends EventEmitter {
       const floorId = message.parameters.floorId
       const map = message.parameters.map
       const floor = this.infrastructure.getFloor(floorId)
-      console.log(map)
       floor.updateMap(map)
       await floor.model.save({rooms_map: JSON.stringify(floor.roomsMap)})
 

@@ -52,7 +52,7 @@
   <div class="container">
     <div class="nav-left">
       <a class="nav-item">
-       
+
       </a>
        <template v-for="floor in infrastructure.house.floors">
       <a @click= "updateRoomLayout(floor.id)" :class="(mapFloorId === floor.id) ? 'nav-item is-tab is-hidden-mobile is-active' : 'nav-item is-tab is-hidden-mobile'">{{ floor.name }}</a>
@@ -64,8 +64,8 @@
      <a @click="openaddRoomModal(mapFloorId)" class= "bouton">Ajouter une salle</a>
      </div>
     </nav>
-   
-    <grid-layout
+
+    <grid-layout v-if="mapFloorId"
             :layout="layout"
             :col-num="12"
             :row-height="30"
@@ -82,12 +82,12 @@
                    :w="item.w"
                    :h="item.h"
                    :i="item.i">
-            
+
                 <span class="text">
                 <p>{{ getRoomFromTagId(item.i).name }}</p>
                 </span>
                 <button @click="deleteRoom(getRoomFromTagId(item.i).id)" class="is-info delete "></button>
-            
+
         </grid-item>
     </grid-layout>
 
@@ -131,10 +131,11 @@ export default {
     ...mapState(['infrastructure'])
   },
   methods: {
-    updateMap() {
+    updateMap () {
+      if (!this.mapFloorId) return
       this.updateMapAction({ floorId: this.mapFloorId, map: this.layout })
     },
-    updateRoomLayout(floorId) {
+    updateRoomLayout (floorId) {
       this.mapFloorId = floorId
     },
     addFloor () {
@@ -145,17 +146,21 @@ export default {
       this.addRoomOpened = false
       this.addRoomAction({ name: this.roomNameInput, floor_id: this.floorId })
     },
-    async deleteRoom(roomId) {
-      await this.deleteRoomAction( {floorId: this.mapFloorId, roomId } )
+    async deleteRoom (roomId) {
+      await this.deleteRoomAction({ floorId: this.mapFloorId, roomId })
     },
     getRoomFromTagId (tagId) {
-      return Object.values(this.infrastructure.house.floors[this.mapFloorId].rooms).find(el => el.tagId === tagId)
+      const room = Object.values(this.infrastructure.house.floors[this.mapFloorId].rooms).find(el => el.tagId === tagId)
+
+      if (room) return room
+      else return { name: '', id: '' }
     },
     openaddRoomModal (id) {
       this.addRoomOpened = true
       this.floorId = id
     },
     async deleteFloor (floorId) {
+      this.mapFloorId = null
       await this.deleteFloorAction({ floorId })
     },
     ...mapActions({ updateMapAction: 'updateMap', addFloorAction: 'addFloor', addRoomAction: 'addRoom', deleteFloorAction: 'deleteFloor', deleteRoomAction: 'deleteRoom' })
