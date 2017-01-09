@@ -177,8 +177,8 @@ export default function initializeStore (app) {
           ws,
           method: 'updateMap',
           parameters: {
-            floorId : opts.floorId,
-            map : opts.map
+            floorId: opts.floorId,
+            map: opts.map
           }
         })
 

@@ -6,13 +6,16 @@ export default {
   },
   dist: './dist-app',
   template: './app/index.html',
-  open: true,
   notify: true,
   resolve: true,
-  vendor: ['axios', 'eva.js', 'eventemitter3', 'fast-json-patch', 'uuid', 'vue', 'vue-color'],
+  vendor: ['axios', 'eva.js', 'eventemitter3', 'fast-json-patch', 'uuid', 'vue', 'vue-color', 'vue-grid-layout/dist/vue-grid-layout.min.js'],
   mergeConfig: {
     performance: {
-      hints: false
+      assetFilter: function (assetFilename) {
+        return assetFilename.endsWith('.js')
+      },
+      maxEntrypointSize: 500000,
+      maxAssetSize: 400000
     }
   }
 }

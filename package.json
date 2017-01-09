@@ -106,7 +106,7 @@
     "url": "https://github.com/INTECH-RGBH/homie-dashboard.git"
   },
   "scripts": {
-    "app-build": "cross-env BABEL_ENV=production NODE_ENV=production vbuild",
+    "app-build": "cross-env BABEL_ENV=production NODE_ENV=production vbuild && shx rm dist-app/*.map",
     "app-dev": "vbuild --dev",
     "common-depcheck": "npm-check --no-emoji",
     "emulator-start": "babel-watch emulator/index.js",
