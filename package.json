@@ -75,7 +75,7 @@
     "shx": "^0.2.0",
     "snazzy": "^5.0.0",
     "standard": "^8.5.0",
-    "vbuild": "^4.0.0",
+    "vbuild": "^5.0.0",
     "vue": "2.1.6",
     "vue-color": "^2.0.2",
     "vue-grid-layout": "^2.0.0",
@@ -106,7 +106,7 @@
     "app-dev": "vbuild --dev",
     "common-depcheck": "depcheck",
     "emulator-start": "babel-watch emulator/index.js",
-    "server-build": "cross-env BABEL_ENV=production NODE_ENV=production babel server/ -d dist-server/src/ && cross-env BABEL_ENV=production babel common/ -d dist-server/common/ && npm run app-build && shx cp -r dist-app/ dist-server/ && shx cp package.json dist-server/",
+    "server-build": "cross-env BABEL_ENV=production NODE_ENV=production babel server/ -d dist-server/src/ && cross-env BABEL_ENV=production NODE_ENV=production babel common/ -d dist-server/common/ && npm run app-build && shx cp -r dist-app/ dist-server/ && shx cp package.json dist-server/",
     "server-dev": "babel-watch server/bin/cli.js -- --port 5000 --ip 0.0.0.0 --logLevel debug",
     "server-lint": "standard server/**/*.js | snazzy",
     "server-test": "nyc ava"

@@ -6,6 +6,11 @@ export default {
   },
   dist: './dist-app',
   template: './app/index.html',
+  open: true,
+  notify: true,
   resolve: true,
-  vendor: ['axios', 'eva.js', 'eventemitter3', 'fast-json-patch', 'uuid', 'vue', 'vue-color']
+  vendor: ['axios', 'eva.js', 'eventemitter3', 'fast-json-patch', 'uuid', 'vue', 'vue-color'],
+  performance: {
+    hints: 'false'
+  }
 }
