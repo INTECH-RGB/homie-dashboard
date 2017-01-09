@@ -12,7 +12,9 @@
           <div class="box column is-half is-offset-one-quarter">
             <p class="control has-icon">
               <input v-model="password" @keyup.enter="send" :class="{input: true, 'is-medium': true, 'is-danger': isWrongPassword}" type="password" placeholder="Mot de passe">
-              <i class="fa fa-lock"></i>
+              <span class="icon">
+                <i class="fa fa-lock"></i>
+              </span>
               <span v-if="isWrongPassword" class="help is-danger">Le mot de passe est invalide.</span>
             </p>
           </div>

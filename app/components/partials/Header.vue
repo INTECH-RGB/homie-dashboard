@@ -19,7 +19,7 @@
 
           <div :class="{'nav-right': true, 'nav-menu': true, 'is-active': isMobileMenuActive}">
             <span class="nav-item">
-              <a class="button is-light is-outlined" @click.prevent="openConfiguratorPopup">
+              <a class="button is-primary is-inverted is-outlined" @click.prevent="openConfiguratorPopup">
                 <span class="icon">
                   <i class="fa fa-plus-circle"></i>
                 </span>

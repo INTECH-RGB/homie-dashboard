@@ -38,7 +38,9 @@
 
           <p class="control has-icon">
             <input v-model="deviceName" class="input is-medium" type="text" placeholder="Nom du périphérique">
-            <i class="fa fa-hashtag"></i>
+            <span class="icon">
+              <i class="fa fa-hashtag"></i>
+            </span>
           </p>
 
           <a :disabled="deviceName === ''" :class="{button: true, 'is-loading': putConfigOngoing}" @click.prevent="sendConfiguration">OK</a>
