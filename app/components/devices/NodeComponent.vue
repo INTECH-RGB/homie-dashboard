@@ -17,7 +17,10 @@
             </ul>
 
             <h2>Nom du nœud</h2>
-
+            
+            <statistical :nodeId="nodeData.id"></statistical>
+           
+            
             <h2>Tags</h2>
 
             <ul class="tag-list">
@@ -70,6 +73,7 @@
 
 <script>
 import {mapState, mapActions} from 'eva.js'
+import Statistical from './Statistical'
 
 export default {
   props: ['nodeData', 'hasActions'],
@@ -78,6 +82,7 @@ export default {
       settingsOpened: false
     }
   },
+  components: {Statistical},
   computed: {
     ...mapState(['infrastructure'])
   },
@@ -105,7 +110,7 @@ export default {
         operationAdd
       })
     },
-    ...mapActions({ toggleTagAction: 'toggleTag' })
+    ...mapActions({ toggleTagAction: 'toggleTag'})
   }
 }
 </script>

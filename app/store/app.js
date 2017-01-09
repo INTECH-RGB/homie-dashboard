@@ -11,6 +11,7 @@ export const SET_WEBSOCKET_AUTH_FAILED = 'SET_WEBSOCKET_AUTH_FAILED'
 export const SET_INTENDED_ROUTE = 'SET_INTENDED_ROUTE'
 export const SET_INFRASTRUCTURE = 'SET_INFRASTRUCTURE'
 export const PATCH_INFRASTRUCTURE = 'PATCH_INFRASTRUCTURE'
+export const SET_STAT = 'SET_STAT'
 
 export default function initializeStore (app) {
   app.model({
@@ -161,6 +162,17 @@ export default function initializeStore (app) {
 
         return result
       },
+      async giveStat({commit}, opts) {
+        const result = await wsRequest({
+          ws, 
+          method: 'getStat', 
+          parameters: {
+            id: opts.id,
+            interval: opts.interval
+          }
+        })
+        return result
+      },
       async deleteFloor ({commit}, opts) {
         const result = await wsRequest({
           ws,
@@ -178,8 +190,8 @@ export default function initializeStore (app) {
           ws,
           method: 'updateMap',
           parameters: {
-            floorId : opts.floorId,
-            map : opts.map
+            floorId: opts.floorId,
+            map: opts.map
           }
         })
 

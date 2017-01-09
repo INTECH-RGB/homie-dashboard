@@ -1,4 +1,5 @@
 import EVA from 'eva.js'
+import AsyncComputed from 'vue-async-computed'
 import App from './components/App'
 
 import initializeStore, {SET_INTENDED_ROUTE, SET_IS_AUTHENTIFIED} from './store/app'
@@ -8,6 +9,7 @@ import Devices from './components/pages/Devices'
 
 import Authentication from './components/standalones/Authentication'
 import AddDevice from './components/standalones/AddDevice'
+
 
 const app = new EVA({ mode: 'history' })
 
@@ -46,5 +48,5 @@ app.$router.beforeEach((to, from, next) => {
 app.$router.afterEach((to, from) => {
   document.title = `${to.meta.title} - Homie Dashboard`
 })
-
+app.use(AsyncComputed)
 app.start(App, '#app')

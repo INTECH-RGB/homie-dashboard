@@ -1,4 +1,4 @@
-import clor from 'clor'
+import c from 'clor/c'
 import {EOL} from 'os'
 
 export const LOG_LEVELS = {
@@ -85,15 +85,15 @@ class Log {
   _getColoredType (type) {
     switch (type) {
       case LOG_LEVELS.FATAL:
-        return clor.inverse.bold.red('fatal:').toString()
+        return c`<inverse><bold><red>fatal:</red></bold></inverse>`
       case LOG_LEVELS.ERROR:
-        return clor.red('error:').toString()
+        return c`<red>error:</red>`
       case LOG_LEVELS.WARN:
-        return clor.yellow(' warn:').toString()
+        return c`<yellow> warn:</yellow>`
       case LOG_LEVELS.INFO:
-        return clor.cyan(' info:').toString()
+        return c`<cyan> info:</cyan>`
       case LOG_LEVELS.DEBUG:
-        return clor.underline.white('debug:').toString()
+        return c`<underline><white>debug:</white></underline>`
       default:
         return '  log:'
     }

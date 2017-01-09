@@ -6,6 +6,7 @@ import {INFRASTRUCTURE} from '../../common/events'
 import Tag from './infrastructure/tag'
 import Floor from './infrastructure/floor'
 import Room from './infrastructure/room'
+import Statistical from './statistical'
 
 import TagModel from '../models/tag'
 import FloorModel from '../models/floor'
@@ -31,6 +32,8 @@ export default class Client extends EventEmitter {
     this.ws = opts.ws
     this.mqttClient = opts.mqttClient
     this.infrastructure = opts.infrastructure
+
+    this.statistical = new Statistical(opts.$deps)
 
     this.ws.send(generateMessage({ type: MESSAGE_TYPES.EVENT, event: INFRASTRUCTURE, value: this.infrastructure.toJSON() }))
 
@@ -157,7 +160,7 @@ export default class Client extends EventEmitter {
       await floor.model.save({ rooms_map: JSON.stringify(floor.roomsMap) })
 
       this._sendResponse(message, true)
-    } else if ( message.method === 'updateMap') {
+    } else if (message.method === 'updateMap') {
       const floorId = message.parameters.floorId
       const map = message.parameters.map
       const floor = this.infrastructure.getFloor(floorId)
@@ -166,10 +169,12 @@ export default class Client extends EventEmitter {
       await floor.model.save({rooms_map: JSON.stringify(floor.roomsMap)})
 
       this._sendResponse(message, true)
-    }
-    
-     else if (message.method === 'getHomieEsp8266Settings') {
+    } else if (message.method === 'getHomieEsp8266Settings') {
       this._sendResponse(message, this.$deps.settings['homie-esp8266'])
+    }
+    else if(message.method === 'getStat'){
+      const result = await this.statistical.getStatDevice(message.parameters.id, message.parameters.interval)
+      this._sendResponse(message, result)
     }
   }
 }

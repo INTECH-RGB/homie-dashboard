@@ -1,6 +1,6 @@
 <template>
   <div>
-   
+
     <div class="modal" :class="{ 'is-active': addFloorOpened }">
       <div class="modal-background"></div>
       <div class="modal-card">
@@ -97,7 +97,7 @@
 <script>
 import debounce from 'lodash.debounce'
 import {mapState, mapActions} from 'eva.js'
-import {GridLayout, GridItem} from 'vue-grid-layout/dist/vue-grid-layout.js'
+import {GridLayout, GridItem} from 'vue-grid-layout/dist/vue-grid-layout.min.js'
 
 export default {
   data () {
@@ -167,10 +167,10 @@ export default {
   .clickable
     cursor: pointer
 
-  .vue-grid-layout 
+  .vue-grid-layout
     background: #eee
 
-  .columns 
+  .columns
     -moz-columns: 120px
     -webkit-columns: 120px
     columns: 120px
@@ -179,17 +179,17 @@ export default {
     background: #e74c3c
     border: 1px solid black
 
-  .vue-grid-item.resizing 
+  .vue-grid-item.resizing
     opacity: 0.9
 
-  .vue-grid-item.static 
+  .vue-grid-item.static
     background: #cce
 
   .bouton
     margin-left: 2cm
     color: blue
 
-  .vue-grid-item .text 
+  .vue-grid-item .text
     font-size: 24px
     text-align: center
     position: absolute
@@ -201,7 +201,7 @@ export default {
     margin: auto
     height: 24px
 
-  .vue-grid-item .minMax 
+  .vue-grid-item .minMax
     font-size: 12px
 
 </style>

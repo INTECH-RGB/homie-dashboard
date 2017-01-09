@@ -3,19 +3,13 @@ node_js:
   - 6
   - 7
 
-cache:
-  directories:
-    - $HOME/.yarn-cache
+cache: yarn
 
 env:
   - SIDE=server
   - SIDE=app
 
-before_install:
-  - npm install -g yarn
-
-install:
-  - yarn install
+# Yarn automatically installed and launched at install step
 
 script:
   - |

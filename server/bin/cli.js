@@ -3,7 +3,7 @@
 'use strict'
 
 import ip from 'internal-ip'
-import clor from 'clor'
+import c from 'clor/c'
 import yargs from 'yargs'
 
 import {bootstrap} from '../index'
@@ -28,20 +28,18 @@ const argv = yargs
   .argv
 
 // Font: Dr Pepper
-const homieStyled = clor.magenta(`\
+const homieStyled = c`<magenta>\
  _____           _        ____          _   _                 _
 |  |  |___ _____|_|___   |    \\ ___ ___| |_| |_ ___ ___ ___ _| |
 |     | . |     | | -_|  |  |  | .'|_ -|   | . | . | .'|  _| . |
 |__|__|___|_|_|_|_|___|  |____/|__,|___|_|_|___|___|__,|_| |___|
-`)
+</magenta>`
 
-console.log(homieStyled.toString())
-console.log(clor.magenta('Version ').bold.magenta(pkg.version).line())
-
-console.log(clor.magenta('See ').underline.magenta('https://github.com/INTECH-RGBH/homie-dashboard').line())
-
-console.log(clor.magenta('Homie Dashboard IP is ').bold.underline.magenta(ip.v4())())
-console.log(clor.magenta("Make sure this IP won't change over time").line())
+console.log(homieStyled)
+console.log(c`<magenta>Version <bold>${pkg.version}</bold></magenta>\n`)
+console.log(c`<magenta>See <underline>https://github.com/INTECH-RGBH/homie-dashboard</underline></magenta>\n`)
+console.log(c`<magenta>Homie Dashboard IP is <bold><underline>${ip.v4()}</underline></bold></magenta>`)
+console.log(c`<magenta>Make sure this IP won't change over time</magenta>\n`)
 
 bootstrap({
   ip: argv.ip || '127.0.0.1',
