@@ -54,12 +54,34 @@ export default {
                     labels: finalResult[r].labels,
                     datasets: [{
                         label: '# ' + finalResult[r].label,
-                        data: finalResult[r].data,
+                        data: finalResult[r].data.avg,
                         backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)'
+                            'rgba(255,99,132,0.2)'
                         ],
                         borderColor: [
                             'rgba(255,99,132,1)'
+                        ],
+                        borderWidth: 1
+                    }, 
+                    {
+                        label: '# Max ' + finalResult[r].label,
+                        data: finalResult[r].data.max,
+                        backgroundColor: [
+                            'rgba(0,204,204,0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(0,204,204,1)'
+                        ],
+                        borderWidth: 1
+                    }, 
+                    {
+                        label: '# Min ' + finalResult[r].label,
+                        data: finalResult[r].data.min,
+                        backgroundColor: [
+                            'rgba(0,255,128,0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(0,255,128,1)'
                         ],
                         borderWidth: 1
                     }]
@@ -98,39 +120,67 @@ export default {
 
             var el = tmpResult[key]
 
-            data[key] = {label: null, labels: [], data: []}
+            data[key] = {label: null, labels: [], data: {
+                min: [],
+                avg: [],
+                max: []
+            }}
 
             el.forEach((element)=> {
 
                 if(data[key].label === null){
                     data[key].label = element.node_property_id
                 }
-                if(this.interval === "day") data[key].labels.push(element.hour + "H")
-                else if (this.interval === "week") data[key].labels.push(element.day)
+                if(this.interval === "day") data[key].labels.push(new Date(element.date).getHours() + "H")
+                else if (this.interval === "week") {
+                    var date = new Date(element.date)
+                    var day_of_week = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"]
+                    var month_of_year = ["01","02","03","04","05","06","07","08","09","10","11","12"]
+                    var month = month_of_year[date.getMonth()]
+                    var day_date = day_of_week[date.getDay()]
+                    var year = date.getFullYear()
+                    data[key].labels.push(day_date + " " + date.getDate() + "/" + month + "/" + year)
+                } 
 
                 switch(key){
                     case this.types.buzzing:
-                    data[key].data.push(Math.round(element.average))
+                        data[key].data.avg.push(Math.round(element.average))
+                        data[key].data.min.push(Math.round(element.minimum))
+                        data[key].data.max.push(Math.round(element.maximum))
                     break
                     case this.types.degrees:
-                    data[key].data.push(element.average)
+                        data[key].data.avg.push(element.average)
+                        data[key].data.min.push(element.minimum)
+                        data[key].data.max.push(element.maximum)
                     break
                     case this.types.intensity: 
-                    data[key].data.push(Math.round(element.average))
+                        data[key].data.avg.push(Math.round(element.average))
+                        data[key].data.min.push(Math.round(element.minimum))
+                        data[key].data.max.push(Math.round(element.maximum))
                     break
                     case this.types.motion: 
-                    data[key].data.push(Math.round(element.average))
+                        data[key].data.avg.push(Math.round(element.average))
+                        data[key].data.min.push(Math.round(element.minimum))
+                        data[key].data.max.push(Math.round(element.maximum))
                     case this.types.on:
-                    data[key].data.push(Math.round(element.average))
+                        data[key].data.avg.push(Math.round(element.average))
+                        data[key].data.min.push(Math.round(element.minimum))
+                        data[key].data.max.push(Math.round(element.maximum))
                     break
                     case this.types.open:
-                    data[key].data.push(Math.round(element.average))
+                        data[key].data.avg.push(Math.round(element.average))
+                        data[key].data.min.push(Math.round(element.minimum))
+                        data[key].data.max.push(Math.round(element.maximum))
                     break
                     case this.types.percentage:
-                    data[key].data.push(Math.round(element.average))
+                        data[key].data.avg.push(Math.round(element.average))
+                        data[key].data.min.push(Math.round(element.minimum))
+                        data[key].data.max.push(Math.round(element.maximum))
                     break
                     default:
-                        data[key].data.push(element.average)
+                        data[key].data.avg.push(element.average)
+                        data[key].data.min.push(element.minimum)
+                        data[key].data.max.push(element.maximum)
                     break
                 }
             })

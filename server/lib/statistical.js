@@ -21,6 +21,7 @@ export default class Statistical {
                                                 this.knex.raw("strftime('%H', datetime(property_history.date / 1000, 'unixepoch')) as hour"),
                                                 this.knex.raw("property_history.property_id as property_id"),
                                                 this.knex.raw("properties.node_property_id"),
+                                                this.knex.raw("property_history.date as date"),
                                                 this.knex.raw("MIN(CAST(property_history.value AS NUMERIC)) AS minimum"),
                                                 //this.knex.raw("CASE WHEN properties.node_property_id = 'color' THEN (avg(CAST(substr( property_history.value , ',', 1 ) AS NUMERIC))  + ',' +  avg(CAST(substr(substr(property_history.value , ',', 2 ),',',-1) AS NUMERIC)) + ',' + avg(CAST(substr(property_history.value , ',', -1 ) AS NUMERIC))) ELSE avg(CAST(property_history.value AS NUMERIC)) END AS average"),
                                                 this.knex.raw("avg(CAST(property_history.value AS NUMERIC)) AS average"),
@@ -47,6 +48,7 @@ export default class Statistical {
             var result = await this.knex.select(this.knex.raw("DATE(property_history.date/1000, 'unixepoch') as day"),
                                                 this.knex.raw("property_history.property_id as property_id"),
                                                 this.knex.raw("properties.node_property_id"),
+                                                this.knex.raw("property_history.date as date"),
                                                 this.knex.raw("MIN(CAST(property_history.value AS NUMERIC)) AS minimum"),
                                                 this.knex.raw("avg(CAST(property_history.value AS NUMERIC)) AS average"),
                                                 this.knex.raw("MAX(CAST(property_history.value AS NUMERIC)) AS maximum"))

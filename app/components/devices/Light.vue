@@ -93,7 +93,6 @@ export default {
       const s = 1
       const l = 0.5
       const rgb = hslToRgb(h, s, l)
-      console.log(rgb)
       this.changeColor(rgb[0] + ',' + rgb[1] + ',' + rgb[2])
     },
     ...mapActions(['setState'])
