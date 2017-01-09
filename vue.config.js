@@ -10,7 +10,9 @@ export default {
   notify: true,
   resolve: true,
   vendor: ['axios', 'eva.js', 'eventemitter3', 'fast-json-patch', 'uuid', 'vue', 'vue-color'],
-  performance: {
-    hints: 'false'
+  mergeConfig: {
+    performance: {
+      hints: 'false'
+    }
   }
 }

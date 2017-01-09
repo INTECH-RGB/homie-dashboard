@@ -88,7 +88,7 @@ ansi-regex@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-2.0.0.tgz#c5061b6e0ef8a81775e50f5d66151bf6bf371107"
 
-ansi-styles@^2.0.1, ansi-styles@^2.2.1:
+ansi-styles@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
 
@@ -1552,11 +1552,9 @@ clone@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.2.tgz#260b7a99ebb1edfe247538175f783243cb19d149"
 
-clor@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/clor/-/clor-2.0.2.tgz#84eae702b0d36ff1e11150a7bcd58fd21f5b97bf"
-  dependencies:
-    ansi-styles "^2.0.1"
+clor@^4.0.0:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/clor/-/clor-4.2.1.tgz#79a7dcace0b8a07285976d491d42815905f8412d"
 
 co-from-stream@~0.0.0:
   version "0.0.0"
@@ -4043,7 +4041,7 @@ lodash.clonedeep@^4.3.2:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
 
-lodash.debounce@^4.0.3:
+lodash.debounce@^4.0.3, lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
 
