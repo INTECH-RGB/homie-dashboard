@@ -6,10 +6,10 @@ import {INFRASTRUCTURE_PATCH} from '../../../common/events'
  * This funcion bridges the MQTT to the WebSocket
  */
 export function bridgeInfrastructureToWebsocket ({$deps, infrastructure}) {
-  let lastInfrastructure = infrastructure.toJSON()
+  let lastInfrastructure = JSON.parse(JSON.stringify(infrastructure.toJSON()))
   infrastructure.on('update', function onUpdate (update) {
     // send to ws
-    const currentInfrastructure = infrastructure.toJSON()
+    const currentInfrastructure = JSON.parse(JSON.stringify(infrastructure.toJSON()))
     const patch = jsonpatch.compare(lastInfrastructure, currentInfrastructure)
     lastInfrastructure = currentInfrastructure
     const message = generateMessage({ type: MESSAGE_TYPES.EVENT, event: INFRASTRUCTURE_PATCH, value: patch })

@@ -1,4 +1,4 @@
-import bunyan from 'bunyan'
+import log from '../server/lib/log'
 import mqtt from 'mqtt'
 
 const BASE_TOPIC = 'homie'
@@ -189,7 +189,6 @@ const DEVICES = [
   }
 ]
 
-const log = bunyan.createLogger({ name: 'emulator' })
 const client = mqtt.connect('mqtt://127.0.0.1:1883')
 const qos1Retained = { qos: 1, retain: true }
 const delay = ms => new Promise(resolve => setTimeout(() => resolve(), ms))

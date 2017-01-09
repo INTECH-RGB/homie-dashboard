@@ -9,6 +9,7 @@ export default class Floor extends EventEmitter {
 
     this._id = null
     this._name = null
+    this.roomsMap = []
 
     this._rooms = new Map()
 
@@ -37,6 +38,11 @@ export default class Floor extends EventEmitter {
 
   getRooms () {
     return this._rooms.values()
+  }
+
+  addMapRoom (map) {
+    this.roomsMap.push(map)
+    this._wasUpdated()
   }
 
   get id () { return this._id }
@@ -68,6 +74,7 @@ export default class Floor extends EventEmitter {
     const representation = { rooms: {} }
     representation.name = this.name
     representation.id = this.id
+    representation.roomsMap = this.roomsMap
     for (const room of this.getRooms()) {
       if (room.isValid) representation.rooms[room.id] = room.toJSON()
     }

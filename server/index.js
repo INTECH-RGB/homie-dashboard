@@ -1,13 +1,17 @@
 import path from 'path'
 import Knex from 'knex'
 import {bookshelf} from './lib/database'
-import log from './lib/log'
+import log, {LOG_LEVELS} from './lib/log'
 import createWebsocketServer from './lib/websocket-server'
 import start from './start'
 import loadSettings from './lib/settings'
 
 export async function bootstrap (opts) {
-  log.level(opts.logLevel)
+  if (typeof LOG_LEVELS[opts.logLevel] === undefined) {
+    log.fatal(`log level ${opts.logLevel} does not exist`)
+    process.exit(1)
+  }
+  log.setLevel(LOG_LEVELS[opts.logLevel])
 
   log.info('starting')
 

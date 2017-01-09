@@ -1,7 +1,7 @@
 {
   "name": "homie-dashboard",
   "description": "IoT dashboard for Homie devices",
-  "version": "0.1.9",
+  "version": "0.1.13",
   "author": "RGB Team",
   "ava": {
     "babel": "inherit",
@@ -26,19 +26,21 @@
       }
     }
   },
+  "bin": {
+    "homie-dashboard": "./src/bin/cli.js"
+  },
   "bugs": "https://github.com/INTECH-RGBH/homie-dashboard/issues",
   "contributors": [
     "Marvin ROGER",
     "Valentin GAUTHEY",
-    "Matthieu BOISSADY",
-    "Hugo ZAMMIT"
+    "Matthieu BOISSADY"
   ],
   "dependencies": {
     "body-parser": "^1.15.2",
     "bookshelf": "^0.10.2",
     "bunyan": "^1.8.4",
     "chart.js": "^2.4.0",
-    "clor": "^2.0.2",
+    "clor": "^4.0.0",
     "cookie": "^0.3.1",
     "express": "^4.14.0",
     "fast-json-patch": "^1.1.2",
@@ -64,28 +66,29 @@
     "babel-plugin-transform-inline-environment-variables": "^6.8.0",
     "babel-watch": "^2.0.3",
     "balloon-css": "^0.4.0",
-    "bulma": "^0.2.3",
+    "bulma": "^0.3.0",
     "coveralls": "^2.11.15",
     "cross-env": "^3.1.3",
-    "depcheck": "^0.6.7",
     "eva.js": "^1.1.1",
     "eventemitter3": "^2.0.2",
     "font-awesome": "^4.7.0",
+    "lodash.debounce": "^4.0.8",
     "node-sass": "^4.0.0",
+    "npm-check": "^5.4.0",
     "nyc": "^10.0.0",
-    "ocanvas": "^2.8.6",
     "sass-loader": "^4.0.2",
     "shx": "^0.2.0",
     "snazzy": "^5.0.0",
     "standard": "^8.5.0",
-    "vbuild": "^4.0.0",
+    "vbuild": "^5.0.0",
     "vue": "2.1.6",
+    "vue-color": "^2.0.2",
     "vue-grid-layout": "^2.0.0",
     "vue-loader": "^10.0.2",
     "vue-template-compiler": "2.1.6"
   },
   "engines": {
-    "node": "^7.0.0"
+    "node": "^6.0.0"
   },
   "homepage": "https://github.com/INTECH-RGBH/homie-dashboard",
   "keywords": [
@@ -98,21 +101,18 @@
   ],
   "license": "GPL-2.0",
   "main": "src/index.js",
+  "preferGlobal": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/INTECH-RGBH/homie-dashboard.git"
   },
-  "bin": {
-    "homie-dashboard": "./src/bin/cli.js"
-  },
-  "preferGlobal": true,
   "scripts": {
     "app-build": "cross-env BABEL_ENV=production NODE_ENV=production vbuild",
     "app-dev": "vbuild --dev",
-    "common-depcheck": "depcheck",
-    "emulator-start": "babel-watch emulator/index.js | bunyan",
-    "server-build": "cross-env BABEL_ENV=production NODE_ENV=production babel server/ -d dist-server/src/ && cross-env BABEL_ENV=production babel common/ -d dist-server/common/ && npm run app-build && shx cp -r dist-app/ dist-server/ && shx cp package.json dist-server/",
-    "server-dev": "babel-watch server/bin/cli.js -- --port 5000 --ip 0.0.0.0 --logLevel debug | bunyan",
+    "common-depcheck": "npm-check --no-emoji",
+    "emulator-start": "babel-watch emulator/index.js",
+    "server-build": "cross-env BABEL_ENV=production NODE_ENV=production babel server/ -d dist-server/src/ && cross-env BABEL_ENV=production NODE_ENV=production babel common/ -d dist-server/common/ && npm run app-build && shx cp -r dist-app/ dist-server/ && shx cp package.json dist-server/",
+    "server-dev": "babel-watch server/bin/cli.js -- --port 5000 --ip 0.0.0.0 --logLevel debug",
     "server-lint": "standard server/**/*.js | snazzy",
     "server-test": "nyc ava"
   }

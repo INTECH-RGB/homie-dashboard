@@ -35,12 +35,15 @@ export async function getInfrastructure (infrastructure) {
 
   for (const floorInDb of floors.models) {
     const floor = new Floor()
+    floor.model = floorInDb
     floor.id = floorInDb.attributes['id']
     floor.name = floorInDb.attributes['name']
+    floor.roomsMap = JSON.parse(floorInDb.attributes['rooms_map'])
     infrastructure.addFloor(floor)
 
     for (const roomInDb of floorInDb.related('rooms').models) {
       const room = new Room()
+      room.model = roomInDb
       room.floor = floor
       room.id = roomInDb.attributes['id']
       room.name = roomInDb.attributes['name']

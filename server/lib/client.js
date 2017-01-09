@@ -113,7 +113,7 @@ export default class Client extends EventEmitter {
       const name = message.parameters.name
 
       const floor = new Floor()
-      floor.model = await FloorModel.forge({ name }).save()
+      floor.model = await FloorModel.forge({ name, rooms_map: JSON.stringify([]) }).save()
       floor.id = floor.model.id
       floor.name = name
       this.infrastructure.addFloor(floor)
@@ -127,6 +127,7 @@ export default class Client extends EventEmitter {
       this.infrastructure.deleteFloor(floorId)
     } else if (message.method === 'addRoom') {
       const name = message.parameters.name
+
       const floorId = message.parameters.floor_id
       const tagId = `room:${uuid()}`
       const tag = new Tag()
@@ -135,12 +136,21 @@ export default class Client extends EventEmitter {
       tag.model = await TagModel.forge({ id: tagId }).save(null, { method: 'insert' })
       const floor = this.infrastructure.getFloor(floorId)
       const room = new Room()
-      room.model = await RoomModel.forge({ name: floor.name, floor_id: floorId, tag_id: tagId }).save()
+      room.model = await RoomModel.forge({ name, floor_id: floorId, tag_id: tagId }).save()
       room.id = room.model.id
       room.name = name
       room.floor = floor
       room.tagId = tagId
       floor.addRoom(room)
+      floor.addMapRoom({ w: 2, h: 2, x: 0, y: 0, i: room.tagId })
+      await floor.model.save({ rooms_map: JSON.stringify(floor.roomsMap) })
+
+      this._sendResponse(message, true)
+    } else if (message.method === 'updateMap') {
+      const floorId = message.parameters.floorId
+      const map = message.parameters.map
+      const floor = this.infrastructure.getFloor(floorId)
+      await floor.model.save({rooms_map: JSON.stringify(map)})
 
       this._sendResponse(message, true)
     } else if (message.method === 'getHomieEsp8266Settings') {
