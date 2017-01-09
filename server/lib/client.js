@@ -143,16 +143,14 @@ export default class Client extends EventEmitter {
       await floor.model.save({ rooms_map: JSON.stringify(floor.roomsMap) })
 
       this._sendResponse(message, true)
-    } else if ( message.method === 'updateMap') {
+    } else if (message.method === 'updateMap') {
       const floorId = message.parameters.floorId
       const map = message.parameters.map
       const floor = this.infrastructure.getFloor(floorId)
       await floor.model.save({rooms_map: JSON.stringify(map)})
 
       this._sendResponse(message, true)
-    }
-    
-     else if (message.method === 'getHomieEsp8266Settings') {
+    } else if (message.method === 'getHomieEsp8266Settings') {
       this._sendResponse(message, this.$deps.settings['homie-esp8266'])
     }
   }
