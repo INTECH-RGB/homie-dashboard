@@ -139,6 +139,18 @@ export default function initializeStore (app) {
         })
         return result
       },
+      async deleteRoom ({commit}, opts) {
+        const result = await wsRequest({
+          ws,
+          method: 'deleteRoom',
+          parameters: {
+            floorId: opts.floorId,
+            roomId: opts.roomId
+          }
+        })
+
+        return result
+      },
       async addFloor ({commit}, opts) {
         const result = await wsRequest({
           ws,
@@ -173,6 +185,7 @@ export default function initializeStore (app) {
         return result
       },
       async updateMap ({commit}, opts) {
+
         const result = await wsRequest({
           ws,
           method: 'updateMap',

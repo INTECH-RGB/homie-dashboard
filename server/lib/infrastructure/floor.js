@@ -32,6 +32,19 @@ export default class Floor extends EventEmitter {
     this._wasUpdated()
   }
 
+  deleteRoom (room) {
+    this._rooms.delete(room.id)
+    this._wasUpdated()
+  }
+
+  deleteMapRoom (room) {
+    for(let i = 0; i < this.roomsMap.length; i++)
+    {
+      if(this.roomsMap[i].i === room.tagId) this.roomsMap.splice(i, 1)
+    }
+    this._wasUpdated()
+  }
+
   getRoom (roomId) {
     return this._rooms.get(roomId)
   }
@@ -42,6 +55,11 @@ export default class Floor extends EventEmitter {
 
   addMapRoom (map) {
     this.roomsMap.push(map)
+    this._wasUpdated()
+  }
+
+  updateMap(map) {
+    this.roomsMap = map 
     this._wasUpdated()
   }
 

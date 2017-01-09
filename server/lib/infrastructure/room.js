@@ -61,6 +61,7 @@ export default class Floor extends EventEmitter {
 
   toJSON () {
     const representation = {}
+    representation.id = this.id
     representation.name = this.name
     representation.tagId = this.tagId
 

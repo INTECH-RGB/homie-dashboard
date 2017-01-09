@@ -48,35 +48,25 @@
       Ici, vous pouvez modéliser votre maison sous forme d'étages et de pièces.
     </h2>
 
-    <div @click="addFloorOpened = true" class="notification is-primary clickable">
-      <div class="content">
-        <p class="title">
-          <span class="icon"><i class="fa fa-plus"></i></span>
-          Ajouter un étage
-        </p>
-      </div>
+    <nav class="nav has-shadow">
+  <div class="container">
+    <div class="nav-left">
+      <a class="nav-item">
+       
+      </a>
+       <template v-for="floor in infrastructure.house.floors">
+      <a @click= "updateRoomLayout(floor.id)" :class="(mapFloorId === floor.id) ? 'nav-item is-tab is-hidden-mobile is-active' : 'nav-item is-tab is-hidden-mobile'">{{ floor.name }}</a>
+       <button @click="deleteFloor(floor.id)" class="delete"></button>
+       </template>
     </div>
-
-    <template v-for="floor in infrastructure.house.floors">
-      <div @click= "mapFloorId = floor.id" class="notification is-primary clickable">
-        <button @click="deleteFloor(floor.id)" class="delete"></button>
-        <p class="title">
-          <span class="icon"><i class="fa fa-eye"></i></span>
-          {{ floor.name }}
-        </p>
-      </div>
-
-      <div @click="openaddRoomModal(floor.id)" class="notification is-info clickable">
-        <p class="title">
-          <span class="icon"><i class="fa fa-plus"></i></span>
-          Ajouter une salle
-        </p>
-      </div>
-    </template>
-    <template v-for = "floor in infrastructure.house.floors">
-      <div v-if = "floor.id === mapFloorId">
+     <a @click= "addFloorOpened = true">Ajouter un étage</a>
+     <div v-if="mapFloorId">
+     <a @click="openaddRoomModal(mapFloorId)" class= "bouton">Ajouter une salle</a>
+     </div>
+    </nav>
+   
     <grid-layout
-            :layout="floor.roomsMap"
+            :layout="layout"
             :col-num="12"
             :row-height="30"
             :is-draggable="true"
@@ -86,21 +76,20 @@
             :use-css-transforms="true"
     >
 
-        <grid-item v-for="item in floor.roomsMap"
+        <grid-item v-for="item in layout"
                    :x="item.x"
                    :y="item.y"
                    :w="item.w"
                    :h="item.h"
                    :i="item.i">
-            <span class="text">
-              <template v-for = "room in floor.rooms">
-                <p v-if="room.tagId === item.i">{{ room.name }}</p>
-              </template>
-            </span>
+            
+                <span class="text">
+                <p>{{ getRoomFromTagId(item.i).name }}</p>
+                </span>
+                <button @click="deleteRoom(getRoomFromTagId(item.i).id)" class="is-info delete "></button>
+            
         </grid-item>
     </grid-layout>
-    </div>
-    </template>
 
   </div>
 </template>
@@ -120,30 +109,7 @@ export default {
       addRoomOpened: false,
       mapFloorId: null,
       floorId: null,
-      windowWidth: window.innerWidth,
-      layout: [
-        {"x":0,"y":0,"w":2,"h":2,"i":"0"},
-        {"x":0,"y":0,"w":2,"h":2,"i":"0a"},
-        {"x":2,"y":0,"w":2,"h":4,"i":"1"},
-        {"x":4,"y":0,"w":2,"h":5,"i":"2"},
-        {"x":6,"y":0,"w":2,"h":3,"i":"3"},
-        {"x":8,"y":0,"w":2,"h":3,"i":"4"},
-        {"x":10,"y":0,"w":2,"h":3,"i":"5"},
-        {"x":0,"y":5,"w":2,"h":5,"i":"6"},
-        {"x":2,"y":5,"w":2,"h":5,"i":"7"},
-        {"x":4,"y":5,"w":2,"h":5,"i":"8"},
-        {"x":6,"y":4,"w":2,"h":4,"i":"9"},
-        {"x":8,"y":4,"w":2,"h":4,"i":"10"},
-        {"x":10,"y":4,"w":2,"h":4,"i":"11"},
-        {"x":0,"y":10,"w":2,"h":5,"i":"12"},
-        {"x":2,"y":10,"w":2,"h":5,"i":"13"},
-        {"x":4,"y":8,"w":2,"h":4,"i":"14"},
-        {"x":6,"y":8,"w":2,"h":4,"i":"15"},
-        {"x":8,"y":10,"w":2,"h":5,"i":"16"},
-        {"x":10,"y":4,"w":2,"h":2,"i":"17"},
-        {"x":0,"y":9,"w":2,"h":3,"i":"18"},
-        {"x":2,"y":6,"w":2,"h":2,"i":"19"}
-    ]
+      windowWidth: window.innerWidth
     }
   },
   components: {
@@ -153,17 +119,23 @@ export default {
   watch: {
     layout: {
       handler: debounce(function (val, oldVal) {
-        console.log(val)
+        this.updateMap()
       }, 200),
       deep: true
     }
   },
   computed: {
+    layout () {
+      return this.mapFloorId ? this.infrastructure.house.floors[this.mapFloorId].roomsMap : []
+    },
     ...mapState(['infrastructure'])
   },
   methods: {
     updateMap() {
-
+      this.updateMapAction({ floorId: this.mapFloorId, map: this.layout })
+    },
+    updateRoomLayout(floorId) {
+      this.mapFloorId = floorId
     },
     addFloor () {
       this.addFloorAction({ name: this.floorNameInput })
@@ -173,6 +145,12 @@ export default {
       this.addRoomOpened = false
       this.addRoomAction({ name: this.roomNameInput, floor_id: this.floorId })
     },
+    async deleteRoom(roomId) {
+      await this.deleteRoomAction( {floorId: this.mapFloorId, roomId } )
+    },
+    getRoomFromTagId (tagId) {
+      return Object.values(this.infrastructure.house.floors[this.mapFloorId].rooms).find(el => el.tagId === tagId)
+    },
     openaddRoomModal (id) {
       this.addRoomOpened = true
       this.floorId = id
@@ -180,7 +158,7 @@ export default {
     async deleteFloor (floorId) {
       await this.deleteFloorAction({ floorId })
     },
-    ...mapActions({ addFloorAction: 'addFloor', addRoomAction: 'addRoom', deleteFloorAction: 'deleteFloor' })
+    ...mapActions({ updateMapAction: 'updateMap', addFloorAction: 'addFloor', addRoomAction: 'addRoom', deleteFloorAction: 'deleteFloor', deleteRoomAction: 'deleteRoom' })
   }
 }
 </script>
@@ -198,7 +176,7 @@ export default {
     columns: 120px
 
   .vue-grid-item
-    background: #fff
+    background: #e74c3c
     border: 1px solid black
 
   .vue-grid-item.resizing
@@ -207,10 +185,15 @@ export default {
   .vue-grid-item.static
     background: #cce
 
+  .bouton
+    margin-left: 2cm
+    color: blue
+
   .vue-grid-item .text
     font-size: 24px
     text-align: center
     position: absolute
+    color: white
     top: 0
     bottom: 0
     left: 0
