@@ -101,9 +101,7 @@ export default class Node extends EventEmitter {
 
     if (!this.isValid) return
 
-    if (wasValid) {
-      this.emit('update', { entity: this })
-    } else {
+    if (!wasValid) {
       if (this._device.isValid) this.emit('valid')
       else {
         this._device.once('valid', () => {
@@ -111,6 +109,8 @@ export default class Node extends EventEmitter {
         })
       }
     }
+
+    this.emit('update', { entity: this })
   }
 
   toJSON () {
@@ -125,6 +125,6 @@ export default class Node extends EventEmitter {
     representation.tags = []
     for (const tag of this.getTags()) representation.tags.push(tag.id)
 
-    return representation
+    return JSON.parse(JSON.stringify(representation))
   }
 }

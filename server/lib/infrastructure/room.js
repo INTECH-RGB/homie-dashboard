@@ -54,9 +54,11 @@ export default class Floor extends EventEmitter {
       this._tagId !== null
     )
 
-    if (!wasValid && this.isValid) this.emit('valid')
+    if (!this.isValid) return
 
-    if (this.isValid) this.emit('update', { entity: this })
+    if (!wasValid) this.emit('valid')
+
+    this.emit('update', { entity: this })
   }
 
   toJSON () {
@@ -65,6 +67,6 @@ export default class Floor extends EventEmitter {
     representation.name = this.name
     representation.tagId = this.tagId
 
-    return representation
+    return JSON.parse(JSON.stringify(representation))
   }
 }

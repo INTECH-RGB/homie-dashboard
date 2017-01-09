@@ -127,7 +127,7 @@ export default class Client extends EventEmitter {
       this.infrastructure.deleteFloor(floorId)
 
       this._sendResponse(message, true)
-    } else if(message.method === 'deleteRoom') {
+    } else if (message.method === 'deleteRoom') {
       const floorId = message.parameters.floorId
       const roomId = message.parameters.roomId
       const floor = this.infrastructure.getFloor(floorId)
@@ -172,8 +172,7 @@ export default class Client extends EventEmitter {
       this._sendResponse(message, true)
     } else if (message.method === 'getHomieEsp8266Settings') {
       this._sendResponse(message, this.$deps.settings['homie-esp8266'])
-    }
-    else if(message.method === 'getStat'){
+    } else if (message.method === 'getStat') {
       const result = await this.statistical.getStatDevice(message.parameters.id, message.parameters.interval)
       this._sendResponse(message, result)
     }

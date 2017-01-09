@@ -73,7 +73,7 @@ export default class Device extends EventEmitter {
   }
   get online () { return this._online }
   set online (val) {
-    if (!val || this._online === val) return
+    if (this._online === val) return
     this._online = val
     this._wasUpdated()
   }
@@ -125,10 +125,11 @@ export default class Device extends EventEmitter {
       this._implementation !== null
     )
 
-    if (this.isValid) {
-      if (wasValid) this.emit('update', { entity: this })
-      else this.emit('valid')
-    }
+    if (!this.isValid) return
+
+    if (!wasValid) this.emit('valid')
+
+    this.emit('update', { entity: this })
   }
 
   toJSON () {
@@ -154,6 +155,6 @@ export default class Device extends EventEmitter {
       if (node.isValid) representation.nodes[node.id] = node.toJSON()
     }
 
-    return representation
+    return JSON.parse(JSON.stringify(representation))
   }
 }

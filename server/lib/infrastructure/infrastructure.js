@@ -164,7 +164,7 @@ class Infrastructure extends EventEmitter {
       if (floor.isValid) representation.house.floors[floor.id] = floor.toJSON()
     }
 
-    return representation
+    return JSON.parse(JSON.stringify(representation))
   }
 }
 

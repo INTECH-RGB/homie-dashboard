@@ -23,7 +23,7 @@
           <h2 class="subtitle">
             Souhaitez-vous ajouter ce périphérique ?
           </h2>
-          <a class="button is-success" @click.prevent="STEP = 'INPUT_DEVICE_NAME'">Oui</a>
+          <a class="button is-success" @click.prevent="step = 'INPUT_DEVICE_NAME'">Oui</a>
           <a class="button is-black" @click.prevent="step = 'ABORTED'">Non</a>
         </div>
       </div>
@@ -43,7 +43,7 @@
             </span>
           </p>
 
-          <a :disabled="deviceName === ''" :class="{button: true, 'is-loading': putConfigOngoing}" @click.prevent="sendConfiguration">OK</a>
+          <a :disabled="deviceName === ''" class="button is-black" :class="{'is-loading': putConfigOngoing}" @click.prevent="sendConfiguration">OK</a>
         </div>
       </div>
     </template>

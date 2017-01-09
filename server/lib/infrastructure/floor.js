@@ -38,9 +38,8 @@ export default class Floor extends EventEmitter {
   }
 
   deleteMapRoom (room) {
-    for(let i = 0; i < this.roomsMap.length; i++)
-    {
-      if(this.roomsMap[i].i === room.tagId) this.roomsMap.splice(i, 1)
+    for (let i = 0; i < this.roomsMap.length; i++) {
+      if (this.roomsMap[i].i === room.tagId) this.roomsMap.splice(i, 1)
     }
     this._wasUpdated()
   }
@@ -83,9 +82,11 @@ export default class Floor extends EventEmitter {
       this._id !== null
     )
 
-    if (!wasValid && this.isValid) this.emit('valid')
+    if (!this.isValid) return
 
-    if (this.isValid) this.emit('update', { entity: this })
+    if (!wasValid) this.emit('valid')
+
+    this.emit('update', { entity: this })
   }
 
   toJSON () {
@@ -97,6 +98,6 @@ export default class Floor extends EventEmitter {
       if (room.isValid) representation.rooms[room.id] = room.toJSON()
     }
 
-    return representation
+    return JSON.parse(JSON.stringify(representation))
   }
 }

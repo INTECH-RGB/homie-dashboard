@@ -29,15 +29,17 @@ export default class Tag extends EventEmitter {
       this._id !== null
     )
 
-    if (!wasValid && this.isValid) this.emit('valid')
+    if (!this.isValid) return
 
-    if (this.isValid) this.emit('update', { entity: this })
+    if (!wasValid) this.emit('valid')
+
+    this.emit('update', { entity: this })
   }
 
   toJSON () {
     const representation = {}
     representation.id = this.id
 
-    return representation
+    return JSON.parse(JSON.stringify(representation))
   }
 }

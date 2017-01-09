@@ -45,18 +45,18 @@ export default class Property extends EventEmitter {
       this._value !== null
     )
 
-    if (this.isValid) {
-      if (wasValid) {
-        this.emit('update', { entity: this })
-      } else {
-        if (this._node.device.isValid) this.emit('valid')
-        else {
-          this._node.device.once('valid', () => {
-            this.emit('valid')
-          })
-        }
+    if (!this.isValid) return
+
+    if (!wasValid) {
+      if (this._node.device.isValid) this.emit('valid')
+      else {
+        this._node.device.once('valid', () => {
+          this.emit('valid')
+        })
       }
     }
+
+    this.emit('update', { entity: this })
   }
 
   toJSON () {
@@ -64,6 +64,6 @@ export default class Property extends EventEmitter {
     representation.id = this.id
     representation.value = this.value
 
-    return representation
+    return JSON.parse(JSON.stringify(representation))
   }
 }
