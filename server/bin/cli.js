@@ -45,5 +45,5 @@ bootstrap({
   ip: argv.ip || '127.0.0.1',
   port: parseInt(argv.port, 10) || 35589,
   dataDir: argv.dataDir || './',
-  logLevel: argv.logLevel.toUpperCase() || 'INFO'
+  logLevel: argv.logLevel ? argv.logLevel.toUpperCase() : 'INFO'
 })
