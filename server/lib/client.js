@@ -122,6 +122,20 @@ export default class Client extends EventEmitter {
 
       await floor.model.destroy()
       this.infrastructure.deleteFloor(floorId)
+    } else if(message.method === 'deleteRoom') {
+      const floorId = message.parameters.floorId
+      const roomId = message.parameters.roomId
+      const floor = this.infrastructure.getFloor(floorId)
+      const room = floor.getRoom(roomId)
+      const tag = this.infrastructure.getTag(room.tagId)
+      await room.model.destroy()
+      floor.deleteRoom(room)
+      floor.deleteMapRoom(room)
+      this.infrastructure.deleteTag(tag)
+      await floor.model.save({ rooms_map: JSON.stringify(floor.roomsMap) })
+      await tag.model.destroy()
+
+      this._sendResponse(message, true)
     } else if (message.method === 'addRoom') {
       const name = message.parameters.name
 
@@ -147,7 +161,9 @@ export default class Client extends EventEmitter {
       const floorId = message.parameters.floorId
       const map = message.parameters.map
       const floor = this.infrastructure.getFloor(floorId)
-      await floor.model.save({rooms_map: JSON.stringify(map)})
+      console.log(map)
+      floor.updateMap(map)
+      await floor.model.save({rooms_map: JSON.stringify(floor.roomsMap)})
 
       this._sendResponse(message, true)
     }
