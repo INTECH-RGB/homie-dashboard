@@ -160,6 +160,18 @@ export default function initializeStore (app) {
 
         return result
       },
+      async updateMap ({commit}, opts) {
+        const result = await wsRequest({
+          ws,
+          method: 'updateMap',
+          parameters: {
+            floorId : opts.floorId,
+            map : opts.map
+          }
+        })
+
+        return result
+      },
       async getHomieEsp8266Settings ({commit}, opts) {
         const result = await wsRequest({
           ws,

@@ -3,6 +3,7 @@ exports.up = function (knex) {
     .createTable('floors', function (table) {
       table.increments('id').primary().notNullable()
       table.string('name').notNullable()
+      table.json('rooms_map').notNullable()
     })
     .createTable('rooms', function (table) {
       table.increments('id').primary().notNullable()
