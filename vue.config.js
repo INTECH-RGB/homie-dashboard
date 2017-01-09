@@ -12,7 +12,7 @@ export default {
   vendor: ['axios', 'eva.js', 'eventemitter3', 'fast-json-patch', 'uuid', 'vue', 'vue-color'],
   mergeConfig: {
     performance: {
-      hints: 'false'
+      hints: false
     }
   }
 }
