@@ -12,12 +12,31 @@
             <input v-model="tagInput.value" @focus="tagInput.focus = true" @blur="tagInput.focus = false" class="input" type="text" placeholder="Filtrer ou créer un tag">
             <ul v-if="tagInput.focus == true" id="autocomplete-dropdown">
               <li v-if="tagInput.value !== ''"><a href="" @click.prevent @mousedown.prevent="createTag(tagInput.value)"><span class="icon is-small"><i class="fa fa-plus"></i></span> Créer le tag <b>{{ tagInput.value }}</b></a></li>
-              <li v-for="tag in dropdownTags"><a href="" @click.prevent @mousedown.prevent="addTag(tag)"><span class="tag"><span class="icon is-small"><i class="fa fa-tag"></i></span>&nbsp;{{ tag.id }}<span :data-balloon="canDeleteTag(tag.id) ? 'Supprimer le tag' : 'Impossible de supprimer ce tag car il est encore affecté'" data-balloon-pos="right"><button @mousedown.prevent.stop="deleteTag(tag.id)" class="delete is-small" :disabled="!canDeleteTag(tag.id)"></button></span></span></a></li>
+              <div v-for="tag in dropdownTags">
+                <div v-for="floor in infrastructure.house.floors">
+                  <div v-for="room in floor.rooms">
+              <li v-if="tag.id === room.tagId"><a href="" @click.prevent @mousedown.prevent="addTagRoom(room)"><span class="tag"><span class="icon is-small"><i class="fa fa-tag"></i></span>&nbsp;{{ room.name }}<span :data-balloon="canDeleteTag(tag.id) ? 'Supprimer le tag' : 'Impossible de supprimer ce tag car il est encore affecté'" data-balloon-pos="right"><button @mousedown.prevent.stop="deleteTag(tag.id)" class="delete is-small" :disabled="!canDeleteTag(tag.id)"></button></span></span></a></li>
+              
+              </div>
+              </div>
+              <li v-if="!tag.id.includes('room:')"><a href="" @click.prevent @mousedown.prevent="addTag(tag)"><span class="tag"><span class="icon is-small"><i class="fa fa-tag"></i></span>&nbsp;{{ tag.id }}<span :data-balloon="canDeleteTag(tag.id) ? 'Supprimer le tag' : 'Impossible de supprimer ce tag car il est encore affecté'" data-balloon-pos="right"><button @mousedown.prevent.stop="deleteTag(tag.id)" class="delete is-small" :disabled="!canDeleteTag(tag.id)"></button></span></span></a></li>
+              </div>
             </ul>
           </p>
         </div>
         <div class="level-item">
-          <span v-for="id in selectedTagsIds" class="tag"><span class="icon is-small"><i class="fa fa-tag"></i></span>&nbsp;{{ infrastructure.tags[id].id }}<button @click="removeCurrentTag(id)" class="delete is-small"></button></span>
+          <span v-for="id in selectedTagsIds" class="tag">
+            <div v-for="floor in infrastructure.house.floors">
+                  <div v-for="room in floor.rooms">
+                    <span v-if="id === room.tagId">
+                    <span class="icon is-small">
+                    <i class="fa fa-tag"></i></span>&nbsp;{{ room.name }}<button @click="removeCurrentTag(room.tagId)" class="delete is-small"></button></span>
+                  </div>
+            </div>
+             <span v-if="!id.includes('room:')">
+            <span class="icon is-small">
+             <i  class="fa fa-tag"></i></span>&nbsp;{{ infrastructure.tags[id].id }}<button @click="removeCurrentTag(id)" class="delete is-small"></button></span>
+          </span>
         </div>
       </div>
 
@@ -93,6 +112,13 @@ export default {
       selectedDeviceState: null
     }
   },
+  mounted() {
+    if(this.route.query.tag != undefined) {
+      this.selectedTagsIds.push(this.route.query.tag)
+      console.log(this.selectedTagsIds)
+    }
+    
+  },
   computed: {
     dropdownTags () {
       return Object.values(this.infrastructure.tags).filter((tag) => {
@@ -122,11 +148,14 @@ export default {
 
       return nodes
     },
-    ...mapState(['infrastructure'])
+    ...mapState(['infrastructure', 'route'])
   },
   methods: {
     addTag (tag) {
       this.selectedTagsIds.push(tag.id)
+    },
+    addTagRoom (room) {
+       this.selectedTagsIds.push(room.tagId)
     },
     removeCurrentTag (tagId) {
       this.selectedTagsIds.splice(this.selectedTagsIds.indexOf(tagId), 1)

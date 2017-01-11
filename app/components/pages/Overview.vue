@@ -81,7 +81,10 @@
                    :y="item.y"
                    :w="item.w"
                    :h="item.h"
-                   :i="item.i">
+                   :i="item.i"
+     :class="{ 'is-active': route.path === '/peripheriques' }"><router-link :to="`/peripheriques?tag=${item.i}`" exact> <i class="fa fa-eye"></i></router-link>
+        
+                   
 
                 <span class="text">
                 <p>{{ getRoomFromTagId(item.i).name }}</p>
@@ -128,7 +131,7 @@ export default {
     layout () {
       return this.mapFloorId ? this.infrastructure.house.floors[this.mapFloorId].roomsMap : []
     },
-    ...mapState(['infrastructure'])
+    ...mapState(['infrastructure', 'route'])
   },
   methods: {
     updateMap () {

@@ -24,7 +24,18 @@
             <h2>Tags</h2>
 
             <ul class="tag-list">
-              <li v-for="tag in infrastructure.tags" @click="toggleTag(tag)"><span class="tag" :class="{ 'is-success': nodeData.tags.includes(tag.id) }"><span class="icon is-small"><i class="fa fa-tag"></i></span>&nbsp;{{ tag.id }}</span></li>
+              <span v-for="tag in infrastructure.tags">
+                 <div v-for="floor in infrastructure.house.floors">
+                  <div v-for="room in floor.rooms">
+                    <span v-if="tag.id === room.tagId">
+              <li @click="toggleTag(tag)"><span class="tag" :class="{ 'is-success': nodeData.tags.includes(tag.id) }"><span class="icon is-small"><i class="fa fa-tag"></i></span>&nbsp;{{ room.name }}</span></li>
+                    </span>
+                  </div>
+                </div>
+                <span v-if="!tag.id.includes('room:')">
+                  <li @click="toggleTag(tag)"><span class="tag" :class="{ 'is-success': nodeData.tags.includes(tag.id) }"><span class="icon is-small"><i class="fa fa-tag"></i></span>&nbsp;{{ tag.id }}</span></li>
+                </span>
+              </span>
             </ul>
           </div>
         </section>
