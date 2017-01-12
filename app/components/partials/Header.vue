@@ -9,6 +9,9 @@
                 <img src="../../assets/images/logo_white.png" alt="Logo">
               </figure>
             </span>
+            <span class="nav-item">
+              <a :href="`https://github.com/INTECH-RGBH/homie-dashboard/releases/tag/${version}`" class="version">v{{version}}</a>
+            </a>
           </div>
 
           <span @click="triggerMobileMenu" :class="{'nav-toggle': true, 'is-active': isMobileMenuActive}">
@@ -73,7 +76,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['route'])
+    ...mapState(['version', 'route'])
   },
   methods: {
     triggerMobileMenu () {
@@ -87,5 +90,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
+  .version
+    font-size: 0.8rem
 </style>
