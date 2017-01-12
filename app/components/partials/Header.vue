@@ -55,7 +55,7 @@
         <div class="container">
           <ul>
             <li :class="{ 'is-active': route.path === '/' }"><router-link to="/" exact>Vue d'ensemble</router-link></li>
-            <li :class="{ 'is-active': route.path === '/peripheriques' }"><router-link to="/peripheriques" exact>Périphériques</router-link></li>
+            <li :class="{ 'is-active': route.path === '/peripheriques' }"><router-link to="/peripheriques" exact>Périphériques &nbsp;<i class="fa fa-cog"></i></router-link></li>
           </ul>
         </div>
       </nav>

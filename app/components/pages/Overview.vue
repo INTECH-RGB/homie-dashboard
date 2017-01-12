@@ -47,6 +47,13 @@
     <h2 class="subtitle">
       Ici, vous pouvez modéliser votre maison sous forme d'étages et de pièces.
     </h2>
+    <div v-if="Object.values(this.infrastructure.house.floors).length === 0">
+    Vous n'avez pas encore d'étage, pour en créer un, cliquez sur "ajouter un étage" à droite. 
+    </div>
+    <div v-else> 
+      Vous disposez de {{ Object.values(this.infrastructure.house.floors).length }} étage{{ Object.values(this.infrastructure.house.floors).length > 1 ? 's' : '' }} et de {{ pieces }} pièce{{ pieces > 1 ? 's' : '' }}.
+    </div>
+    </br>
 
     <nav class="nav has-shadow">
   <div class="container">
@@ -88,6 +95,7 @@
 
                 <span class="text">
                 <p>{{ getRoomFromTagId(item.i).name }}</p>
+                <p> {{ getPeripheriqueNumber(item.i) }} &nbsp; <i class="fa fa-cog"></i></p>
                 </span>
                 <button @click="deleteRoom(getRoomFromTagId(item.i).id)" class="is-info delete "></button>
 
@@ -112,6 +120,7 @@ export default {
       addRoomOpened: false,
       mapFloorId: null,
       floorId: null,
+      floorsNumber: null,
       windowWidth: window.innerWidth
     }
   },
@@ -131,15 +140,42 @@ export default {
     layout () {
       return this.mapFloorId ? this.infrastructure.house.floors[this.mapFloorId].roomsMap : []
     },
+    pieces: function() {
+      let roomsNumber = 0
+      for( let floor of Object.values(this.infrastructure.house.floors)) {
+        let rooms = Object.values(floor.rooms)
+        roomsNumber += rooms.length
+      }
+      return roomsNumber
+    },
     ...mapState(['infrastructure', 'route'])
   },
   methods: {
     updateMap () {
       if (!this.mapFloorId) return
+      for(let i = 0; i < this.layout.length; i++)
+      {
+        if(this.layout[i].h < 3) this.layout[i].h = 3
+        if(this.layout[i].w < 2) this.layout[i].w = 2
+      }
       this.updateMapAction({ floorId: this.mapFloorId, map: this.layout })
     },
     updateRoomLayout (floorId) {
       this.mapFloorId = floorId
+    },
+    getPeripheriqueNumber(roomId) {
+      let compt = 0;
+       for( let device of Object.values(this.infrastructure.devices)) {
+         console.log(device)
+        for( let node of Object.values(device.nodes)) {
+          
+          if(node.tags.includes(roomId)) {
+            compt ++
+          }
+        } 
+       }
+       return compt
+                  
     },
     addFloor () {
       this.addFloorAction({ name: this.floorNameInput })

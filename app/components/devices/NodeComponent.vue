@@ -16,17 +16,25 @@
               <li>Firmware : {{ nodeData.device.fw.name }} (v{{ nodeData.device.fw.version }})</li>
             </ul>
 
-            <h2>Tags</h2>
+            <h2>Pièces</h2>
 
-            <ul class="tag-list">
-              <span v-for="tag in infrastructure.tags">
-                 <div v-for="floor in infrastructure.house.floors">
-                  <div v-for="room in floor.rooms">
+             <div v-for="floor in infrastructure.house.floors">
+                <h4>{{ floor.name }}</h4>
+                <ul class="room-list">
+             <span v-for="tag in infrastructure.tags">
+                  <template v-for="room in floor.rooms">
                     <span v-if="tag.id === room.tagId">
               <li @click="toggleTag(tag)"><span class="tag" :class="{ 'is-success': nodeData.tags.includes(tag.id) }"><span class="icon is-small"><i class="fa fa-tag"></i></span>&nbsp;{{ room.name }}</span></li>
                     </span>
-                  </div>
+                  </template>
+                </span>
                 </div>
+                </ul>
+
+                <h2>Tags</h2>
+
+            <ul class="tag-list">
+              <span v-for="tag in infrastructure.tags">
                 <span v-if="!tag.id.includes('room:')">
                   <li @click="toggleTag(tag)"><span class="tag" :class="{ 'is-success': nodeData.tags.includes(tag.id) }"><span class="icon is-small"><i class="fa fa-tag"></i></span>&nbsp;{{ tag.id }}</span></li>
                 </span>
@@ -159,7 +167,7 @@ export default {
       &.is-strong
         color: $green
 
-  ul.tag-list
+  ul.tag-list, ul.room-list
     list-style-type: none
 
     li
