@@ -36,6 +36,7 @@
     "Matthieu BOISSADY"
   ],
   "dependencies": {
+    "ajv": "^4.10.4",
     "body-parser": "^1.15.2",
     "bookshelf": "^0.10.2",
     "bunyan": "^1.8.4",

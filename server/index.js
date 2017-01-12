@@ -5,6 +5,7 @@ import log, {LOG_LEVELS} from './lib/log'
 import createWebsocketServer from './lib/websocket-server'
 import start from './start'
 import loadSettings from './lib/settings'
+import {validate as validateSettings} from './lib/validators/settings'
 
 export async function bootstrap (opts) {
   if (typeof LOG_LEVELS[opts.logLevel] === undefined) {
@@ -18,6 +19,11 @@ export async function bootstrap (opts) {
   let settings
   try {
     settings = await loadSettings(opts.dataDir)
+    const validated = validateSettings(settings)
+    if (!validated.valid) {
+      log.fatal('invalid settings', validated.errors)
+      process.exit(1)
+    }
     log.info('settings loaded')
   } catch (err) {
     log.fatal('cannot load settings', err)
