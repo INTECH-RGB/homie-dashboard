@@ -2,13 +2,14 @@ import jsonpatch from 'fast-json-patch'
 import WebSocket from '../lib/websocket'
 import {login, logout} from '../services/api'
 import {parseMessage, MESSAGE_TYPES} from '../../common/ws-messages'
-import {INFRASTRUCTURE, INFRASTRUCTURE_PATCH} from '../../common/events'
+import {VERSION, INFRASTRUCTURE, INFRASTRUCTURE_PATCH} from '../../common/events'
 import wsRequest from '../helpers/ws-request'
 
 export const SET_IS_CONNECTED = 'SET_IS_CONNECTED'
 export const SET_IS_AUTHENTIFIED = 'SET_IS_AUTHENTIFIED'
 export const SET_WEBSOCKET_AUTH_FAILED = 'SET_WEBSOCKET_AUTH_FAILED'
 export const SET_INTENDED_ROUTE = 'SET_INTENDED_ROUTE'
+export const SET_VERSION = 'SET_VERSION'
 export const SET_INFRASTRUCTURE = 'SET_INFRASTRUCTURE'
 export const PATCH_INFRASTRUCTURE = 'PATCH_INFRASTRUCTURE'
 export const SET_STAT = 'SET_STAT'
@@ -20,6 +21,7 @@ export default function initializeStore (app) {
       isAuthentified: false,
       websocketAuthFailed: false,
       intendedRoute: '/',
+      version: '',
       infrastructure: {
         devices: {},
         tags: {},
@@ -38,6 +40,9 @@ export default function initializeStore (app) {
       },
       [SET_INTENDED_ROUTE] (state, route) {
         state.intendedRoute = route
+      },
+      [SET_VERSION] (state, version) {
+        state.version = version
       },
       [SET_INFRASTRUCTURE] (state, infrastructure) {
         state.infrastructure = infrastructure
@@ -164,8 +169,8 @@ export default function initializeStore (app) {
       },
       async giveStat({commit}, opts) {
         const result = await wsRequest({
-          ws, 
-          method: 'getStat', 
+          ws,
+          method: 'getStat',
           parameters: {
             id: opts.id,
             interval: opts.interval
@@ -237,6 +242,9 @@ export default function initializeStore (app) {
     if (message.type !== MESSAGE_TYPES.EVENT) return
 
     switch (message.event) {
+      case VERSION:
+        app.$store.commit(SET_VERSION, message.value)
+        return
       case INFRASTRUCTURE:
         app.$store.commit(SET_INFRASTRUCTURE, message.value)
         return

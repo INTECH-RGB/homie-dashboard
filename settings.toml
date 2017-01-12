@@ -8,8 +8,8 @@ password = "abcd"
     enabled = true
 
     [bindings.aqara.gateway]
-      ip = '192.168.6.17'
-      key = '000000000000'
+      ip = "192.168.6.17"
+      key = "000000000000"
   [bindings.yeelight]
     enabled = true
 

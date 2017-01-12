@@ -1,8 +1,9 @@
 import {EventEmitter} from 'events'
 import uuid from 'uuid'
 
+import pkg from '../../package'
 import {generateMessage, parseMessage, MESSAGE_TYPES} from '../../common/ws-messages'
-import {INFRASTRUCTURE} from '../../common/events'
+import {VERSION, INFRASTRUCTURE} from '../../common/events'
 import Tag from './infrastructure/tag'
 import Floor from './infrastructure/floor'
 import Room from './infrastructure/room'
@@ -36,6 +37,7 @@ export default class Client extends EventEmitter {
     this.statistical = new Statistical(opts.$deps)
 
     this.ws.send(generateMessage({ type: MESSAGE_TYPES.EVENT, event: INFRASTRUCTURE, value: this.infrastructure.toJSON() }))
+    this.ws.send(generateMessage({ type: MESSAGE_TYPES.EVENT, event: VERSION, value: pkg.version }))
 
     this.ws.on('message', data => {
       const message = parseMessage(data)
