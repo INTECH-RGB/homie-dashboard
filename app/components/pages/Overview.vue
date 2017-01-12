@@ -1,5 +1,6 @@
 <template>
   <div>
+    <help :visible="help" @close="help = false"></help>
 
     <div class="modal" :class="{ 'is-active': addFloorOpened }">
       <div class="modal-background"></div>
@@ -43,7 +44,14 @@
       </div>
     </div>
 
-    <h1 class="title">Vue d'ensemble</h1>
+    <h1 class="title">
+      Vue d'ensemble
+      <a href="#" @click.prevent="help = true" data-balloon="Aide" data-balloon-pos="up">
+        <span class="icon is-medium">
+          <i class="fa fa-question-circle-o"></i>
+        </span>
+      </a>
+    </h1>
     <h2 class="subtitle">
       Ici, vous pouvez modéliser votre maison sous forme d'étages et de pièces.
     </h2>
@@ -83,8 +91,8 @@
                    :h="item.h"
                    :i="item.i"
      :class="{ 'is-active': route.path === '/peripheriques' }"><router-link :to="`/peripheriques?tag=${item.i}`" exact> <i class="fa fa-eye"></i></router-link>
-        
-                   
+
+
 
                 <span class="text">
                 <p>{{ getRoomFromTagId(item.i).name }}</p>
@@ -102,9 +110,12 @@ import debounce from 'lodash.debounce'
 import {mapState, mapActions} from 'eva.js'
 import {GridLayout, GridItem} from 'vue-grid-layout/dist/vue-grid-layout.min.js'
 
+import Help from '../help/Overview'
+
 export default {
   data () {
     return {
+      help: false,
       canvas: null,
       floorNameInput: '',
       addFloorOpened: false,
@@ -116,6 +127,7 @@ export default {
     }
   },
   components: {
+    Help,
     GridLayout,
     GridItem
   },

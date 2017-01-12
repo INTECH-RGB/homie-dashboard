@@ -1,6 +1,15 @@
 <template>
   <div>
-    <h1 class="title">Périphériques</h1>
+    <help :visible="help" @close="help = false"></help>
+
+    <h1 class="title">
+      Périphériques
+      <a href="#" @click.prevent="help = true" data-balloon="Aide" data-balloon-pos="up">
+        <span class="icon is-medium">
+          <i class="fa fa-question-circle-o"></i>
+        </span>
+      </a>
+    </h1>
     <h2 class="subtitle">
       Tous les périphériques de votre maison
     </h2>
@@ -16,7 +25,7 @@
                 <div v-for="floor in infrastructure.house.floors">
                   <div v-for="room in floor.rooms">
               <li v-if="tag.id === room.tagId"><a href="" @click.prevent @mousedown.prevent="addTagRoom(room)"><span class="tag"><span class="icon is-small"><i class="fa fa-tag"></i></span>&nbsp;{{ room.name }}<span :data-balloon="canDeleteTag(tag.id) ? 'Supprimer le tag' : 'Impossible de supprimer ce tag car il est encore affecté'" data-balloon-pos="right"><button @mousedown.prevent.stop="deleteTag(tag.id)" class="delete is-small" :disabled="!canDeleteTag(tag.id)"></button></span></span></a></li>
-              
+
               </div>
               </div>
               <li v-if="!tag.id.includes('room:')"><a href="" @click.prevent @mousedown.prevent="addTag(tag)"><span class="tag"><span class="icon is-small"><i class="fa fa-tag"></i></span>&nbsp;{{ tag.id }}<span :data-balloon="canDeleteTag(tag.id) ? 'Supprimer le tag' : 'Impossible de supprimer ce tag car il est encore affecté'" data-balloon-pos="right"><button @mousedown.prevent.stop="deleteTag(tag.id)" class="delete is-small" :disabled="!canDeleteTag(tag.id)"></button></span></span></a></li>
@@ -71,6 +80,8 @@
 <script>
 import {mapState, mapActions} from 'eva.js'
 
+import Help from '../help/Devices'
+
 import SwitchDevice from '../devices/Switch'
 import LightDevice from '../devices/Light'
 import TemperatureDevice from '../devices/Temperature'
@@ -89,6 +100,7 @@ import ButtonDevice from '../devices/Button'
 export default {
   data () {
     return {
+      help: false,
       types: {
         'temperature': TemperatureDevice,
         'light': LightDevice,
@@ -114,12 +126,12 @@ export default {
       selectedDeviceState: null
     }
   },
-  mounted() {
-    if(this.route.query.tag != undefined) {
+  components: { Help },
+  mounted () {
+    if (this.route.query.tag !== undefined) {
       this.selectedTagsIds.push(this.route.query.tag)
       console.log(this.selectedTagsIds)
     }
-    
   },
   computed: {
     dropdownTags () {
@@ -157,7 +169,7 @@ export default {
       this.selectedTagsIds.push(tag.id)
     },
     addTagRoom (room) {
-       this.selectedTagsIds.push(room.tagId)
+      this.selectedTagsIds.push(room.tagId)
     },
     removeCurrentTag (tagId) {
       this.selectedTagsIds.splice(this.selectedTagsIds.indexOf(tagId), 1)
