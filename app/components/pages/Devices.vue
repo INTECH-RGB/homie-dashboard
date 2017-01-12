@@ -84,6 +84,7 @@ import SoundDevice from '../devices/Sound'
 import LuminosityDevice from '../devices/Luminosity'
 import MotionDevice from '../devices/Motion'
 import BuzzerDevice from '../devices/Buzzer'
+import ButtonDevice from '../devices/Button'
 
 export default {
   data () {
@@ -101,7 +102,8 @@ export default {
         'sound': SoundDevice,
         'luminosity': LuminosityDevice,
         'motion': MotionDevice,
-        'buzzer': BuzzerDevice
+        'buzzer': BuzzerDevice,
+        'button': ButtonDevice
       },
       tagInput: { value: '', focus: false },
       selectedTagsIds: [],
