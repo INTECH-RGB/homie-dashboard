@@ -53,7 +53,8 @@ export function bridgeInfrastructureToDatabase ({$deps, infrastructure}) {
       $deps.log.debug(`inserting new property ${property.id} into DB`)
       return PropertyModel.forge({
         node_id: property.node.model.id,
-        node_property_id: property.id
+        node_property_id: property.id,
+        settable: property.settable
       }).save()
     }).then((model) => {
       property.model = model

@@ -14,13 +14,17 @@
       Ici, vous pouvez automatiser les comportements de vos périphériques.
     </h2>
 
-    <div id="blocklyDiv" style="height: 480px; width: 100%;"></div>
+    <div ref="blockly" style="height: 480px; width: 100%;"></div>
   </div>
 </template>
 
 <script>
 /* global Blockly */
+import {mapState} from 'eva.js'
+
 import Help from '../help/Automation'
+
+import {CONDITIONS, MUTATIONS, NODE_TYPES} from '../../../common/node-types'
 
 export default {
   data () {
@@ -28,109 +32,210 @@ export default {
       help: false
     }
   },
+  computed: {
+    ...mapState(['infrastructure'])
+  },
+  watch: {
+    infrastructure (val) {
+      createCustomBlocks(val, this.$refs.blockly)
+    }
+  },
   components: {
     Help
   },
   mounted () {
-    createCustomBlocks()
-
-    const toolbox = `
-      <xml>
-        <block type="controls_if"></block>
-        <block type="logic_compare"></block>
-
-        <block type="homie_device_node_prop"></block>
-        <block type="homie_condition"></block>
-      </xml>
-    `
-    Blockly.inject('blocklyDiv', {toolbox})
+    createCustomBlocks(this.infrastructure, this.$refs.blockly)
   }
 }
 
-function createCustomBlocks () {
-  Blockly.Blocks['homie_device_node_prop'] = {
-    init: function () {
-      this.jsonInit({
-        'message0': 'propriété %1',
-        'args0': [
-          {
-            'type': 'field_dropdown',
-            'name': 'VAR',
-            'options': [
-              [ 'first thing', 'ITEM1' ],
-              [ 'second item', 'ITEM2' ]
-            ]
+function createCustomBlocks (infrastructure, blockly) {
+  const homieColor = '#e74c3c'
+  Blockly.Blocks['homie_device_node_prop_condition'] = {
+    init () {
+      this.setColour(homieColor)
+      const dropdownValues = []
+      for (const device of Object.values(infrastructure.devices)) {
+        for (const node of Object.values(device.nodes)) {
+          for (const property of Object.values(node.properties)) {
+            dropdownValues.push([
+              `propriété ${device.name} - ${node.id} - ${property.id}`,
+              JSON.stringify({
+                deviceId: device.id,
+                nodeId: node.id,
+                nodeType: node.type,
+                propertyId: property.id
+              })
+            ])
           }
-        ],
-        'output': 'HomieProperty',
-        'colour': 160,
-        'tooltip': 'Retourne la valeur de la propriété spécifiée.'
+        }
+      }
+      const dropdown = new Blockly.FieldDropdown(dropdownValues, function onChange (option) {
+        this.sourceBlock_._updateShapeCondition(option)
       })
-    }
-  }
-
-  Blockly.Blocks['homie_condition'] = {
-    init: function () {
-      var PROPERTIES =
-        [[Blockly.Msg.MATH_IS_EVEN, 'EVEN'],
-         [Blockly.Msg.MATH_IS_ODD, 'ODD'],
-         [Blockly.Msg.MATH_IS_PRIME, 'PRIME'],
-         [Blockly.Msg.MATH_IS_WHOLE, 'WHOLE'],
-         [Blockly.Msg.MATH_IS_POSITIVE, 'POSITIVE'],
-         [Blockly.Msg.MATH_IS_NEGATIVE, 'NEGATIVE'],
-         [Blockly.Msg.MATH_IS_DIVISIBLE_BY, 'DIVISIBLE_BY']]
-      this.setColour(Blockly.Blocks.math.HUE)
-      this.appendValueInput('CONDITION_TO_CHECK')
-          .setCheck('HomieProperty')
-      const dropdown = new Blockly.FieldDropdown(PROPERTIES, function (option) {
-        const comparatorInput = (option === 'DIVISIBLE_BY') || (option === 'MULTIPLY_BY')
-        this.sourceBlock_.updateShape_(comparatorInput)
-      })
-      this.appendDummyInput()
-          .appendField(dropdown, 'CHECK')
+      this.appendDummyInput('PROPERTY')
+          .appendField(dropdown)
       this.setInputsInline(true)
       this.setOutput(true, 'Boolean')
-      this.setTooltip(Blockly.Msg.MATH_IS_TOOLTIP)
+      this.setTooltip('Vérifie que la condition de propriété spécifiée est vraie')
     },
     /**
-     * Create XML to represent whether the 'divisorInput' should be present.
+     * Create XML to represent whether the 'comparatorInput' should be present.
      * @return {Element} XML storage element.
      * @this Blockly.Block
      */
-    mutationToDom: function () {
-      const container = document.createElement('mutation')
-      const comparatorInput = (this.getFieldValue('CHECK') === 'DIVISIBLE_BY')
-      container.setAttribute('comparator_input', comparatorInput)
-      return container
+    mutationToDom () {
+      /*const container = document.createElement('mutation')
+      container.setAttribute('condition_option', this.getFieldValue('CONDITION'))
+      container.setAttribute('comparator_option', this.getFieldValue('COMPARATOR'))
+      return container*/
     },
     /**
-     * Parse XML to restore the 'divisorInput'.
+     * Parse XML to restore the 'comparatorInput'.
      * @param {!Element} xmlElement XML storage element.
      * @this Blockly.Block
      */
-    domToMutation: function (xmlElement) {
-      const comparatorInput = (xmlElement.getAttribute('comparator_input') === 'true')
-      this.updateShape_(comparatorInput)
+    domToMutation (xmlElement) {
+      /*const conditionOption = xmlElement.getAttribute('condition_option')
+      const comparatorOption = xmlElement.getAttribute('comparator_option')
+      this._updateShapeCondition(conditionOption)
+      this._updateShapeComparator(comparatorOption)*/
     },
-    /**
-     * Modify this block to have (or not have) an input for 'is divisible by'.
-     * @param {boolean} divisorInput True if this block has a divisor input.
-     * @private
-     * @this Blockly.Block
-     */
-    updateShape_: function (comparatorInput) {
-      // Add or remove a Value Input.
-      var inputExists = this.getInput('COMPARATOR')
-      if (comparatorInput) {
-        if (!inputExists) {
-          this.appendValueInput('COMPARATOR')
-              .setCheck('Number')
-        }
-      } else if (inputExists) {
-        this.removeInput('COMPARATOR')
+    _updateShapeCondition (option) {
+      // remove current field
+      let currentConditionInput = this.getInput('CONDITION')
+      if (currentConditionInput) this.removeInput('CONDITION')
+
+      option = JSON.parse(option)
+      const propertyConditions = NODE_TYPES[option.nodeType][option.propertyId].conditions
+
+      const conditionsDropdownValues = []
+
+      for (const condition of propertyConditions) {
+        conditionsDropdownValues.push([
+          condition.id,
+          JSON.stringify(condition)
+        ])
       }
+
+      const conditionsDropdown = new Blockly.FieldDropdown(conditionsDropdownValues, function onChange (option) {
+        this.sourceBlock_._updateShapeComparator(option)
+      })
+      this.appendDummyInput('CONDITION')
+          .appendField(conditionsDropdown)
+
+      currentConditionInput = this.getInput('CONDITION').fieldRow[0].value_
+      this._updateShapeComparator(currentConditionInput)
+    },
+    _updateShapeComparator (option) {
+      const currentComparatorInput = this.getInput('COMPARATOR')
+      if (currentComparatorInput) this.removeInput('COMPARATOR')
+
+      option = JSON.parse(option)
+
+      if (option.hasField) this.appendValueInput('COMPARATOR')
     }
   }
+
+  Blockly.Blocks['homie_device_node_prop_set'] = {
+    init () {
+      this.setColour(homieColor)
+      const dropdownValues = []
+      for (const device of Object.values(infrastructure.devices)) {
+        for (const node of Object.values(device.nodes)) {
+          for (const property of Object.values(node.properties)) {
+            if (!property.settable) continue
+            dropdownValues.push([
+              `propriété ${device.name} - ${node.id} - ${property.id}`,
+              JSON.stringify({
+                deviceId: device.id,
+                nodeId: node.id,
+                nodeType: node.type,
+                propertyId: property.id
+              })
+            ])
+          }
+        }
+      }
+      const dropdown = new Blockly.FieldDropdown(dropdownValues, function onChange (option) {
+        this.sourceBlock_._updateShapeMutation(option)
+      })
+      this.appendDummyInput('PROPERTY')
+          .appendField(dropdown)
+      this.setInputsInline(true)
+      this.setPreviousStatement(true)
+      this.setNextStatement(true)
+      this.setTooltip('Définit la valeur de la propriété spécifiée')
+      this.contextMenu = false
+    },
+    /**
+     * Create XML to represent whether the 'comparatorInput' should be present.
+     * @return {Element} XML storage element.
+     * @this Blockly.Block
+     */
+    mutationToDom () {
+      /*const container = document.createElement('mutation')
+      container.setAttribute('condition_option', this.getFieldValue('CONDITION'))
+      container.setAttribute('comparator_option', this.getFieldValue('COMPARATOR'))
+      return container*/
+    },
+    /**
+     * Parse XML to restore the 'comparatorInput'.
+     * @param {!Element} xmlElement XML storage element.
+     * @this Blockly.Block
+     */
+    domToMutation (xmlElement) {
+      /*const conditionOption = xmlElement.getAttribute('condition_option')
+      const comparatorOption = xmlElement.getAttribute('comparator_option')
+      this._updateShapeCondition(conditionOption)
+      this._updateShapeComparator(comparatorOption)*/
+    },
+    _updateShapeMutation (option) {
+      // remove current field
+      let currentMutationInput = this.getInput('MUTATION')
+      if (currentMutationInput) this.removeInput('MUTATION')
+
+      option = JSON.parse(option)
+      const propertyMutations = NODE_TYPES[option.nodeType][option.propertyId].mutations
+
+      const mutationsDropdownValues = []
+
+      for (const mutation of propertyMutations) {
+        mutationsDropdownValues.push([
+          mutation.id,
+          JSON.stringify(mutation)
+        ])
+      }
+
+      const mutationsDropdown = new Blockly.FieldDropdown(mutationsDropdownValues, function onChange (option) {
+        this.sourceBlock_._updateShapeValue(option)
+      })
+      this.appendDummyInput('MUTATION')
+          .appendField(mutationsDropdown)
+
+      currentMutationInput = this.getInput('MUTATION').fieldRow[0].value_
+      this._updateShapeValue(currentMutationInput)
+    },
+    _updateShapeValue (option) {
+      const currentValueInput = this.getInput('VALUE')
+      if (currentValueInput) this.removeInput('VALUE')
+
+      option = JSON.parse(option)
+
+      if (option.hasField) this.appendValueInput('VALUE')
+    }
+  }
+
+  const toolbox = `
+    <xml>
+      <block type="controls_if"></block>
+
+      <block type="homie_device_node_prop_condition"></block>
+      <block type="homie_device_node_prop_set"></block>
+      <block type="text"></block>
+    </xml>
+  `
+
+  Blockly.inject(blockly, {toolbox})
 }
 </script>
 

@@ -94,6 +94,7 @@ export async function getInfrastructure (infrastructure) {
         property.node = node
         property.id = propertyInDb.attributes['node_property_id']
         property.value = propertyInDb.related('history').models.length === 1 ? propertyInDb.related('history').models[0].attributes['value'] : null
+        property.settable = propertyInDb.attributes['settable']
 
         node.addProperty(property)
       }
