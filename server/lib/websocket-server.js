@@ -5,6 +5,7 @@ import express from 'express'
 import uuid from 'uuid'
 import bodyParser from 'body-parser'
 import {Server as WebSocketServer} from 'ws'
+import {verify} from './hash'
 import AuthTokenModel from '../models/auth-token'
 
 /**
@@ -28,7 +29,8 @@ export default function createWebsocketServer (opts) {
     })
 
     app.post('/login', async function (req, res) {
-      if (req.body.password === opts.settings.password) {
+      const match = await verify(opts.settings.password, req.body.password)
+      if (match) {
         const token = uuid()
         await AuthTokenModel.forge({ token }).save(null, { method: 'insert' }) // we insert primary key so considered update by default
         const never = new Date(253402300000000) // year 999

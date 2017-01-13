@@ -1,7 +1,7 @@
 {
   "name": "homie-dashboard",
   "description": "IoT dashboard for Homie devices",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "author": "RGB Team",
   "ava": {
     "babel": "inherit",
@@ -37,6 +37,7 @@
   ],
   "dependencies": {
     "ajv": "^4.10.4",
+    "argon2": "^0.15.0",
     "body-parser": "^1.15.2",
     "bookshelf": "^0.10.2",
     "bunyan": "^1.8.4",
@@ -112,7 +113,7 @@
     "common-depcheck": "npm-check --no-emoji",
     "emulator-start": "babel-watch emulator/index.js",
     "server-build": "cross-env BABEL_ENV=production NODE_ENV=production babel server/ -d dist-server/src/ && cross-env BABEL_ENV=production NODE_ENV=production babel common/ -d dist-server/common/ && npm run app-build && shx cp -r dist-app/ dist-server/ && shx cp package.json dist-server/",
-    "server-dev": "babel-watch server/bin/cli.js -- --port 5000 --ip 0.0.0.0 --logLevel debug",
+    "server-dev": "babel-watch server/bin/cli.js -- start --port 5000 --ip 0.0.0.0 --logLevel debug",
     "server-lint": "standard server/**/*.js | snazzy",
     "server-test": "nyc ava"
   }
