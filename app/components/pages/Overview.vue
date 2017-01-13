@@ -97,15 +97,15 @@
                    :w="item.w"
                    :h="item.h"
                    :i="item.i"
-     :class="{ 'is-active': route.path === '/peripheriques' }"><router-link :to="`/peripheriques?tag=${item.i}`" exact> <i class="fa fa-eye"></i></router-link>
+     :class="{ 'is-active': route.path === '/peripheriques' }">
 
 
-
+                <button @click="deleteRoom(getRoomFromTagId(item.i).id)" class="is-info delete "></button>
                 <span class="text">
                 <p>{{ getRoomFromTagId(item.i).name }}</p>
-                <p> {{ getPeripheriqueNumber(item.i) }} &nbsp; <i class="fa fa-cog"></i></p>
+               <router-link :to="`/peripheriques?tag=${item.i}`" exact> <p><i class="fa fa-cog"> {{ getPeripheriqueNumber(item.i) }}  </i></p></router-link>
                 </span>
-                <button @click="deleteRoom(getRoomFromTagId(item.i).id)" class="is-info delete "></button>
+                
 
         </grid-item>
     </grid-layout>
@@ -244,6 +244,9 @@ export default {
   .bouton
     margin-left: 2cm
     color: blue
+
+  .fa
+    color: white
 
   .vue-grid-item .text
     font-size: 24px
