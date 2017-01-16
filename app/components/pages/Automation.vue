@@ -14,6 +14,9 @@
       Ici, vous pouvez automatiser les comportements de vos périphériques.
     </h2>
 
+    <div class="block">
+      <a class="button is-success" @click.prevent="save">Enregistrer</a>
+    </div>
     <div ref="blockly" style="height: 480px; width: 100%;"></div>
   </div>
 </template>
@@ -29,7 +32,8 @@ import {CONDITIONS, MUTATIONS, NODE_TYPES} from '../../../common/node-types'
 export default {
   data () {
     return {
-      help: false
+      help: false,
+      blocklyWorkspace: null
     }
   },
   computed: {
@@ -37,18 +41,23 @@ export default {
   },
   watch: {
     infrastructure (val) {
-      createCustomBlocks(val, this.$refs.blockly)
+      createCustomBlocks(val, this)
     }
   },
   components: {
     Help
   },
+  methods: {
+    save () {
+      console.log(Blockly.JavaScript.workspaceToCode(this.blocklyWorkspace))
+    }
+  },
   mounted () {
-    createCustomBlocks(this.infrastructure, this.$refs.blockly)
+    createCustomBlocks(this.infrastructure, this)
   }
 }
 
-function createCustomBlocks (infrastructure, blockly) {
+function createCustomBlocks (infrastructure, self) {
   const homieColor = '#e74c3c'
   Blockly.Blocks['homie_device_node_prop_condition'] = {
     init () {
@@ -58,7 +67,7 @@ function createCustomBlocks (infrastructure, blockly) {
         for (const node of Object.values(device.nodes)) {
           for (const property of Object.values(node.properties)) {
             dropdownValues.push([
-              `propriété ${device.name} - ${node.id} - ${property.id}`,
+              `condition ${device.name} - ${node.id} - ${property.id}`,
               JSON.stringify({
                 deviceId: device.id,
                 nodeId: node.id,
@@ -69,14 +78,19 @@ function createCustomBlocks (infrastructure, blockly) {
           }
         }
       }
+
+      if (dropdownValues.length === 0) return
+
       const dropdown = new Blockly.FieldDropdown(dropdownValues, function onChange (option) {
         this.sourceBlock_._updateShapeCondition(option)
       })
       this.appendDummyInput('PROPERTY')
-          .appendField(dropdown)
+          .appendField(dropdown, 'PROPERTY')
       this.setInputsInline(true)
       this.setOutput(true, 'Boolean')
       this.setTooltip('Vérifie que la condition de propriété spécifiée est vraie')
+
+      this._updateShapeCondition(this.getFieldValue('PROPERTY'))
     },
     /**
      * Create XML to represent whether the 'comparatorInput' should be present.
@@ -121,10 +135,9 @@ function createCustomBlocks (infrastructure, blockly) {
         this.sourceBlock_._updateShapeComparator(option)
       })
       this.appendDummyInput('CONDITION')
-          .appendField(conditionsDropdown)
+          .appendField(conditionsDropdown, 'CONDITION')
 
-      currentConditionInput = this.getInput('CONDITION').fieldRow[0].value_
-      this._updateShapeComparator(currentConditionInput)
+      this._updateShapeComparator(this.getFieldValue('CONDITION'))
     },
     _updateShapeComparator (option) {
       const currentComparatorInput = this.getInput('COMPARATOR')
@@ -132,7 +145,10 @@ function createCustomBlocks (infrastructure, blockly) {
 
       option = JSON.parse(option)
 
-      if (option.hasField) this.appendValueInput('COMPARATOR')
+      if (option.hasField) {
+        this.appendDummyInput('COMPARATOR')
+          .appendField(new Blockly.FieldTextInput(''), 'COMPARATOR')
+      }
     }
   }
 
@@ -145,7 +161,7 @@ function createCustomBlocks (infrastructure, blockly) {
           for (const property of Object.values(node.properties)) {
             if (!property.settable) continue
             dropdownValues.push([
-              `propriété ${device.name} - ${node.id} - ${property.id}`,
+              `action ${device.name} - ${node.id} - ${property.id}`,
               JSON.stringify({
                 deviceId: device.id,
                 nodeId: node.id,
@@ -156,16 +172,21 @@ function createCustomBlocks (infrastructure, blockly) {
           }
         }
       }
+
+      if (dropdownValues.length === 0) return
+
       const dropdown = new Blockly.FieldDropdown(dropdownValues, function onChange (option) {
         this.sourceBlock_._updateShapeMutation(option)
       })
       this.appendDummyInput('PROPERTY')
-          .appendField(dropdown)
+          .appendField(dropdown, 'PROPERTY')
       this.setInputsInline(true)
       this.setPreviousStatement(true)
       this.setNextStatement(true)
       this.setTooltip('Définit la valeur de la propriété spécifiée')
       this.contextMenu = false
+
+      this._updateShapeMutation(this.getFieldValue('PROPERTY'))
     },
     /**
      * Create XML to represent whether the 'comparatorInput' should be present.
@@ -210,10 +231,9 @@ function createCustomBlocks (infrastructure, blockly) {
         this.sourceBlock_._updateShapeValue(option)
       })
       this.appendDummyInput('MUTATION')
-          .appendField(mutationsDropdown)
+          .appendField(mutationsDropdown, 'MUTATION')
 
-      currentMutationInput = this.getInput('MUTATION').fieldRow[0].value_
-      this._updateShapeValue(currentMutationInput)
+      this._updateShapeValue(this.getFieldValue('MUTATION'))
     },
     _updateShapeValue (option) {
       const currentValueInput = this.getInput('VALUE')
@@ -221,21 +241,80 @@ function createCustomBlocks (infrastructure, blockly) {
 
       option = JSON.parse(option)
 
-      if (option.hasField) this.appendValueInput('VALUE')
+      if (option.hasField) {
+        this.appendDummyInput('VALUE')
+          .appendField(new Blockly.FieldTextInput(''), 'VALUE')
+      }
     }
+  }
+
+  Blockly.JavaScript['homie_device_node_prop_condition'] = function (block) {
+    const property = JSON.parse(block.getFieldValue('PROPERTY'))
+    const condition = JSON.parse(block.getFieldValue('CONDITION'))
+    const comparator = block.getFieldValue('COMPARATOR')
+
+    let code = `infrastructure['${property.deviceId}']nodes['${property.nodeId}'].properties['${property.propertyId}'].value`
+    switch (condition.id) {
+      case 'isMotion':
+      case 'isOpen':
+      case 'isOn':
+        code += " === '1'"
+        break
+      case 'isNotMotion':
+      case 'isClose':
+      case 'isOff':
+        code += " === '0'"
+        break
+      case 'equals':
+        code += ` === '${comparator}'`
+        break
+      case 'above':
+        code += ` > '${comparator}'`
+        break
+      case 'under':
+        code += ` < '${comparator}'`
+        break
+    }
+    return [code, Blockly.JavaScript.ORDER_MEMBER]
+  }
+
+  Blockly.JavaScript['homie_device_node_prop_set'] = function (block) {
+    const property = JSON.parse(block.getFieldValue('PROPERTY'))
+    const mutation = JSON.parse(block.getFieldValue('MUTATION'))
+    const value = block.getFieldValue('VALUE')
+
+    let computedValue = value
+    switch (mutation.id) {
+      case 'setOpen':
+      case 'setOn':
+        computedValue = '1'
+        break
+      case 'setClose':
+      case 'setOff':
+        computedValue = '0'
+        break
+    }
+
+    const code = `handleAction({ deviceId: '${property.deviceId}', nodeId: '${property.nodeId}', propertyId: '${property.propertyId}', value: '${computedValue}' });\n`
+    console.log(code)
+    return code
   }
 
   const toolbox = `
     <xml>
       <block type="controls_if"></block>
+      <block type="logic_operation"></block>
 
       <block type="homie_device_node_prop_condition"></block>
       <block type="homie_device_node_prop_set"></block>
-      <block type="text"></block>
     </xml>
   `
 
-  Blockly.inject(blockly, {toolbox})
+  if (!self.$refs.blockly) return
+
+  if (self.blocklyWorkspace) self.blocklyWorkspace.dispose()
+  self.blocklyWorkspace = Blockly.inject(self.$refs.blockly, {toolbox})
+  Blockly.JavaScript.addReservedWords('code')
 }
 </script>
 
