@@ -23,7 +23,7 @@
 
 <script>
 /* global Blockly */
-import {mapState} from 'eva.js'
+import {mapState, mapActions} from 'eva.js'
 
 import Help from '../help/Automation'
 
@@ -48,9 +48,16 @@ export default {
     Help
   },
   methods: {
-    save () {
-      console.log(Blockly.JavaScript.workspaceToCode(this.blocklyWorkspace))
-    }
+    async save () {
+      const xml = Blockly.Xml.workspaceToDom(this.blocklyWorkspace)
+      var xmlText = Blockly.Xml.domToText(xml)
+      console.log(xmlText)
+      await this.saveAutomationScript({
+        blocklyXml: xmlText,
+        script: Blockly.JavaScript.workspaceToCode(this.blocklyWorkspace)
+      })
+    },
+    ...mapActions(['saveAutomationScript'])
   },
   mounted () {
     createCustomBlocks(this.infrastructure, this)
@@ -314,6 +321,8 @@ function createCustomBlocks (infrastructure, self) {
 
   if (self.blocklyWorkspace) self.blocklyWorkspace.dispose()
   self.blocklyWorkspace = Blockly.inject(self.$refs.blockly, {toolbox})
+  const xml = Blockly.Xml.textToDom(self.infrastructure.automation)
+  Blockly.Xml.domToWorkspace(xml, self.blocklyWorkspace)
   Blockly.JavaScript.addReservedWords('code')
 }
 </script>

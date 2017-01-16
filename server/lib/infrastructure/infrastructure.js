@@ -16,6 +16,12 @@ class Infrastructure extends EventEmitter {
 
     this._houseFloors = new Map()
 
+    this._automation = {
+      model: null,
+      xml: '',
+      script: ''
+    }
+
     Object.seal(this)
   }
 
@@ -145,12 +151,26 @@ class Infrastructure extends EventEmitter {
     return this._houseFloors.values()
   }
 
+  setAutomation (opts) {
+    this._automation.xml = opts.xml
+    this._automation.script = opts.script
+
+    this.emit('automationUpdated')
+  }
+
+  getAutomation () {
+    return {
+      script: this._automation.script,
+      xml: this._automation.xml
+    }
+  }
+
   _wasUpdated () {
     this.emit('update', { entity: this })
   }
 
   toJSON () {
-    const representation = { devices: {}, tags: {}, house: { floors: {} } }
+    const representation = { devices: {}, tags: {}, house: { floors: {} }, automation: '' }
 
     for (const device of this.getDevices()) {
       if (device.isValid) representation.devices[device.id] = device.toJSON()
@@ -163,6 +183,8 @@ class Infrastructure extends EventEmitter {
     for (const floor of this.getFloors()) {
       if (floor.isValid) representation.house.floors[floor.id] = floor.toJSON()
     }
+
+    representation.automation = this.getAutomation().xml
 
     return JSON.parse(JSON.stringify(representation))
   }

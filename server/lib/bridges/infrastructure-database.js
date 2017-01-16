@@ -2,6 +2,7 @@ import DeviceModel from '../../models/device'
 import NodeModel from '../../models/node'
 import PropertyModel from '../../models/property'
 import PropertyHistoryModel from '../../models/property-history'
+import AutomationScriptModel from '../../models/automation-script'
 import Device from '../infrastructure/device'
 import Node from '../infrastructure/node'
 import Property from '../infrastructure/property'
@@ -11,6 +12,18 @@ import Property from '../infrastructure/property'
  */
 export function bridgeInfrastructureToDatabase ({$deps, infrastructure}) {
   let databaseQueue = Promise.resolve()
+
+  infrastructure.on('automationUpdated', async () => {
+    const automation = infrastructure.getAutomation()
+    if (!automation.model) {
+      automation.model = await AutomationScriptModel.forge({ script: automation.script, blockly_xml: automation.xml }).save()
+    } else {
+      await automation.model.set({
+        script: automation.script,
+        xml: automation.xml
+      }).save()
+    }
+  })
 
   infrastructure.on('newDevice', function onNewDevice (device) {
     databaseQueue = databaseQueue.then(() => {

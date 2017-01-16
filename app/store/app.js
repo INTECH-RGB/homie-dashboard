@@ -25,7 +25,8 @@ export default function initializeStore (app) {
       infrastructure: {
         devices: {},
         tags: {},
-        house: { floors: {} }
+        house: { floors: {} },
+        automation: '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
       }
     },
     mutations: {
@@ -167,7 +168,7 @@ export default function initializeStore (app) {
 
         return result
       },
-      async giveStat({commit}, opts) {
+      async giveStat ({commit}, opts) {
         const result = await wsRequest({
           ws,
           method: 'getStat',
@@ -190,7 +191,6 @@ export default function initializeStore (app) {
         return result
       },
       async updateMap ({commit}, opts) {
-
         const result = await wsRequest({
           ws,
           method: 'updateMap',
@@ -207,6 +207,18 @@ export default function initializeStore (app) {
           ws,
           method: 'getHomieEsp8266Settings',
           parameters: null
+        })
+
+        return result
+      },
+      async saveAutomationScript ({commit}, opts) {
+        const result = await wsRequest({
+          ws,
+          method: 'saveAutomationScript',
+          parameters: {
+            blocklyXml: opts.blocklyXml,
+            script: opts.script
+          }
         })
 
         return result
