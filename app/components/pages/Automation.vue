@@ -105,10 +105,10 @@ function createCustomBlocks (infrastructure, self) {
      * @this Blockly.Block
      */
     mutationToDom () {
-      /*const container = document.createElement('mutation')
+      const container = document.createElement('mutation')
+      container.setAttribute('property_option', this.getFieldValue('PROPERTY'))
       container.setAttribute('condition_option', this.getFieldValue('CONDITION'))
-      container.setAttribute('comparator_option', this.getFieldValue('COMPARATOR'))
-      return container*/
+      return container
     },
     /**
      * Parse XML to restore the 'comparatorInput'.
@@ -116,10 +116,10 @@ function createCustomBlocks (infrastructure, self) {
      * @this Blockly.Block
      */
     domToMutation (xmlElement) {
-      /*const conditionOption = xmlElement.getAttribute('condition_option')
-      const comparatorOption = xmlElement.getAttribute('comparator_option')
-      this._updateShapeCondition(conditionOption)
-      this._updateShapeComparator(comparatorOption)*/
+      const propertyOption = xmlElement.getAttribute('property_option')
+      const conditionOption = xmlElement.getAttribute('condition_option')
+      this._updateShapeCondition(propertyOption)
+      this._updateShapeComparator(conditionOption)
     },
     _updateShapeCondition (option) {
       // remove current field
@@ -201,10 +201,10 @@ function createCustomBlocks (infrastructure, self) {
      * @this Blockly.Block
      */
     mutationToDom () {
-      /*const container = document.createElement('mutation')
-      container.setAttribute('condition_option', this.getFieldValue('CONDITION'))
-      container.setAttribute('comparator_option', this.getFieldValue('COMPARATOR'))
-      return container*/
+      const container = document.createElement('mutation')
+      container.setAttribute('property_option', this.getFieldValue('PROPERTY'))
+      container.setAttribute('mutation_option', this.getFieldValue('MUTATION'))
+      return container
     },
     /**
      * Parse XML to restore the 'comparatorInput'.
@@ -212,10 +212,10 @@ function createCustomBlocks (infrastructure, self) {
      * @this Blockly.Block
      */
     domToMutation (xmlElement) {
-      /*const conditionOption = xmlElement.getAttribute('condition_option')
-      const comparatorOption = xmlElement.getAttribute('comparator_option')
-      this._updateShapeCondition(conditionOption)
-      this._updateShapeComparator(comparatorOption)*/
+      const propertyOption = xmlElement.getAttribute('property_option')
+      const mutationOption = xmlElement.getAttribute('mutation_option')
+      this._updateShapeMutation(propertyOption)
+      this._updateShapeValue(mutationOption)
     },
     _updateShapeMutation (option) {
       // remove current field
@@ -260,7 +260,7 @@ function createCustomBlocks (infrastructure, self) {
     const condition = JSON.parse(block.getFieldValue('CONDITION'))
     const comparator = block.getFieldValue('COMPARATOR')
 
-    let code = `infrastructure['${property.deviceId}']nodes['${property.nodeId}'].properties['${property.propertyId}'].value`
+    let code = `infrastructure.devices['${property.deviceId}'].nodes['${property.nodeId}'].properties['${property.propertyId}'].value`
     switch (condition.id) {
       case 'isMotion':
       case 'isOpen':

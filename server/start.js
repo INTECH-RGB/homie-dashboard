@@ -5,6 +5,7 @@ import {bridgeInfrastructureToDatabase} from './lib/bridges/infrastructure-datab
 import {bridgeInfrastructureToWebsocket} from './lib/bridges/infrastructure-websocket'
 import infrastructure from './lib/infrastructure/infrastructure'
 import {getInfrastructure} from './services/database'
+import {handleAutomation} from './lib/automator.js'
 
 /* import bindings */
 
@@ -43,6 +44,10 @@ export default async function start ($deps) {
   /* Bridge the MQTT to the infrastructure */
 
   bridgeMqttToInfrastructure({ $deps, mqttClient, infrastructure })
+
+  /* Handle automation */
+
+  handleAutomation({ $deps, infrastructure, mqttClient })
 
   /* start bindings */
 
