@@ -37,7 +37,7 @@
   ],
   "dependencies": {
     "ajv": "^4.10.4",
-    "argon2": "^0.15.0",
+    "bcryptjs": "^2.4.0",
     "body-parser": "^1.15.2",
     "bookshelf": "^0.10.2",
     "bunyan": "^1.8.4",
