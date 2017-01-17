@@ -1,6 +1,6 @@
 # Password securing your Homie Dashboard
 # Use homie-dashboard hash <password> to get a valid hash
-password = "$argon2i$v=19$m=4096,t=3,p=1$4xll2wWqD/1IusLFeGfEXA$RIOjwn/TEMMfeLHPNrLrm3wfEN/UTYo6Xvgc8ycZG8k"
+password = "$2a$10$hYnFXjXkyXprVEWXFV5zHOUff3oE0ec.5Yb6rBjnyYhIFQuOk3iQm"
 
 # Enable bindings
 [bindings]

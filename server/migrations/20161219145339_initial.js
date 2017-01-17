@@ -27,6 +27,7 @@ exports.up = function (knex) {
       table.increments('id').primary().notNullable()
       table.integer('node_id').notNullable().references('id').inTable('nodes')
       table.string('node_property_id').notNullable()
+      table.boolean('settable').notNullable()
     })
     .createTable('property_history', function (table) {
       table.increments('id').primary().notNullable()

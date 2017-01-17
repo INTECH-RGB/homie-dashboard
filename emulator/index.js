@@ -98,7 +98,7 @@ const DEVICES = [
         id: 'windownode',
         type: 'window',
         properties: [
-          { id: 'window', settable: false }
+          { id: 'open', settable: false }
         ]
       }
     ]

@@ -177,6 +177,16 @@ export default class Client extends EventEmitter {
     } else if (message.method === 'getStat') {
       const result = await this.statistical.getStatDevice(message.parameters.id, message.parameters.interval)
       this._sendResponse(message, result)
+    } else if (message.method === 'saveAutomationScript') {
+      const blocklyXml = message.parameters.blocklyXml
+      const script = message.parameters.script
+
+      this.infrastructure.setAutomation({
+        xml: blocklyXml,
+        script
+      })
+
+      this._sendResponse(message, true)
     }
   }
 }

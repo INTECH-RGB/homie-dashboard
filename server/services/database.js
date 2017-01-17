@@ -8,6 +8,7 @@ import Room from '../lib/infrastructure/room'
 import DeviceModel from '../models/device'
 import TagModel from '../models/tag'
 import FloorModel from '../models/floor'
+import AutomationScript from '../models/automation-script'
 
 /**
  * This function synchronizes the database with the infrastructure.
@@ -26,6 +27,19 @@ export async function getInfrastructure (infrastructure) {
     tag.model = tagInDb
     tag.id = tagInDb['id']
     infrastructure.addTag(tag)
+  }
+
+  /* Automation */
+
+  const automationScripts = await AutomationScript.fetchAll()
+
+  for (const automationScriptInDb of automationScripts.models) {
+    const automationInInfra = infrastructure.getAutomation()
+    automationInInfra.model = automationScriptInDb
+    infrastructure.setAutomation({
+      xml: automationScriptInDb.attributes['blockly_xml'],
+      script: automationScriptInDb.attributes['script']
+    })
   }
 
   /* House */
@@ -94,6 +108,7 @@ export async function getInfrastructure (infrastructure) {
         property.node = node
         property.id = propertyInDb.attributes['node_property_id']
         property.value = propertyInDb.related('history').models.length === 1 ? propertyInDb.related('history').models[0].attributes['value'] : null
+        property.settable = propertyInDb.attributes['settable']
 
         node.addProperty(property)
       }

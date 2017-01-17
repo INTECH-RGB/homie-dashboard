@@ -57,8 +57,24 @@
       <nav class="tabs is-boxed">
         <div class="container">
           <ul>
-            <li :class="{ 'is-active': route.path === '/' }"><router-link to="/" exact>Vue d'ensemble</router-link></li>
-            <li :class="{ 'is-active': route.path === '/peripheriques' }"><router-link to="/peripheriques" exact>Périphériques &nbsp;<i class="fa fa-cog"></i></router-link></li>
+            <li :class="{ 'is-active': route.path === '/' }">
+              <router-link to="/" exact>
+                <span class="icon is-small"><i class="fa fa-eye"></i></span>
+                <span>Vue d'ensemble</span>
+              </router-link>
+            </li>
+            <li :class="{ 'is-active': route.path === '/peripheriques' }">
+              <router-link to="/peripheriques" exact>
+                <span class="icon is-small"><i class="fa fa-lightbulb-o"></i></span>
+                <span>Périphériques</span>
+              </router-link>
+            </li>
+            <li :class="{ 'is-active': route.path === '/automatisation' }">
+              <router-link to="/automatisation" exact>
+                <span class="icon is-small"><i class="fa fa-magic"></i></span>
+                <span>Automatisation</span>
+              </router-link>
+            </li>
           </ul>
         </div>
       </nav>

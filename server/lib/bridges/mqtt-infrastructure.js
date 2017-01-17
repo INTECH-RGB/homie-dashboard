@@ -82,6 +82,24 @@ export function bridgeMqttToInfrastructure ({$deps, mqttClient, infrastructure})
           return
         case 'properties':
           node.propertiesDefinition = message.value
+          const propertiesDefinition = node.propertiesDefinition.split(',').map(function (propertyDefinition) {
+            const splitted = propertyDefinition.split(':')
+            return {
+              id: splitted[0],
+              settable: splitted[1] ? splitted[1] === 'settable' : false
+            }
+          })
+
+          for (let propertyDefinition of propertiesDefinition) {
+            let property
+            if (!node.hasProperty(propertyDefinition.id)) {
+              property = new Property()
+              property.node = node
+              property.id = propertyDefinition.id
+              node.addProperty(property)
+            } else property = node.getProperty(propertyDefinition.id)
+            property.settable = propertyDefinition.settable
+          }
           return
       }
     }
