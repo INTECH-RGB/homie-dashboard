@@ -27,7 +27,7 @@ import {mapState, mapActions} from 'eva.js'
 
 import Help from '../help/Automation'
 
-import {CONDITIONS, MUTATIONS, NODE_TYPES} from '../../../common/node-types'
+import {NODE_TYPES} from '../../../common/node-types'
 
 export default {
   data () {

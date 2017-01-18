@@ -11,7 +11,7 @@
     <div slot="main">
       <div class="has-text-centered">
         <p class="title">
-          <template v-if="nodeData.properties.degrees">
+          <template v-if="nodeData.properties.degrees && nodeData.properties.degrees.value">
             {{ nodeData.properties.degrees.value }} °C
           </template>
           <template v-else>

@@ -8,7 +8,7 @@
     <div slot="main">
       <div class="has-text-centered">
         <p class="title">
-          <template v-if="nodeData.properties.pressed">
+          <template v-if="nodeData.properties.pressed && nodeData.properties.pressed.value">
             {{ nodeData.properties.pressed.value === '1' ? 'Pressé' : 'Relâché' }}
           </template>
           <template v-else>

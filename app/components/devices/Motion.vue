@@ -8,7 +8,7 @@
     <div slot="main">
       <div class="has-text-centered">
         <p class="title">
-          <template v-if="nodeData.properties.motion">
+          <template v-if="nodeData.properties.motion && nodeData.properties.motion.value">
             {{ nodeData.properties.motion.value === '1' ? 'Mouvement détecté' : 'Aucun mouvement' }}
           </template>
           <template v-else>

@@ -2,7 +2,7 @@
   <node :hasActions="true" :nodeData="nodeData">
     <template slot="img">
       <div class="has-text-centered">
-        <i v-if="nodeData.properties.intensity" class="fa fa-lightbulb-o " aria-hidden="true" :style="imgDataStyle"></i>
+        <i v-if="nodeData.properties.intensity && nodeData.properties.intensity.value" class="fa fa-lightbulb-o " aria-hidden="true" :style="imgDataStyle"></i>
         <img v-else src="../../assets/images/icons/common/unknown.png" alt="" >
       </div>
     </template>
@@ -10,7 +10,7 @@
     <template slot="main">
       <div class="has-text-centered">
         <p class="title">
-          <template v-if="nodeData.properties.intensity">
+          <template v-if="nodeData.properties.intensity && nodeData.properties.intensity.value">
             {{ nodeData.properties.intensity.value }} %
           </template>
           <template v-else>
@@ -50,7 +50,7 @@ export default {
         l: 0.5,
         a: 1
       },
-      intensityInput: this.nodeData.properties.intensity ? this.nodeData.properties.intensity.value : 0
+      intensityInput: (this.nodeData.properties.intensity && this.nodeData.properties.intensity.value) ? this.nodeData.properties.intensity.value : 0
     }
   },
   computed: {

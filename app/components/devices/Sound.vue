@@ -6,7 +6,7 @@
     <div slot="main">
       <div class="has-text-centered">
         <p class="title">
-          <template v-if="nodeData.properties.intensity">
+          <template v-if="nodeData.properties.intensity && nodeData.properties.intensity.value">
             {{ nodeData.properties.intensity.value }} dB
           </template>
           <template v-else>
