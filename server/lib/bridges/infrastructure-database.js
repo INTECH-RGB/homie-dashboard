@@ -72,6 +72,7 @@ export function bridgeInfrastructureToDatabase ({$deps, infrastructure}) {
     }).then((model) => {
       property.model = model
 
+      if (!property.value) return
       return PropertyHistoryModel.forge({
         property_id: property.model.id,
         value: property.value,
