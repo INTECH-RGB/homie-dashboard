@@ -103,7 +103,7 @@
                 <button @click="deleteRoom(getRoomFromTagId(item.i).id)" class="is-info delete "></button>
                 <span class="text">
                 <p>{{ getRoomFromTagId(item.i).name }}</p>
-               <router-link :to="`/peripheriques?tag=${item.i}`" exact> <p><i class="fa fa-cog"> {{ getPeripheriqueNumber(item.i) }}  </i></p></router-link>
+               <router-link :to="`/peripheriques?tag=${item.i}`" exact> <p><i class="fa fa-lightbulb-o view"> {{ getPeripheriqueNumber(item.i) }}  </i></p></router-link>
                 </span>
 
 
@@ -242,7 +242,7 @@ export default {
     margin-left: 2cm
     color: blue
 
-  .fa
+  .fa.view
     color: white
 
   .vue-grid-item .text
