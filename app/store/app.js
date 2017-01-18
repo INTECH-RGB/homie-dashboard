@@ -157,6 +157,17 @@ export default function initializeStore (app) {
 
         return result
       },
+      async changeNodeName ({commit}, opts) {
+        const result = await wsRequest({
+          ws,
+          method: 'changeNodeName',
+          parameters: {
+            node: opts.node,
+            name: opts.name
+          }
+        })
+        console.log("dab")
+      },
       async addFloor ({commit}, opts) {
         const result = await wsRequest({
           ws,

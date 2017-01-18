@@ -18,6 +18,7 @@ exports.up = function (knex) {
       table.increments('id').primary().notNullable()
       table.string('device_id').notNullable().references('id').inTable('devices')
       table.string('device_node_id').notNullable()
+      table.string('name').notNullable()
       table.string('type').notNullable()
       table.string('properties').notNullable()
 

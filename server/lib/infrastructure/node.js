@@ -11,6 +11,7 @@ export default class Node extends EventEmitter {
 
     this._id = null
     this._type = null
+    this._name = null
     this._propertiesDefinition = null
 
     this._properties = new Map()
@@ -52,6 +53,10 @@ export default class Node extends EventEmitter {
     this._wasUpdated()
   }
 
+  changeNodeName(name){
+    this._name = name
+  }
+
   deleteTag (tag) {
     this._tags.delete(tag)
     this._wasUpdated()
@@ -75,6 +80,12 @@ export default class Node extends EventEmitter {
   set id (val) {
     if (!val || this._id === val) return
     this._id = val
+    this._wasUpdated()
+  }
+  get name() { return this._name }
+  set name (val) {
+    if (!val || this._name === val) return
+    this._name = val
     this._wasUpdated()
   }
   get type () { return this._type }
@@ -117,6 +128,7 @@ export default class Node extends EventEmitter {
     const representation = {}
     representation.id = this.id
     representation.type = this.type
+    representation.name = this.name
     representation.propertiesDefinition = this.propertiesDefinition
     representation.properties = {}
     for (const property of this.getProperties()) {

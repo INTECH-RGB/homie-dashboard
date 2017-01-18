@@ -96,6 +96,7 @@ export async function getInfrastructure (infrastructure) {
       node.model = nodeInDb
       node.device = device
       node.id = nodeInDb.attributes['device_node_id']
+      node.name = nodeInDb.attributes['name']
       node.type = nodeInDb.attributes['type']
       node.propertiesDefinition = nodeInDb.attributes['properties']
       for (const tagInDb of nodeInDb.related('tags').models) {

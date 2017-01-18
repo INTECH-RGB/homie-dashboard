@@ -53,6 +53,7 @@ export function bridgeInfrastructureToDatabase ({$deps, infrastructure}) {
       return NodeModel.forge({
         device_id: node.device.id,
         device_node_id: node.id,
+        name: node.type,
         type: node.type,
         properties: node.propertiesDefinition
       }).save()

@@ -121,7 +121,17 @@ export default class Client extends EventEmitter {
       this.infrastructure.addFloor(floor)
 
       this._sendResponse(message, true)
-    } else if (message.method === 'deleteFloor') {
+    } else if (message.method === 'changeNodeName') {
+      console.log("bim")
+      const name = message.parameters.name
+      const nodeData = message.parameters.node
+      const device = this.infrastructure.getDevice(nodeData.device.id)
+      const node = device.getNode(nodeData.id)
+      node.changeNodeName(name)
+      await node.model.save({ name: name })
+
+      this._sendResponse(message, true)
+    }else if (message.method === 'deleteFloor') {
       const floorId = message.parameters.floorId
       const floor = this.infrastructure.getFloor(floorId)
 

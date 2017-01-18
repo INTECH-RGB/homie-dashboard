@@ -5,14 +5,21 @@
       <div class="modal-card">
         <header class="modal-card-head">
           <p class="modal-card-title">Paramètres du nœud <i>{{ nodeData.id }}</i> de l'objet <i>{{ nodeData.device.name }}</i></p>
-          <button @click.prevent="settingsOpened = false" class="delete"></button>
+          <button @click.prevent="settingsOpened = false; isModif = false" class="delete"></button>
         </header>
         <section class="modal-card-body">
           <div class="content">
             <h2>Informations sur l'objet</h2>
 
             <ul>
-              <li>Nom : {{ nodeData.device.name }}</li>
+              <template v-if = "isModif">
+                <label class = "croud">
+               <input v-model="name" class="input is-primary" type="text" :placeholder="nodeData.name" width ="3"> &nbsp; <a @click="changeNodeName(nodeData, name)" class= "bouton">Enregistrer</a> 
+              </label>
+              </template>
+              <template v-else>
+              <li>Nom : {{ nodeData.name }} &nbsp;&nbsp;&nbsp;&nbsp; <a @click="isModif = true" class= "bouton">Modifier</a></li>
+              </template>
               <li>Firmware : {{ nodeData.device.fw.name }} (v{{ nodeData.device.fw.version }})</li>
             </ul>
 
@@ -70,7 +77,7 @@
       <header class="card-header">
         <p class="card-header-title">
           <template v-if="nodeData">
-            {{ nodeData.device.name }}
+            {{ nodeData.name }}
           </template>
         </p>
         <span class="card-header-icon custom wifi" :class="getSignalIconClasses(nodeData.device.online, nodeData.device.stats.signal)" :data-balloon="`${nodeData.device.online ? 'En ligne' : 'Hors-ligne'}, signal : ${nodeData.device.stats.signal}%`" data-balloon-pos="up">
@@ -112,7 +119,9 @@ export default {
   data () {
     return {
       settingsOpened: false,
-      statsOpened: false
+      statsOpened: false,
+      name: "",
+      isModif: false
     }
   },
   components: {Statistical},
@@ -127,6 +136,14 @@ export default {
         'is-strong': online && signal > 66
       }
     },
+    async changeNodeName(node, name) {
+      
+      await this.changeNodeNameAction({
+        node: node,
+        name: name
+      })
+      this.isModif = false
+    },
     async toggleTag (tag) {
       const operationAdd = !this.nodeData.tags.includes(tag.id)
 
@@ -137,7 +154,7 @@ export default {
         operationAdd
       })
     },
-    ...mapActions({ toggleTagAction: 'toggleTag' })
+    ...mapActions({ toggleTagAction: 'toggleTag', changeNodeNameAction: 'changeNodeName' })
   }
 }
 </script>
