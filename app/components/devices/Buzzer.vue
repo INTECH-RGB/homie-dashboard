@@ -8,7 +8,7 @@
     <div slot="main">
       <div class="has-text-centered">
         <p class="title">
-          <template v-if="nodeData.properties.buzzing">
+          <template v-if="nodeData.properties.buzzing && nodeData.properties.buzzing.value">
             {{ nodeData.properties.buzzing.value === '1' ? 'Actif' : 'Inactif' }}
           </template>
           <template v-else>

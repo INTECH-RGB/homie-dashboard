@@ -2,7 +2,7 @@
   <node :hasActions="true" :nodeData="nodeData">
     <template slot="img">
       <div class="has-text-centered">
-        <i v-if="nodeData.properties.intensity" class="fa fa-lightbulb-o " aria-hidden="true" :style="imgDataStyle"></i>
+        <i v-if="nodeData.properties.intensity && nodeData.properties.intensity.value" class="fa fa-lightbulb-o " aria-hidden="true" :style="imgDataStyle"></i>
         <img v-else src="../../assets/images/icons/common/unknown.png" alt="" >
       </div>
     </template>
@@ -10,7 +10,7 @@
     <template slot="main">
       <div class="has-text-centered">
         <p class="title">
-          <template v-if="nodeData.properties.intensity">
+          <template v-if="nodeData.properties.intensity && nodeData.properties.intensity.value">
             {{ nodeData.properties.intensity.value }} %
           </template>
           <template v-else>
@@ -39,7 +39,7 @@ import {hslToRgb, rgbToHsl} from '../../helpers/conversions'
 export default {
   mixins: [nodeMixin],
   data () {
-    const rgb = this.nodeData.properties.color ? this.nodeData.properties.color.value.split(',').map(str => parseInt(str, 10)) : [0, 255, 255]
+    const rgb = (this.nodeData.properties.color && this.nodeData.properties.color.value) ? this.nodeData.properties.color.value.split(',').map(str => parseInt(str, 10)) : [0, 255, 255]
     const hsl = rgbToHsl(rgb[0], rgb[1], rgb[2])
     hsl[0] *= 360
 
@@ -50,12 +50,12 @@ export default {
         l: 0.5,
         a: 1
       },
-      intensityInput: this.nodeData.properties.intensity ? this.nodeData.properties.intensity.value : 0
+      intensityInput: (this.nodeData.properties.intensity && this.nodeData.properties.intensity.value) ? this.nodeData.properties.intensity.value : 0
     }
   },
   computed: {
     imgDataStyle () {
-      if (this.nodeData.properties.intensity && parseInt(this.nodeData.properties.intensity.value) <= 1) {
+      if (this.nodeData.properties.intensity && this.nodeData.properties.intensity.value && parseInt(this.nodeData.properties.intensity.value) <= 1) {
         return {
           fontSize: '1725%',
           opacity: 10 / 100,
@@ -65,7 +65,7 @@ export default {
         return {
           fontSize: '1725%',
           opacity: this.nodeData.properties.intensity.value / 100,
-          color: this.nodeData.properties.color ? `rgb(${parseInt(this.nodeData.properties.color.value.split(',')[0])},${parseInt(this.nodeData.properties.color.value.split(',')[1])},${parseInt(this.nodeData.properties.color.value.split(',')[2])}` : 'rgb(0,0,0)'
+          color: (this.nodeData.properties.color && this.nodeData.properties.color.value) ? `rgb(${parseInt(this.nodeData.properties.color.value.split(',')[0])},${parseInt(this.nodeData.properties.color.value.split(',')[1])},${parseInt(this.nodeData.properties.color.value.split(',')[2])}` : 'rgb(0,0,0)'
         }
       }
     }

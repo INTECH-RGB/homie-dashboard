@@ -6,7 +6,7 @@
     <div slot="main">
       <div class="has-text-centered">
         <p class="title">
-          <template v-if="nodeData.properties.percentage">
+          <template v-if="nodeData.properties.percentage && nodeData.properties.percentage.value">
             {{ nodeData.properties.percentage.value }} %
           </template>
           <template v-else>

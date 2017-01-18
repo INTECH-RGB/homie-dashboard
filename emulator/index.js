@@ -215,8 +215,8 @@ client.on('connect', async function onConnect () {
     for (let node of device.nodes) {
       client.publish(`${BASE_TOPIC}/${device.id}/${node.id}/$type`, node.type, qos1Retained)
       let properties = ''
-      for (let property of node.properties) properties += `${property.id}${property.settable ? ':settable' : ''}`
-      client.publish(`${BASE_TOPIC}/${device.id}/${node.id}/$properties`, properties, qos1Retained)
+      for (let property of node.properties) properties += `${property.id}${property.settable ? ':settable' : ''},`
+      client.publish(`${BASE_TOPIC}/${device.id}/${node.id}/$properties`, properties.slice(0, -1), qos1Retained)
     }
 
     client.publish(`${BASE_TOPIC}/${device.id}/$online`, 'true', qos1Retained)

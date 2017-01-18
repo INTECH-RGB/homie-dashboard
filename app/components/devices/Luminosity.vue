@@ -6,7 +6,7 @@
     <div slot="main">
       <div class="has-text-centered">
         <p class="title">
-          <template v-if="nodeData.properties.lux">
+          <template v-if="nodeData.properties.lux && nodeData.properties.lux.value">
             {{ nodeData.properties.lux.value }} lx
           </template>
           <template v-else>

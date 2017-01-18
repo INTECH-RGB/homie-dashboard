@@ -8,7 +8,7 @@
     <div slot="main">
       <div class="has-text-centered">
         <p class="title">
-          <template v-if="nodeData.properties.open">
+          <template v-if="nodeData.properties.open && nodeData.properties.open.value">
             {{ nodeData.properties.open.value === '1' ? 'Ouverte' : 'Fermée' }}
           </template>
           <template v-else>

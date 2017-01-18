@@ -1,7 +1,7 @@
 {
   "name": "homie-dashboard",
   "description": "IoT dashboard for Homie devices",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": "RGB Team",
   "ava": {
     "babel": "inherit",
@@ -41,7 +41,7 @@
     "body-parser": "^1.15.2",
     "bookshelf": "^0.10.2",
     "bunyan": "^1.8.4",
-    "clor": "^5.0.0",
+    "clor": "^5.0.1",
     "cookie": "^0.3.1",
     "express": "^4.14.0",
     "fast-json-patch": "^1.1.2",
@@ -81,12 +81,12 @@
     "snazzy": "^6.0.0",
     "standard": "^8.5.0",
     "vbuild": "^5.0.0",
-    "vue": "2.1.6",
+    "vue": "^2.1.10",
     "vue-async-computed": "^2.2.1",
-    "vue-color": "^2.0.2",
+    "vue-color": "^2.0.5",
     "vue-grid-layout": "^2.0.0",
     "vue-loader": "^10.0.2",
-    "vue-template-compiler": "2.1.6"
+    "vue-template-compiler": "^2.1.10"
   },
   "engines": {
     "node": "^6.0.0"
