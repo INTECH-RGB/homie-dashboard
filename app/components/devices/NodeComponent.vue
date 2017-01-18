@@ -123,8 +123,8 @@ export default {
     getSignalIconClasses (online, signal) {
       return {
         'is-offline': !online,
-        'is-weak': online && signal <= 66,
-        'is-strong': online && signal > 66
+        'is-weak': online && signal <= 30,
+        'is-strong': online && signal > 30
       }
     },
     async toggleTag (tag) {

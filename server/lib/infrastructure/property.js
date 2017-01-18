@@ -34,7 +34,7 @@ export default class Property extends EventEmitter {
   }
   get value () { return this._value }
   set value (val) {
-    if (!val || this._value === val) return
+    if (this._value === val) return
     this._value = val; this._wasUpdated()
   }
   get settable () { return this._settable }
@@ -48,7 +48,6 @@ export default class Property extends EventEmitter {
     this.isValid = (
       this._node !== null &&
       this._id !== null &&
-      this._value !== null &&
       this._settable !== null
     )
 
