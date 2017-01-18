@@ -62,4 +62,4 @@ after_deploy:
       -H "Travis-API-Version: 3" \
       -H "Authorization: token $TRAVIS_TOKEN" \
       -d "$body" \
-      https://api.travis-ci.org/repo/INTECH-RGBH%2Fhomie-dashboard-docker/requests
+      https://api.travis-ci.org/repo/INTECH-RGB%2Fhomie-dashboard-docker/requests

@@ -29,7 +29,7 @@
   "bin": {
     "homie-dashboard": "./src/bin/cli.js"
   },
-  "bugs": "https://github.com/INTECH-RGBH/homie-dashboard/issues",
+  "bugs": "https://github.com/INTECH-RGB/homie-dashboard/issues",
   "contributors": [
     "Marvin ROGER",
     "Valentin GAUTHEY",
@@ -91,7 +91,7 @@
   "engines": {
     "node": "^6.0.0"
   },
-  "homepage": "https://github.com/INTECH-RGBH/homie-dashboard",
+  "homepage": "https://github.com/IINTECH-RGBhomie-dashboard",
   "keywords": [
     "automation",
     "dashboard",
@@ -105,7 +105,7 @@
   "preferGlobal": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/INTECH-RGBH/homie-dashboard.git"
+    "url": "https://github.com/ININTECH-RGBomie-dashboard.git"
   },
   "scripts": {
     "app-build": "cross-env BABEL_ENV=production NODE_ENV=production vbuild && shx rm dist-app/*.map",
