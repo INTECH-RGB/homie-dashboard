@@ -166,7 +166,6 @@ export default function initializeStore (app) {
             name: opts.name
           }
         })
-        console.log("dab")
       },
       async addFloor ({commit}, opts) {
         const result = await wsRequest({

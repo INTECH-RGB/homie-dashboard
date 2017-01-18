@@ -130,7 +130,6 @@ export default {
   mounted () {
     if (this.route.query.tag !== undefined) {
       this.selectedTagsIds.push(this.route.query.tag)
-      console.log(this.selectedTagsIds)
     }
   },
   computed: {

@@ -122,7 +122,6 @@ export default class Client extends EventEmitter {
 
       this._sendResponse(message, true)
     } else if (message.method === 'changeNodeName') {
-      console.log("bim")
       const name = message.parameters.name
       const nodeData = message.parameters.node
       const device = this.infrastructure.getDevice(nodeData.device.id)
