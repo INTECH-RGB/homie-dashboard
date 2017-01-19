@@ -13,9 +13,9 @@
 
             <ul>
               <template v-if = "isModif">
-                <label class = "croud">
-               <input v-model="name" class="input is-primary" type="text" :placeholder="nodeData.name" width ="3"> &nbsp; <a @click="changeNodeName(nodeData, name)" class= "bouton">Enregistrer</a> 
-              </label>
+                  <p class="control has-addons">
+                    <input v-model="name" class="input is-primary" type="text" :placeholder="nodeData.name" width ="3"> <a @click="changeNodeName(nodeData, name)" class="button is-primary">Enregistrer</a> 
+                  </p>
               </template>
               <template v-else>
               <li>Nom : {{ nodeData.name }} &nbsp;&nbsp;&nbsp;&nbsp; <a @click="isModif = true" class= "bouton">Modifier</a></li>
