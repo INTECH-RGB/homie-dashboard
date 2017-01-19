@@ -12,8 +12,6 @@
 <p>Note : Vous pouvez insérer un bloc « et » dans le bloc « si » pour pouvoir définir deux conditions.</p>
 <h4>Comment supprimer une automatisation ?</h4>
 <p>Il suffit de déplacer vos blocs sur la partie gauche de l’écran pour qu’ils disparaissent puis appuyer sur le bouton « enregistrer » pour sauvegarder vos modifications.</p>
-
-
   </help>
 </template>
 
