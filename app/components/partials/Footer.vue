@@ -3,7 +3,7 @@
     <div class="container">
       <div class="content has-text-centered">
         <p>
-          <strong>Homie Dashboard</strong> par <a target="_blank" href="https://github.com/INTECH-RGB">RGBH Team</a>.
+          <strong>Homie Dashboard</strong> par <a target="_blank" href="https://github.com/INTECH-RGB">RGB Team</a>.
         </p>
         <p>
           <a target="_blank" class="icon" href="https://github.com/INTECH-RGB/homie-dashboard">
