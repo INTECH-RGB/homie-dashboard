@@ -52,11 +52,6 @@ export default class Node extends EventEmitter {
     this._tags.add(tag)
     this._wasUpdated()
   }
-
-  changeNodeName(name){
-    this._name = name
-  }
-
   deleteTag (tag) {
     this._tags.delete(tag)
     this._wasUpdated()
@@ -106,6 +101,7 @@ export default class Node extends EventEmitter {
     this.isValid = (
       this._device !== null &&
       this._id !== null &&
+      this._name !== null &&
       this._type !== null &&
       this._propertiesDefinition !== null
     )

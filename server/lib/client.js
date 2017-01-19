@@ -126,7 +126,7 @@ export default class Client extends EventEmitter {
       const nodeData = message.parameters.node
       const device = this.infrastructure.getDevice(nodeData.device.id)
       const node = device.getNode(nodeData.id)
-      node.changeNodeName(name)
+      node.name = name
       await node.model.save({ name: name })
 
       this._sendResponse(message, true)
