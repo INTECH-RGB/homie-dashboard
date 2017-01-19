@@ -117,6 +117,7 @@ export function bridgeInfrastructureToDatabase ({$deps, infrastructure}) {
         if (!update.entity.model) return
         databaseQueue = databaseQueue.then(() => {
           $deps.log.debug(`updating property ${update.entity.id} in DB`)
+          if (!update.entity.value) return
           return PropertyHistoryModel.forge({
             property_id: update.entity.model.id,
             value: update.entity.value,
