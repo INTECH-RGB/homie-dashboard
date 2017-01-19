@@ -112,7 +112,7 @@
     "app-dev": "vbuild --dev",
     "common-depcheck": "npm-check --no-emoji",
     "emulator-start": "babel-watch emulator/index.js",
-    "server-build": "cross-env BABEL_ENV=production NODE_ENV=production babel server/ -d dist-server/src/ && cross-env BABEL_ENV=production NODE_ENV=production babel common/ -d dist-server/common/ && npm run app-build && shx cp -r dist-app/ dist-server/ && shx cp package.json dist-server/",
+    "server-build": "cross-env BABEL_ENV=production NODE_ENV=production babel server/ -d dist-server/src/ && cross-env BABEL_ENV=production NODE_ENV=production babel common/ -d dist-server/common/ && npm run app-build && shx cp -r dist-app/ dist-server/ && shx cp package.json dist-server/ && shx cp README.md dist-server/",
     "server-dev": "babel-watch server/bin/cli.js -- start --port 5000 --ip 0.0.0.0 --logLevel debug",
     "server-lint": "standard server/**/*.js | snazzy",
     "server-test": "nyc ava"
