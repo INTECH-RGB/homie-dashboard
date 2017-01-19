@@ -77,7 +77,7 @@ export default class Node extends EventEmitter {
     this._id = val
     this._wasUpdated()
   }
-  get name() { return this._name }
+  get name () { return this._name }
   set name (val) {
     if (!val || this._name === val) return
     this._name = val
@@ -87,6 +87,7 @@ export default class Node extends EventEmitter {
   set type (val) {
     if (!val || this._type === val) return
     this._type = val
+    if (!this._name) this._name = val
     this._wasUpdated()
   }
   get propertiesDefinition () { return this._propertiesDefinition }
