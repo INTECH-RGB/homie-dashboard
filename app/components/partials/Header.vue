@@ -10,7 +10,7 @@
               </figure>
             </span>
             <span class="nav-item">
-              <a :href="`https://github.com/INTECH-RGBH/homie-dashboard/releases/tag/${version}`" class="version">v{{version}}</a>
+              <a :href="`https://github.com/INTECH-RGB/homie-dashboard/releases/tag/${version}`" class="version">v{{version}}</a>
             </a>
           </div>
 

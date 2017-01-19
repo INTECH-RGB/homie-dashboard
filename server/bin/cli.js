@@ -50,7 +50,7 @@ const wrapper = async function () {
 
       console.log(homieStyled)
       console.log(c`<magenta>Version <bold>${pkg.version}</bold></magenta>\n`)
-      console.log(c`<magenta>See <underline>https://github.com/INTECH-RGBH/homie-dashboard</underline></magenta>\n`)
+      console.log(c`<magenta>See <underline>https://github.com/INTECH-RGB/homie-dashboard</underline></magenta>\n`)
       console.log(c`<magenta>Homie Dashboard IP is <bold><underline>${ip.v4()}</underline></bold></magenta>`)
       console.log(c`<magenta>Make sure this IP won't change over time</magenta>\n`)
 

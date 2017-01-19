@@ -1,7 +1,7 @@
 {
   "name": "homie-dashboard",
   "description": "IoT dashboard for Homie devices",
-  "version": "0.4.0",
+  "version": "0.4.3",
   "author": "RGB Team",
   "ava": {
     "babel": "inherit",
@@ -29,7 +29,7 @@
   "bin": {
     "homie-dashboard": "./src/bin/cli.js"
   },
-  "bugs": "https://github.com/INTECH-RGBH/homie-dashboard/issues",
+  "bugs": "https://github.com/INTECH-RGB/homie-dashboard/issues",
   "contributors": [
     "Marvin ROGER",
     "Valentin GAUTHEY",
@@ -91,7 +91,7 @@
   "engines": {
     "node": "^6.0.0"
   },
-  "homepage": "https://github.com/INTECH-RGBH/homie-dashboard",
+  "homepage": "https://github.com/INTECH-RGB/homie-dashboard",
   "keywords": [
     "automation",
     "dashboard",
@@ -105,14 +105,14 @@
   "preferGlobal": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/INTECH-RGBH/homie-dashboard.git"
+    "url": "https://github.com/INTECH-RGB/homie-dashboard.git"
   },
   "scripts": {
     "app-build": "cross-env BABEL_ENV=production NODE_ENV=production vbuild && shx rm dist-app/*.map",
     "app-dev": "vbuild --dev",
     "common-depcheck": "npm-check --no-emoji",
     "emulator-start": "babel-watch emulator/index.js",
-    "server-build": "cross-env BABEL_ENV=production NODE_ENV=production babel server/ -d dist-server/src/ && cross-env BABEL_ENV=production NODE_ENV=production babel common/ -d dist-server/common/ && npm run app-build && shx cp -r dist-app/ dist-server/ && shx cp package.json dist-server/",
+    "server-build": "cross-env BABEL_ENV=production NODE_ENV=production babel server/ -d dist-server/src/ && cross-env BABEL_ENV=production NODE_ENV=production babel common/ -d dist-server/common/ && npm run app-build && shx cp -r dist-app/ dist-server/ && shx cp package.json dist-server/ && shx cp README.md dist-server/",
     "server-dev": "babel-watch server/bin/cli.js -- start --port 5000 --ip 0.0.0.0 --logLevel debug",
     "server-lint": "standard server/**/*.js | snazzy",
     "server-test": "nyc ava"
