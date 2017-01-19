@@ -3,6 +3,7 @@ import uuid from 'uuid'
 
 import pkg from '../../package'
 import {generateMessage, parseMessage, MESSAGE_TYPES} from '../../common/ws-messages'
+import {hash} from './hash'
 import {VERSION, INFRASTRUCTURE} from '../../common/events'
 import Tag from './infrastructure/tag'
 import Floor from './infrastructure/floor'
@@ -12,6 +13,7 @@ import Statistical from './statistical'
 import TagModel from '../models/tag'
 import FloorModel from '../models/floor'
 import RoomModel from '../models/room'
+import SettingModel from '../models/setting'
 
 /**
  * This class handles WebSocket clients
@@ -130,7 +132,7 @@ export default class Client extends EventEmitter {
       await node.model.save({ name: name })
 
       this._sendResponse(message, true)
-    }else if (message.method === 'deleteFloor') {
+    } else if (message.method === 'deleteFloor') {
       const floorId = message.parameters.floorId
       const floor = this.infrastructure.getFloor(floorId)
 
@@ -194,6 +196,14 @@ export default class Client extends EventEmitter {
         xml: blocklyXml,
         script
       })
+
+      this._sendResponse(message, true)
+    } else if (message.method === 'updatePassword') {
+      const {password} = message.parameters
+
+      const hashed = await hash(password)
+
+      await SettingModel.forge({ key: 'password' }).save({ value: hashed })
 
       this._sendResponse(message, true)
     }

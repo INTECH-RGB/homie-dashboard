@@ -232,6 +232,17 @@ export default function initializeStore (app) {
         })
 
         return result
+      },
+      async updatePassword ({commit}, opts) {
+        const result = await wsRequest({
+          ws,
+          method: 'updatePassword',
+          parameters: {
+            password: opts.password
+          }
+        })
+
+        return result
       }
     }
   })

@@ -75,6 +75,12 @@
                 <span>Automatisation</span>
               </router-link>
             </li>
+            <li :class="{ 'is-active': route.path === '/parametres' }">
+              <router-link to="/parametres" exact>
+                <span class="icon is-small"><i class="fa fa-cog"></i></span>
+                <span>Paramètres</span>
+              </router-link>
+            </li>
           </ul>
         </div>
       </nav>

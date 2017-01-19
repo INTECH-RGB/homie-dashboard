@@ -1,8 +1,4 @@
-# Password securing your Homie Dashboard
-# Use homie-dashboard hash <password> to get a valid hash
-password = "$2a$10$hYnFXjXkyXprVEWXFV5zHOUff3oE0ec.5Yb6rBjnyYhIFQuOk3iQm"
-
-# Enable bindings
+# Bindings configuration
 [bindings]
 
   [bindings.aqara]

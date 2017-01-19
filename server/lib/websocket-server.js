@@ -7,6 +7,7 @@ import bodyParser from 'body-parser'
 import {Server as WebSocketServer} from 'ws'
 import {verify} from './hash'
 import AuthTokenModel from '../models/auth-token'
+import SettingModel from '../models/setting'
 
 /**
  * This function creates a WebSocket server.
@@ -29,7 +30,8 @@ export default function createWebsocketServer (opts) {
     })
 
     app.post('/login', async function (req, res) {
-      const match = await verify(opts.settings.password, req.body.password)
+      const passwordModel = await SettingModel.forge({ key: 'password' }).fetch()
+      const match = await verify(passwordModel.attributes['value'], req.body.password)
       if (match) {
         const token = uuid()
         await AuthTokenModel.forge({ token }).save(null, { method: 'insert' }) // we insert primary key so considered update by default
