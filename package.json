@@ -12,7 +12,8 @@
   "babel": {
     "plugins": [
       "transform-es2015-modules-commonjs",
-      "transform-async-to-generator"
+      "transform-async-to-generator",
+      "transform-es2017-object-entries"
     ],
     "ignore": "test/**/*.js",
     "env": {
@@ -62,6 +63,7 @@
     "babel-core": "^6.18.2",
     "babel-plugin-transform-async-to-generator": "^6.16.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
+    "babel-plugin-transform-es2017-object-entries": "0.0.3",
     "babel-plugin-transform-inline-environment-variables": "^6.8.0",
     "babel-watch": "^2.0.3",
     "balloon-css": "^0.4.0",
