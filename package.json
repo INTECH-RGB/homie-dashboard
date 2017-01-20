@@ -37,7 +37,6 @@
   ],
   "dependencies": {
     "ajv": "^4.10.4",
-    "bcryptjs": "^2.4.0",
     "body-parser": "^1.15.2",
     "bookshelf": "^0.10.2",
     "clor": "^5.0.1",

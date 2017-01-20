@@ -6,7 +6,7 @@ exports.up = function (knex) {
         table.string('value').notNullable()
       }).then(function () {
         return knex('settings').insert([
-          { key: 'password', value: '$2a$10$hYnFXjXkyXprVEWXFV5zHOUff3oE0ec.5Yb6rBjnyYhIFQuOk3iQm' }
+          { key: 'password', value: '75c9aa9127e43df7b1e8f4bad7d887d4,adde47c3d7894070ffab1ca6b855761ffe942a0b3965ba534b67c46a84fcda56' }
         ])
       })
   ])

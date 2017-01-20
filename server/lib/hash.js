@@ -1,22 +1,30 @@
-import bcrypt from 'bcryptjs'
+import crypto from 'crypto'
 
-export function hash (password) {
+function _generateSalt () {
   return new Promise((resolve, reject) => {
-    bcrypt.genSalt(function (err, salt) {
+    crypto.randomBytes(16, function (err, randomBytes) {
       if (err) return reject(err)
-      bcrypt.hash(password, salt, function (err, hash) {
-        if (err) return reject(err)
-        resolve(hash)
-      })
+
+      resolve(randomBytes.toString('hex'))
     })
   })
 }
 
+function _generateHash (string) {
+  return crypto.createHash('sha256').update(string, 'utf-8').digest('hex')
+}
+
+export async function hash (password) {
+  const salt = await _generateSalt()
+  const hash = _generateHash(`${salt}${password}`)
+
+  return `${salt},${hash}`
+}
+
 export async function verify (hash, password) {
-  return new Promise((resolve, reject) => {
-    bcrypt.compare(password, hash, function (err, res) {
-      if (err) return reject(err)
-      resolve(res)
-    })
-  })
+  const splitted = hash.split(',')
+  const salt = splitted[0]
+  const concreteHash = splitted[1]
+
+  return _generateHash(`${salt}${password}`) === concreteHash
 }
