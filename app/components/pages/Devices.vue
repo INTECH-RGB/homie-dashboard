@@ -22,12 +22,6 @@
             <ul v-if="tagInput.focus == true" id="autocomplete-dropdown">
               <li v-if="tagInput.value !== ''"><a href="" @click.prevent @mousedown.prevent="createTag(tagInput.value)"><span class="icon is-small"><i class="fa fa-plus"></i></span> Créer le tag <b>{{ tagInput.value }}</b></a></li>
               <div v-for="tag in dropdownTags">
-                <div v-for="floor in infrastructure.house.floors">
-                  <div v-for="room in floor.rooms">
-              <li v-if="tag.id === room.tagId"><a href="" @click.prevent @mousedown.prevent="addTagRoom(room)"><span class="tag"><span class="icon is-small"><i class="fa fa-tag"></i></span>&nbsp;{{ room.name }}<span :data-balloon="canDeleteTag(tag.id) ? 'Supprimer le tag' : 'Impossible de supprimer ce tag car il est encore affecté'" data-balloon-pos="right"><button @mousedown.prevent.stop="deleteTag(tag.id)" class="delete is-small" :disabled="!canDeleteTag(tag.id)"></button></span></span></a></li>
-
-              </div>
-              </div>
               <li v-if="!tag.id.includes('room:')"><a href="" @click.prevent @mousedown.prevent="addTag(tag)"><span class="tag"><span class="icon is-small"><i class="fa fa-tag"></i></span>&nbsp;{{ tag.id }}<span :data-balloon="canDeleteTag(tag.id) ? 'Supprimer le tag' : 'Impossible de supprimer ce tag car il est encore affecté'" data-balloon-pos="right"><button @mousedown.prevent.stop="deleteTag(tag.id)" class="delete is-small" :disabled="!canDeleteTag(tag.id)"></button></span></span></a></li>
               </div>
             </ul>

@@ -74,7 +74,7 @@ function createCustomBlocks (infrastructure, self) {
         for (const node of Object.values(device.nodes)) {
           for (const property of Object.values(node.properties)) {
             dropdownValues.push([
-              `condition ${device.name} - ${node.id} - ${property.id}`,
+              `condition ${device.name} - ${node.name} - ${property.id}`,
               JSON.stringify({
                 deviceId: device.id,
                 nodeId: node.id,
@@ -168,7 +168,7 @@ function createCustomBlocks (infrastructure, self) {
           for (const property of Object.values(node.properties)) {
             if (!property.settable) continue
             dropdownValues.push([
-              `action ${device.name} - ${node.id} - ${property.id}`,
+              `action ${device.name} - ${node.name} - ${property.id}`,
               JSON.stringify({
                 deviceId: device.id,
                 nodeId: node.id,
