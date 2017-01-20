@@ -1,7 +1,7 @@
 {
   "name": "homie-dashboard",
   "description": "IoT dashboard for Homie devices",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "author": "RGB Team",
   "ava": {
     "babel": "inherit",
@@ -12,8 +12,7 @@
   "babel": {
     "plugins": [
       "transform-es2015-modules-commonjs",
-      "transform-async-to-generator",
-      "transform-es2017-object-entries"
+      "transform-async-to-generator"
     ],
     "ignore": "test/**/*.js",
     "env": {
@@ -63,7 +62,6 @@
     "babel-core": "^6.18.2",
     "babel-plugin-transform-async-to-generator": "^6.16.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
-    "babel-plugin-transform-es2017-object-entries": "0.0.3",
     "babel-plugin-transform-inline-environment-variables": "^6.8.0",
     "babel-watch": "^2.0.3",
     "balloon-css": "^0.4.0",
@@ -91,7 +89,7 @@
     "vue-template-compiler": "^2.1.10"
   },
   "engines": {
-    "node": "^6.0.0"
+    "node": "^7.0.0"
   },
   "homepage": "https://github.com/INTECH-RGB/homie-dashboard",
   "keywords": [
