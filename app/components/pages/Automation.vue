@@ -51,7 +51,7 @@ export default {
     async save () {
       const xml = Blockly.Xml.workspaceToDom(this.blocklyWorkspace)
       var xmlText = Blockly.Xml.domToText(xml)
-      console.log(xmlText)
+
       await this.saveAutomationScript({
         blocklyXml: xmlText,
         script: Blockly.JavaScript.workspaceToCode(this.blocklyWorkspace)
@@ -265,11 +265,13 @@ function createCustomBlocks (infrastructure, self) {
       case 'isMotion':
       case 'isOpen':
       case 'isOn':
+      case 'isPressed':
         code += " === '1'"
         break
       case 'isNotMotion':
       case 'isClose':
       case 'isOff':
+      case 'isReleased':
         code += " === '0'"
         break
       case 'equals':
@@ -303,7 +305,6 @@ function createCustomBlocks (infrastructure, self) {
     }
 
     const code = `handleAction({ deviceId: '${property.deviceId}', nodeId: '${property.nodeId}', propertyId: '${property.propertyId}', value: '${computedValue}' });\n`
-    console.log(code)
     return code
   }
 

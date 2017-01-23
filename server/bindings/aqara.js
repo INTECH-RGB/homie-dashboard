@@ -152,7 +152,7 @@ export default function start (opts) {
     }
   })
 
-  serverSocket.bind(SERVER_PORT)
+  serverSocket.bind(SERVER_PORT, '0.0.0.0')
 }
 
 function mapToHomie (opts) {

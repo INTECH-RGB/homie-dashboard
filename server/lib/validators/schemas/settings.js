@@ -20,7 +20,8 @@ export default {
                 'password': {
                   'type': 'string'
                 }
-              }
+              },
+              'required': ['ip', 'password']
             }
           },
           'required': ['enabled', 'gateway']

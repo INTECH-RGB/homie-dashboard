@@ -5,6 +5,8 @@ export const CONDITIONS = {
   'IS_CLOSE': { id: 'isClose', hasField: false },
   'IS_MOTION': { id: 'isMotion', hasField: false },
   'IS_NOT_MOTION': { id: 'isNotMotion', hasField: false },
+  'IS_PRESSED': { id: 'isPressed', hasField: false },
+  'IS_RELEASED': { id: 'isReleased', hasField: false },
   'EQUALS': { id: 'equals', hasField: true },
   'ABOVE': { id: 'above', hasField: true },
   'UNDER': { id: 'under', hasField: true }
@@ -28,10 +30,16 @@ export const NODE_TYPES = {
       mutations: [MUTATIONS.SET_ON, MUTATIONS.SET_OFF]
     }
   },
+  'button': {
+    'pressed': {
+      settable: false,
+      conditions: [CONDITIONS.IS_PRESSED, CONDITIONS.IS_RELEASED]
+    }
+  },
   'light': {
     'color': {
       settable: true,
-      conditions: [],
+      conditions: [CONDITIONS.EQUALS],
       mutations: [MUTATIONS.SET_COLOR]
     },
     'intensity': {
