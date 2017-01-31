@@ -14,7 +14,7 @@
             <ul>
               <template v-if = "isModif">
                   <p class="control has-addons">
-                    <input v-model="name" class="input is-primary" type="text" :placeholder="nodeData.name" width ="3"> <a @click="changeNodeName(nodeData, name)" class="button is-primary">Enregistrer</a> 
+                    <input v-model="name" class="input is-primary" type="text" :placeholder="nodeData.name" width ="3"> <a @click="changeNodeName(nodeData, name)" class="button is-primary">Enregistrer</a>
                   </p>
               </template>
               <template v-else>
@@ -64,7 +64,7 @@
         </header>
         <section class="modal-card-body">
           <div class="content">
-            <statistical :nodeId="nodeData.id"></statistical>
+            <slot name="statistics"></slot>
           </div>
         </section>
         <footer class="modal-card-foot">
@@ -112,7 +112,6 @@
 
 <script>
 import {mapState, mapActions} from 'eva.js'
-import Statistical from './Statistical'
 
 export default {
   props: ['nodeData', 'hasActions'],
@@ -120,11 +119,10 @@ export default {
     return {
       settingsOpened: false,
       statsOpened: false,
-      name: "",
+      name: '',
       isModif: false
     }
   },
-  components: {Statistical},
   computed: {
     ...mapState(['infrastructure'])
   },
@@ -136,8 +134,7 @@ export default {
         'is-strong': online && signal > 30
       }
     },
-    async changeNodeName(node, name) {
-      
+    async changeNodeName (node, name) {
       await this.changeNodeNameAction({
         node: node,
         name: name

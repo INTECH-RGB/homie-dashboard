@@ -1,5 +1,8 @@
 <template>
   <node :nodeData="nodeData">
+    <template slot="statistics">
+      <statistics :deviceId="nodeData.device.id" :nodeId="nodeData.id" :properties="[{ id: 'degrees', name: 'Degrés', graph: true }]"></statistics>
+    </template>
     <div slot="img">
       <img src="../../assets/images/icons/temperature/thermometer.png" alt="" >
       <!--<canvas ref="canvas"></canvas>-->
@@ -21,11 +24,12 @@
 
 <script>
 import {Component as Node, mixin as nodeMixin} from './Node.js'
+import Statistics from './Statistics'
 
 export default {
   mixins: [nodeMixin],
 
-  components: {Node}
+  components: {Node, Statistics}
 }
 </script>
 
