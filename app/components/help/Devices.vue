@@ -1,6 +1,6 @@
 <template>
   <help :visible="visible" @close="$emit('close')">
-    <h3>Ici, vous pouvez voir tous les périphériques que vous avez ajouté.</h3>
+    <h3>Ici, vous pouvez voir tous les périphériques que vous avez ajoutés.</h3>
 <h4>Comment ajouter un tag ?</h4>
 <p>Lorsque vous écrivez quelque chose dans la barre de recherche en dessous du descriptif de la page, un bouton « créer le tag » apparaît, il suffit de cliquer dessus.</p>
 <h4>Comment filtrer par tag ou par pièce ?</h4>

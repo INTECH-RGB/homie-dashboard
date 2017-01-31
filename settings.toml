@@ -6,7 +6,8 @@
 
     [bindings.aqara.gateway]
       ip = "192.168.6.17"
-      key = "000000000000"
+      password = "000000000000"
+
   [bindings.yeelight]
     enabled = true
 
