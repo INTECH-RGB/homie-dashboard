@@ -4,8 +4,6 @@ import {STATS_TYPES, STATS_GRANULARITY} from '../../common/statistics'
 export async function getStatistics (opts) {
   const {deviceId, nodeId, propertyId, type, granularity, range} = opts
 
-  console.log(opts)
-
   if (type === STATS_TYPES.GRAPH) {
     let result
     switch (granularity) {
@@ -26,7 +24,6 @@ export async function getStatistics (opts) {
           ORDER BY day, hour;
         `, [deviceId, nodeId, propertyId, range.day])
 
-        console.log(result)
         return result
       case STATS_GRANULARITY.DAY:
         result = await bookshelf.knex.raw(`
@@ -44,7 +41,24 @@ export async function getStatistics (opts) {
           ORDER BY day;
         `, [deviceId, nodeId, propertyId, range.startDay, range.endDay])
 
-        console.log(result)
+        return result
+      case STATS_GRANULARITY.MONTH:
+        result = await bookshelf.knex.raw(`
+          SELECT
+            strftime('%Y', date / 1000, 'unixepoch') AS year,
+            strftime('%m', date / 1000, 'unixepoch') AS month,
+            min(CAST(value AS NUMERIC)) AS minimum,
+            avg(CAST(value AS NUMERIC)) AS average,
+            max(CAST(value AS NUMERIC)) AS maximum
+          FROM property_history h
+          INNER JOIN properties p ON h.property_id = p.id
+          INNER JOIN nodes n ON p.node_id = n.id
+          INNER JOIN devices d ON n.device_id = d.id
+          WHERE d.id = ? AND n.device_node_id = ? AND p.node_property_id = ? AND year = ?
+          GROUP BY year, month
+          ORDER BY year, month;
+        `, [deviceId, nodeId, propertyId, range.year])
+
         return result
     }
   } else if (type === STATS_TYPES.LIST) {

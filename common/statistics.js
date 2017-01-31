@@ -5,5 +5,6 @@ export const STATS_TYPES = {
 
 export const STATS_GRANULARITY = {
   HOUR: 'HOUR',
-  DAY: 'DAY'
+  DAY: 'DAY',
+  MONTH: 'MONTH'
 }
