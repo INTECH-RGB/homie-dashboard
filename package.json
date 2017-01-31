@@ -1,7 +1,7 @@
 {
   "name": "homie-dashboard",
   "description": "IoT dashboard for Homie devices",
-  "version": "0.4.13",
+  "version": "0.5.0",
   "author": "RGB Team",
   "ava": {
     "babel": "inherit",
