@@ -60,8 +60,8 @@ export default function initializeStore (app) {
       }
     },
     actions: {
-      async login ({commit, dispatch}, password) {
-        const success = await login(password)
+      async login ({commit, dispatch}, opts) {
+        const success = await login(opts)
         if (success) {
           window.localStorage.setItem('accessTokenSet', true)
           commit(SET_IS_AUTHENTIFIED, true)

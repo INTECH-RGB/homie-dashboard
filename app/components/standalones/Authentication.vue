@@ -15,7 +15,13 @@
               <span class="icon">
                 <i class="fa fa-lock"></i>
               </span>
-              <span v-if="isWrongPassword" class="help is-danger">Le mot de passe est invalide.</span>
+            </p>
+            <p class="control has-icon">
+              <input v-model="otp" @keyup.enter="send" :class="{input: true, 'is-medium': true, 'is-danger': isWrongPassword}" type="text" placeholder="Code de sécurité">
+              <span class="icon">
+                <i class="fa fa-shield"></i>
+              </span>
+              <span v-if="isWrongPassword" class="help is-danger">Les mots de passe sont invalides.</span>
             </p>
           </div>
         </div>
@@ -31,12 +37,16 @@ export default {
   data () {
     return {
       password: '',
+      otp: '',
       isWrongPassword: false
     }
   },
   methods: {
     async send () {
-      const success = await this.login(this.password) // redirected if success
+      const success = await this.login({
+        password: this.password,
+        otp: this.otp
+      }) // redirected if success
       if (!success) this.isWrongPassword = true
     },
     ...mapActions(['login'])

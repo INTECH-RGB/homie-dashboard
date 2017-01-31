@@ -2,6 +2,7 @@ import path from 'path'
 import {createServer} from 'http'
 import cookie from 'cookie'
 import express from 'express'
+import speakeasy from 'speakeasy'
 import uuid from 'uuid'
 import bodyParser from 'body-parser'
 import {Server as WebSocketServer} from 'ws'
@@ -31,8 +32,15 @@ export default function createWebsocketServer (opts) {
 
     app.post('/login', async function (req, res) {
       const passwordModel = await SettingModel.forge({ key: 'password' }).fetch()
-      const match = await verify(passwordModel.attributes['value'], req.body.password)
-      if (match) {
+      const matchPassword = await verify(passwordModel.attributes['value'], req.body.password)
+      const otpSecretModel = await SettingModel.forge({ key: 'otp_secret' }).fetch()
+      const matchOtp = speakeasy.totp.verify({
+        secret: otpSecretModel.attributes['value'],
+        encoding: 'base32',
+        token: req.body.otp
+      })
+
+      if (matchPassword && matchOtp) {
         const token = uuid()
         await AuthTokenModel.forge({ token }).save(null, { method: 'insert' }) // we insert primary key so considered update by default
         const never = new Date(253402300000000) // year 999

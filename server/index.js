@@ -6,6 +6,7 @@ import createWebsocketServer from './lib/websocket-server'
 import start from './start'
 import loadSettings from './lib/settings'
 import {validate as validateSettings} from './lib/validators/settings'
+import SettingModel from './models/setting'
 
 export async function bootstrap (opts) {
   if (typeof LOG_LEVELS[opts.logLevel] === undefined) {
@@ -45,6 +46,10 @@ export async function bootstrap (opts) {
     await knex.raw('PRAGMA synchronous=NORMAL')
     await knex.migrate.latest({ directory: path.join(__dirname, '/migrations') })
     log.debug('database migrated')
+    const otpSecretModel = await SettingModel.forge({ key: 'otp_secret' }).fetch()
+    const qrCodeSecret = otpSecretModel.attributes['value']
+    const qrCodeData = `otpauth://totp/HomieDashboard?secret=${qrCodeSecret}`
+    log.info(`copy this into a web browser to add the secure key: https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(qrCodeData)}`)
   } catch (err) {
     log.fatal('cannot open or migrate database', err)
     process.exit(1)

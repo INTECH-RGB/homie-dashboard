@@ -8,11 +8,9 @@ if (process.env.NODE_ENV === 'production') {
   baseUrl = 'http://127.0.0.1:5000'
 }
 
-export async function login (password) {
+export async function login (opts) {
   return new Promise((resolve, reject) => {
-    axios.post(`${baseUrl}/login`, {
-      password
-    }, { withCredentials: true }).then((res) => {
+    axios.post(`${baseUrl}/login`, opts, { withCredentials: true }).then((res) => {
       return resolve(true)
     }).catch((err) => {
       if (err.response) return resolve(false)
