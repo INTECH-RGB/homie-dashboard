@@ -166,6 +166,8 @@ export default function initializeStore (app) {
             name: opts.name
           }
         })
+
+        return result
       },
       async addFloor ({commit}, opts) {
         const result = await wsRequest({
@@ -178,15 +180,20 @@ export default function initializeStore (app) {
 
         return result
       },
-      async giveStat ({commit}, opts) {
+      async getStatistics ({commit}, opts) {
         const result = await wsRequest({
           ws,
-          method: 'getStat',
+          method: 'getStatistics',
           parameters: {
-            id: opts.id,
-            interval: opts.interval
+            deviceId: opts.deviceId,
+            nodeId: opts.nodeId,
+            propertyId: opts.propertyId,
+            type: opts.type,
+            granularity: opts.granularity,
+            range: opts.range
           }
         })
+
         return result
       },
       async deleteFloor ({commit}, opts) {
