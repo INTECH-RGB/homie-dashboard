@@ -41,7 +41,7 @@
     "bookshelf": "^0.10.2",
     "clor": "^5.0.1",
     "cookie": "^0.3.1",
-    "express": "^4.14.0",
+    "express": "^4.17.0",
     "fast-json-patch": "^1.1.2",
     "internal-ip": "^1.2.0",
     "knex": "^0.12.6",
